@@ -1,0 +1,5 @@
+Using Yelp API:
+https://github.com/Yelp/yelp-fusion/blob/master/fusion/python/sample.py
+
+Yelp API documentation:
+https://www.yelp.com/developers/documentation/v3/get_started
