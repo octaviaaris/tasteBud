@@ -1,4 +1,4 @@
-from flask_sq import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -32,15 +32,15 @@ class Restaurant(db.Model):
 	address1 = db.Column(db.String(50), nullable=False)
 	address2 = db.Column(db.String(50), nullable=True)
 	address3 = db.Column(db.String(50), nullable=True)
-	city = db.Column(String(25), nullable=False)
-	state = db.Column(String(25), nullable=False)
+	city = db.Column(db.String(25), nullable=False)
+	state = db.Column(db.String(25), nullable=False)
 	zipcode = db.Column(db.Integer, nullable=False)
-	latitude = db.Column(db.Decimal)
-	longitude = db.Column(db.Decimal)
-	hours = db.Column(db.JSON, default=text("'null'"))
+	latitude = db.Column(db.Float(asdecimal=True))
+	longitude = db.Column(db.Float(asdecimal=True))
+	hours = db.Column(db.String(500))
 	price = db.Column(db.String(5),
 					  db.ForeignKey('prices.price_id'), nullable=False)
-	yelp_rating = db.Column(db.Decimal)
+	yelp_rating = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
 		return "<Restaurant rest_id={id} name={name}>".format(id=self.rest_id,
@@ -57,7 +57,7 @@ class Rating(db.Model):
 						db.ForeignKey('restaurants.rest_id'), nullable=False)
 	user_id = db.Column(db.Integer,
 						db.ForeignKey('users.user_id'), nullable=False)
-	user_rating = db.Column(db.Decimal, nullable=False)
+	user_rating = db.Column(db.Float(asdecimal=True), nullable=False)
 
 	restaurants = db.relationship('Restaurant', backref='ratings')
 	users = db.relationship('User', backref='users')
@@ -121,13 +121,14 @@ def connect_to_db(app):
 	"""Connect the database to my Flask app"""
 
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///project_db'
-    app.config['SQLALCHEMY_ECHO'] = False
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.app = app
-    db.init_app(app)
+	app.config['SQLALCHEMY_ECHO'] = False
+	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+	db.app = app
+	db.init_app(app)
 
 
 if __name__ == "__main__":
 
 	init_app()
+	db.create_all()
 
