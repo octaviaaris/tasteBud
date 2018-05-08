@@ -29,18 +29,18 @@ class Restaurant(db.Model):
 	restaurant_id = db.Column(db.String(50), primary_key=True)
 	name = db.Column(db.String(125), nullable=False)
 	url = db.Column(db.String(300))
-	address1 = db.Column(db.String(50), nullable=False)
-	address2 = db.Column(db.String(50), nullable=True)
-	address3 = db.Column(db.String(50), nullable=True)
+	address1 = db.Column(db.String(50))
+	address2 = db.Column(db.String(50))
+	address3 = db.Column(db.String(50))
 	city = db.Column(db.String(25), nullable=False)
 	state = db.Column(db.String(25), nullable=False)
 	zipcode = db.Column(db.String(10), nullable=False)
-	# latitude = db.Column(db.Float(asdecimal=True))
-	# longitude = db.Column(db.Float(asdecimal=True))
-	# hours = db.Column(db.String(500), nullable=True)
+	latitude = db.Column(db.Float(asdecimal=True))
+	longitude = db.Column(db.Float(asdecimal=True))
+	hours = db.Column(db.String(500))
 	price = db.Column(db.Integer,
-					  db.ForeignKey('prices.price_id'), nullable=True)
-	yelp_rating = db.Column(db.Float(asdecimal=True), nullable=True)
+					  db.ForeignKey('prices.price_id'))
+	yelp_rating = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
 		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
@@ -84,7 +84,7 @@ class Category(db.Model):
 class Rest_cat(db.Model):
 	"""Rest_cat model."""
 
-	__tablename__ = "rest_cat"
+	__tablename__ = "rest_cats"
 
 	rest_cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	restaurant_id = db.Column(db.String(50),
@@ -109,6 +109,7 @@ class Price(db.Model):
 
 	def __repr__(self):
 		return "<Price price_id={id}>".format(id=self.price_id)
+
 
 ##############################################################################
 # Helper functions
