@@ -6,7 +6,10 @@
   </head>
   <body>
     <h1>ProjectTitle</h1>
+    {% for message in get_flashed_messages() %}
+    {{ message }}
+    {% endfor %}
     {% block content %}BODY CONTENT GOES HERE{% endblock %}
-    <footer>Hackbright Project</footer>
+    <!-- <footer>Hackbright Project</footer> -->
   <body>
 </html>
