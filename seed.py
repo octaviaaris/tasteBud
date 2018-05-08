@@ -4,10 +4,12 @@ from model import *
 init_app()
 
 def create_rest(filename):
+	"""Import restaurants from data file."""
+
 	with open(filename) as f:
 		for line in f:
 			line = json.loads(line)
-			# print type(line)
+
 			rest_id = line['id']
 			name = line['name']
 			url = line['url']
@@ -39,6 +41,7 @@ def create_rest(filename):
 
 		db.session.commit()
 
+
 def create_price():
 	"""Populate price table."""
 
@@ -51,3 +54,27 @@ def create_price():
 	db.session.commit()
 
 
+def create_categories(filename):
+	"""Import categories from data file."""
+
+	aliases = []
+
+	with open(filename) as f:
+		for line in f:
+			line = json.loads(line)
+			categories = line['categories']
+				
+			for c in categories:
+				alias = c['alias']
+
+				if alias not in aliases:
+					aliases.append(alias)
+	
+	print aliases
+
+	for a in aliases:
+		if not Category.query.filter_by(alias=a).all():
+			new = Category(alias=a)
+			db.session.add(new)
+
+	db.session.commit()
