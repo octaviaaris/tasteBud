@@ -11,15 +11,18 @@ class User(db.Model):
 	__tablename__ = "users"
 
 	user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	fname = db.Column(db.String(25), nullable=False)
-	lname = db.Column(db.String(25), nullable=False)
-	email = db.Column(db.String(50), nullable=False)
+	# fname = db.Column(db.String(25), nullable=False)
+	# lname = db.Column(db.String(25), nullable=False)
+	username = db.Column(db.String(25), unique=True)
+	password = db.Column(db.String(25), unique=True)
+	# email = db.Column(db.String(50), nullable=False)
 	score_avg = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
-		return "<User user_id={id} email={email}>".format(id=self.user_id,
-														  email=self.email)
-
+		# return "<User user_id={id} email={email}>".format(id=self.user_id,
+		# 												  email=self.email)
+		return "<User user_id={id} username={username}>".format(id=self.user_id,
+																username=self.username)
 
 class Restaurant(db.Model):
 	"""Restaurant model."""
