@@ -54,6 +54,7 @@ def create_user_account():
 	if User.query.filter_by(username=username, password=pw).all():
 		flash(Markup('Account already exists. Please log in.'))
 		return redirect("/login")
+	# if user does not yet exist, add to db and redirect to login
 	else:
 		new_user = User(username=username,
 						password=pw,
