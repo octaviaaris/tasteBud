@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, flash, redirect
+from flask import Flask, session, render_template, request, flash, redirect, Markup
 from flask_debugtoolbar import DebugToolbarExtension
 from model import *
 
@@ -28,7 +28,7 @@ def handle_login():
 		session['username'] = username
 		return redirect("/")
 	else:
-		flash('Email and/or password is invalid. Please try again.')
+		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
 		return redirect("/login")
 
 @app.route("/handle-logout")
@@ -42,6 +42,26 @@ def handle_logout():
 def display_signup():
 
 	return render_template("signup.html")
+
+@app.route("/handle-signup", methods=['POST'])
+def create_user_account():
+
+	# get username from form submission
+	username = request.form['username']
+	pw = request.form['password']
+
+	# redirect to login page if user already has account
+	if User.query.filter_by(username=username, password=pw).all():
+		flash(Markup('Account already exists. Please log in.'))
+		return redirect("/login")
+	else:
+		new_user = User(username=username,
+						password=pw,
+						score_avg=None)
+		db.session.add(new_user)
+		db.session.commit()
+		flash("Account created! Please log in.")
+		return redirect("/login")
 
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
