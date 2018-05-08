@@ -8,7 +8,7 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	return "Welcome!"
+	return render_template("index.html")
 
 
 if __name__ == "__main__":
