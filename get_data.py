@@ -38,11 +38,11 @@ def search_businesses(location, filename, offset=0):
 	with open(filename, "a+") as f:
 		string = f.read()
 		for b in businesses:
+			# ensure entry is not a repeat
 			if b['id'] not in string:
 				f.write(json.dumps(b))
 				f.write("\n")
-			else:
-				print "DUPLICATE: " + b['id']
+
 
 def get_sf(filename):
 	"""Get 1000 restaurants in SF."""
