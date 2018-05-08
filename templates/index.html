@@ -4,7 +4,13 @@
 
 {% block content %}
 
-<h2>Log In</h2>
-<h2>Sign In</h2>
+{% if session.username %}
+<p>Welcome back, {{ session.username }}!</p>
+<p><a href="/handle-logout">Log Out</a></p>
+
+{% else %}
+<h2><a href="/login">Log In</a></h2>
+<h2><a href="/signup">Sign Up</a></h2>
+{% endif %}
 
 {% endblock %}
