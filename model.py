@@ -14,7 +14,7 @@ class User(db.Model):
 	fname = db.Column(db.String(25), nullable=False)
 	lname = db.Column(db.String(25), nullable=False)
 	email = db.Column(db.String(50), nullable=False)
-	score_avg = db.Column(db.Integer)
+	score_avg = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
 		return "<User user_id={id} email={email}>".format(id=self.user_id,
@@ -26,7 +26,7 @@ class Restaurant(db.Model):
 
 	__tablename__ = "restaurants"
 
-	rest_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	rest_id = db.Column(db.String(50), primary_key=True)
 	name = db.Column(db.String(125), nullable=False)
 	url = db.Column(db.String(300))
 	address1 = db.Column(db.String(50), nullable=False)
@@ -34,13 +34,13 @@ class Restaurant(db.Model):
 	address3 = db.Column(db.String(50), nullable=True)
 	city = db.Column(db.String(25), nullable=False)
 	state = db.Column(db.String(25), nullable=False)
-	zipcode = db.Column(db.Integer, nullable=False)
-	latitude = db.Column(db.Float(asdecimal=True))
-	longitude = db.Column(db.Float(asdecimal=True))
-	hours = db.Column(db.String(500))
-	price = db.Column(db.String(5),
-					  db.ForeignKey('prices.price_id'), nullable=False)
-	yelp_rating = db.Column(db.Float(asdecimal=True))
+	zipcode = db.Column(db.String(10), nullable=False)
+	# latitude = db.Column(db.Float(asdecimal=True))
+	# longitude = db.Column(db.Float(asdecimal=True))
+	hours = db.Column(db.String(500), nullable=True)
+	price = db.Column(db.Integer,
+					  db.ForeignKey('prices.price_id'), nullable=True)
+	yelp_rating = db.Column(db.Float(asdecimal=True), nullable=True)
 
 	def __repr__(self):
 		return "<Restaurant rest_id={id} name={name}>".format(id=self.rest_id,
@@ -53,11 +53,12 @@ class Rating(db.Model):
 	__tablename__ = "ratings"
 
 	rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	rest_id = db.Column(db.Integer, 
+	rest_id = db.Column(db.String(50), 
 						db.ForeignKey('restaurants.rest_id'), nullable=False)
 	user_id = db.Column(db.Integer,
 						db.ForeignKey('users.user_id'), nullable=False)
 	user_rating = db.Column(db.Float(asdecimal=True), nullable=False)
+
 
 	restaurants = db.relationship('Restaurant', backref='ratings')
 	users = db.relationship('User', backref='users')
@@ -72,10 +73,12 @@ class Category(db.Model):
 
 	__tablename__ = "categories"
 
-	alias = db.Column(db.String(50), primary_key=True)
+	cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	alias = db.Column(db.String(50))
 
 	def __repr__(self):
-		return "<Category alias={alias}>".format(alias=self.alias)
+		return "<Category cat_id={id} alias={alias}>".format(id=self.cat_id,
+															 alias=self.alias)
 
 
 class Rest_cat(db.Model):
@@ -84,16 +87,17 @@ class Rest_cat(db.Model):
 	__tablename__ = "rest_cat"
 
 	rest_cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	rest_id = db.Column(db.Integer,
+	rest_id = db.Column(db.String(50),
 						db.ForeignKey('restaurants.rest_id'), nullable=False)
-	alias = db.Column(db.String(50),
-					  db.ForeignKey('categories.alias'), nullable=False)
+	cat_id = db.Column(db.Integer,
+					  db.ForeignKey('categories.cat_id'), nullable=False)
+
 
 	categories = db.relationship('Category', backref='rest_cat')
 
 	def __repr__(self):
-		return "<Rest_cat rest_id={rest_id} alias={alias}>".format(rest_id=self.rest_id,
-																   alias=self.alias)
+		return "<Rest_cat rest_id={rest_id} cat_id={cat_id}>".format(rest_id=self.rest_id,
+																     cat_id=self.cat_id)
 
 
 class Price(db.Model):
@@ -101,7 +105,7 @@ class Price(db.Model):
 
 	__tablename__ = "prices"
 
-	price_id = db.Column(db.String(5), primary_key=True)
+	price_id = db.Column(db.Integer, primary_key=True)
 
 	def __repr__(self):
 		return "<Price price_id={id}>".format(id=self.price_id)
