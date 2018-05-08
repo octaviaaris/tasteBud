@@ -3,3 +3,6 @@ https://github.com/Yelp/yelp-fusion/blob/master/fusion/python/sample.py
 
 Yelp API documentation:
 https://www.yelp.com/developers/documentation/v3/get_started
+
+Ratings lab code for login/logout functionality:
+https://github.com/octaviaaris/ratings/blob/master/server.py
