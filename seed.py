@@ -3,14 +3,14 @@ from model import *
 
 init_app()
 
-def create_rest(filename):
+def create_restaurant(filename):
 	"""Import restaurants from data file."""
 
 	with open(filename) as f:
 		for line in f:
 			line = json.loads(line)
 
-			rest_id = line['id']
+			restaurant_id = line['id']
 			name = line['name']
 			url = line['url']
 			address1 = line["location"]['address1']
@@ -23,7 +23,7 @@ def create_rest(filename):
 			# longitude = line['coordinates']['longitude']
 
 
-			new = Restaurant(rest_id=rest_id,
+			new = Restaurant(restaurant_id=restaurant_id,
 							 name=name,
 							 url=url,
 							 address1=address1,
@@ -34,7 +34,7 @@ def create_rest(filename):
 							 zipcode=zipcode,
 							 # latitude=latitude,
 							 # longitude=longitude,
-							 hours=None,
+							 # hours=None,
 							 price=None)
 
 			db.session.add(new)
@@ -69,8 +69,7 @@ def create_categories(filename):
 
 				if alias not in aliases:
 					aliases.append(alias)
-	
-	print aliases
+
 
 	for a in aliases:
 		if not Category.query.filter_by(alias=a).all():
