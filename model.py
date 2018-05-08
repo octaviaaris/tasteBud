@@ -26,7 +26,7 @@ class Restaurant(db.Model):
 
 	__tablename__ = "restaurants"
 
-	rest_id = db.Column(db.String(50), primary_key=True)
+	restaurant_id = db.Column(db.String(50), primary_key=True)
 	name = db.Column(db.String(125), nullable=False)
 	url = db.Column(db.String(300))
 	address1 = db.Column(db.String(50), nullable=False)
@@ -37,14 +37,14 @@ class Restaurant(db.Model):
 	zipcode = db.Column(db.String(10), nullable=False)
 	# latitude = db.Column(db.Float(asdecimal=True))
 	# longitude = db.Column(db.Float(asdecimal=True))
-	hours = db.Column(db.String(500), nullable=True)
+	# hours = db.Column(db.String(500), nullable=True)
 	price = db.Column(db.Integer,
 					  db.ForeignKey('prices.price_id'), nullable=True)
 	yelp_rating = db.Column(db.Float(asdecimal=True), nullable=True)
 
 	def __repr__(self):
-		return "<Restaurant rest_id={id} name={name}>".format(id=self.rest_id,
-															  name=self.name)
+		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
+															  		name=self.name)
 
 
 class Rating(db.Model):
@@ -53,15 +53,15 @@ class Rating(db.Model):
 	__tablename__ = "ratings"
 
 	rating_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	rest_id = db.Column(db.String(50), 
-						db.ForeignKey('restaurants.rest_id'), nullable=False)
+	restaurant_id = db.Column(db.String(50), 
+							  db.ForeignKey('restaurants.restaurant_id'), nullable=False)
 	user_id = db.Column(db.Integer,
 						db.ForeignKey('users.user_id'), nullable=False)
 	user_rating = db.Column(db.Float(asdecimal=True), nullable=False)
 
 
 	restaurants = db.relationship('Restaurant', backref='ratings')
-	users = db.relationship('User', backref='users')
+	users = db.relationship('User', backref='ratings')
 
 	def __repr__(self):
 		return "<Rating rating_id={id}> user_rating={rating}".format(id=self.rating_id,
@@ -73,12 +73,12 @@ class Category(db.Model):
 
 	__tablename__ = "categories"
 
-	cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	alias = db.Column(db.String(50))
 
 	def __repr__(self):
-		return "<Category cat_id={id} alias={alias}>".format(id=self.cat_id,
-															 alias=self.alias)
+		return "<Category category_id={id} alias={alias}>".format(id=self.category_id,
+															 	  alias=self.alias)
 
 
 class Rest_cat(db.Model):
@@ -87,17 +87,17 @@ class Rest_cat(db.Model):
 	__tablename__ = "rest_cat"
 
 	rest_cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	rest_id = db.Column(db.String(50),
-						db.ForeignKey('restaurants.rest_id'), nullable=False)
-	cat_id = db.Column(db.Integer,
-					  db.ForeignKey('categories.cat_id'), nullable=False)
+	restaurant_id = db.Column(db.String(50),
+							  db.ForeignKey('restaurants.restaurant_id'), nullable=False)
+	category_id = db.Column(db.Integer,
+					  		db.ForeignKey('categories.category_id'), nullable=False)
 
 
 	categories = db.relationship('Category', backref='rest_cat')
 
 	def __repr__(self):
-		return "<Rest_cat rest_id={rest_id} cat_id={cat_id}>".format(rest_id=self.rest_id,
-																     cat_id=self.cat_id)
+		return "<Rest_cat restaurant_id={rest_id} category_id={cat_id}>".format(rest_id=self.restaurant_id,
+																     			cat_id=self.category_id)
 
 
 class Price(db.Model):
