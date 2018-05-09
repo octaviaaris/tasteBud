@@ -8,7 +8,7 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	return render_template("index.html", session=session)
+	return render_template("index.html")
 
 @app.route("/login")
 def display_login():
@@ -26,7 +26,7 @@ def handle_login():
 	# check if username and pw exist in db
 	if User.query.filter_by(username=username, password=pw).all():
 		session['username'] = username
-		return redirect("/")
+		return redirect("/profile")
 	else:
 		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
 		return redirect("/login")
@@ -63,6 +63,16 @@ def create_user_account():
 		db.session.commit()
 		flash("Account created! Please log in.")
 		return redirect("/login")
+
+@app.route("/profile")
+def show_profile():
+
+	return render_template("profile.html", session=session)
+
+@app.route("/search")
+def search_restaurants():
+
+	return "search"
 
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
