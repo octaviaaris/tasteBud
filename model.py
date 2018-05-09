@@ -19,8 +19,6 @@ class User(db.Model):
 	score_avg = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
-		# return "<User user_id={id} email={email}>".format(id=self.user_id,
-		# 												  email=self.email)
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
@@ -42,7 +40,7 @@ class Restaurant(db.Model):
 	longitude = db.Column(db.Float(asdecimal=True))
 	hours = db.Column(db.String(500))
 	price = db.Column(db.Integer,
-					  db.ForeignKey('prices.price_id'))
+					  db.ForeignKey('prices.price'))
 	yelp_rating = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
@@ -76,12 +74,10 @@ class Category(db.Model):
 
 	__tablename__ = "categories"
 
-	category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	alias = db.Column(db.String(50))
+	category = db.Column(db.String(50), primary_key=True)
 
 	def __repr__(self):
-		return "<Category category_id={id} alias={alias}>".format(id=self.category_id,
-															 	  alias=self.alias)
+		return "<Category category={category}>".format(category=self.category)
 
 
 class Rest_cat(db.Model):
@@ -92,15 +88,15 @@ class Rest_cat(db.Model):
 	rest_cat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 	restaurant_id = db.Column(db.String(50),
 							  db.ForeignKey('restaurants.restaurant_id'), nullable=False)
-	category_id = db.Column(db.Integer,
-					  		db.ForeignKey('categories.category_id'), nullable=False)
+	category = db.Column(db.String(50),
+					  	 db.ForeignKey('categories.category'), nullable=False)
 
 
-	categories = db.relationship('Category', backref='rest_cat')
+	categories = db.relationship('Category', backref='rest_cats')
 
 	def __repr__(self):
-		return "<Rest_cat restaurant_id={rest_id} category_id={cat_id}>".format(rest_id=self.restaurant_id,
-																     			cat_id=self.category_id)
+		return "<Rest_cat restaurant_id={rest_id} category={category}>".format(rest_id=self.restaurant_id,
+																     		   category=self.category)
 
 
 class Price(db.Model):
@@ -108,10 +104,10 @@ class Price(db.Model):
 
 	__tablename__ = "prices"
 
-	price_id = db.Column(db.Integer, primary_key=True)
+	price = db.Column(db.Integer, primary_key=True)
 
 	def __repr__(self):
-		return "<Price price_id={id}>".format(id=self.price_id)
+		return "<Price price={price}>".format(price=self.price)
 
 
 ##############################################################################
@@ -128,7 +124,7 @@ def init_app():
 def connect_to_db(app):
 	"""Connect the database to my Flask app"""
 
-	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///project_db'
+	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///projectdb'
 	app.config['SQLALCHEMY_ECHO'] = False
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.app = app
