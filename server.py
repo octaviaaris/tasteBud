@@ -72,7 +72,9 @@ def show_profile():
 @app.route("/search")
 def search_restaurants():
 
-	return "search"
+	location = request.args['location']
+
+	return "Results in " + location
 
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
