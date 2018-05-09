@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock%}
+
+{% block content %}
+
+{% if session.username %}
+<p>Welcome back, {{ session.username }}!</p>
+
+<form action="/search">
+      Find <input type="text" name="search">
+      <select name="city">
+        <option value="San Francisco">San Francisco</option>
+        <option value="East Bay">East Bay</option>
+      </select>
+      <input type="submit" value="Search">
+    </form>
+
+<p><a href="/handle-logout">Log Out</a></p>
+
+
+{% else %}
+<h2><a href="/login">Log In</a></h2>
+<h2><a href="/signup">Sign Up</a></h2>
+{% endif %}
+
+{% endblock %}
