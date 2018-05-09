@@ -1,6 +1,5 @@
 import json
 from model import *
-from get_data import 
 
 init_app()
 
