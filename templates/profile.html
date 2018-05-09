@@ -6,9 +6,11 @@
 
 <p>Welcome back, {{ session.username }}!</p>
 
+<p>Top Picks For You</p>
+
 <form action="/search">
-      Find <input type="text" name="search">
-      <select name="city">
+      Find <input type="text" name="find">
+      <select name="location" required>
         <option value="San Francisco">San Francisco</option>
         <option value="East Bay">East Bay</option>
       </select>
