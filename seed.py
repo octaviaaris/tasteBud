@@ -81,19 +81,3 @@ def seed_prices():
 	db.session.commit()
 
 
-# do the quesrying in get_data.py and seed in this file
-def restaurant_price_and_rating():
-	"""Get prices for each restaurant."""
-
-	all_restaurants = Restaurant.query.all()
-
-	i = 1
-
-	for a in all_restaurants:
-		print "{i}: {id}".format(i=i, id=a.restaurant_id)
-		i += 1
-
-		# query Yelp using business ID
-
-
-
