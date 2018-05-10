@@ -44,8 +44,10 @@ class Restaurant(db.Model):
 	yelp_rating = db.Column(db.Float(asdecimal=True))
 
 	def __repr__(self):
+		name = self.name
+		name_for_output = name.encode('utf8', 'replace')
 		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
-															  		name=self.name)
+															  		name=name_for_output)
 
 
 class Rating(db.Model):
@@ -105,6 +107,8 @@ class Price(db.Model):
 	__tablename__ = "prices"
 
 	price = db.Column(db.Integer, primary_key=True)
+
+	restaurants = db.relationship('Restaurant', backref='prices')
 
 	def __repr__(self):
 		return "<Price price={price}>".format(price=self.price)
