@@ -71,29 +71,25 @@ def get_oak(filename):
 	return "Done!"
 
 
-def restaurant_price_and_rating():
-	"""Get prices for each restaurant."""
+def restaurant_price_and_rating(restaurants):
+	"""Get prices for each restaurant in a list of restaurant objects."""
 
-	# all_restaurants = Restaurant.query.all()
+	# restaurants = Restaurant.query.all()
+	
+	for rst in restaurants:
 
-	cholita = Restaurant.query.get('UHFjEP5dVn4wqcjt7ByUog')
+		url = API_HOST + BUSINESS_PATH + rst.restaurant_id
+		response = requests.request("GET", url, headers=HEADER)
+		r = response.json()
 
-	url = API_HOST + BUSINESS_PATH + cholita.restaurant_id
+		price = r.get('price', None)
+		if price:
+			price = len(price)
+		yelp_rating = r.get('rating', None)
 
-	response = request(url, API_KEY)
+		rst.price = price
+		rst.yelp_rating = yelp_rating
 
-	r = response.json()
+		db.session.commit()
 
-	print """Name: {name}
-			 Price: {price}
-			 Rating: {rating}""".format(name=r.name, price=r.price, rating=r.rating)
-
-	# for a in all_restaurants:
-	# 	url += a.restaurant_id # build API endpoint for specific business
-		
-	# 	response = requests.request("GET", url, headers=HEADER, params=params)
-
-	# 	print "{i}: {id}".format(i=i, id=a.restaurant_id)
-	# 	i += 1
-
-		# query Yelp using business ID
+	return "Done!"
