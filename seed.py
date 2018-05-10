@@ -62,8 +62,8 @@ def seed_categories(filename):
 
 	# add all items in aliases list not already in db
 	for a in aliases:
-		if not Category.query.filter_by(alias=a).all():
-			new = Category(alias=a)
+		if not Category.query.filter_by(category=a).all():
+			new = Category(category=a)
 			db.session.add(new)
 
 	db.session.commit()
