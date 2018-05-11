@@ -1,6 +1,12 @@
 from flask import Flask, session, render_template, request, flash, redirect, Markup
 from flask_debugtoolbar import DebugToolbarExtension
+from sqlalchemy import func
 from model import *
+
+import urllib
+import urllib2
+
+# -- coding: utf-8 --
 
 app = Flask(__name__)
 app.secret_key = "athena"
@@ -67,14 +73,24 @@ def create_user_account():
 @app.route("/profile")
 def show_profile():
 
-	return render_template("profile.html", session=session)
+	cities = Restaurant.query.with_entities(Restaurant.city, 
+											func.count(Restaurant.city)).group_by(Restaurant.city).all()
+
+	cities.sort()
+
+	return render_template("profile.html", cities=cities, session=session)
 
 @app.route("/search")
 def search_restaurants():
 
+	# find = request.args.get('find')
 	location = request.args['location']
+	
+	print request.args
 
-	return "Results in " + location
+	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
+
+	return render_template('search.html', location=location, restaurants=restaurants)
 
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
