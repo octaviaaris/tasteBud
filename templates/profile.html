@@ -11,8 +11,9 @@
 <form action="/search">
       Find <input type="text" name="find">
       <select name="location" required>
-        <option value="San Francisco">San Francisco</option>
-        <option value="East Bay">East Bay</option>
+      	{% for city in cities %}
+        <option value={{ city[0]|urlencode() }}>{{ city[0] }}</option>
+        {% endfor %}
       </select>
       <input type="submit" value="Search">
     </form>
