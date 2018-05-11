@@ -93,3 +93,20 @@ def restaurant_price_and_rating(restaurants):
 		db.session.commit()
 
 	return "Done!"
+
+
+def save_price_rating():
+	"""Save price and yelp_rating data for each restaurant to txt file for easy reseeding."""
+
+	all_restaurants = Restaurant.query.all()
+
+	price_rating = {}
+
+	for a in all_restaurants:
+		price_rating[a.restaurant_id] = {'price': a.price, 'yelp_rating': float(a.yelp_rating)}
+
+	with open('database/ratings_prices.txt', 'a+') as f:
+		f.write(json.dumps(price_rating))
+
+	return price_rating
+
