@@ -41,7 +41,7 @@ class Restaurant(db.Model):
 	hours = db.Column(db.String(500))
 	price = db.Column(db.Integer,
 					  db.ForeignKey('prices.price'))
-	yelp_rating = db.Column(db.Float(asdecimal=True))
+	yelp_rating = db.Column(db.Float(precision=1, asdecimal=True))
 
 	def __repr__(self):
 		name = self.name
@@ -94,6 +94,7 @@ class Rest_cat(db.Model):
 					  	 db.ForeignKey('categories.category'), nullable=False)
 
 
+	restaurants = db.relationship('Restaurant', backref='rest_cats')
 	categories = db.relationship('Category', backref='rest_cats')
 
 	def __repr__(self):
