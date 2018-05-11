@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock%}
+
+{% block content %}
+
+<p>{{ restaurant.name }}</p>
+<p>Price: {{ restaurant.price }}</p>
+<p>Yelp Rating: {{ restaurant.yelp_rating }}</p>
+
+<h2>DETAILS!</h2>
+
+<p><a href="{{ restaurant.url }}" target="_blank">Go to yelp page</a></p>
+
+{% endblock %}
