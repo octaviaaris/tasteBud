@@ -92,6 +92,13 @@ def search_restaurants():
 
 	return render_template('search.html', location=location, restaurants=restaurants)
 
+@app.route("/details/<restaurant_id>")
+def show_details(restaurant_id):
+
+	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
+
+	return render_template("details.html", restaurant=r)
+
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
