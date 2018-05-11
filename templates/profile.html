@@ -12,7 +12,7 @@
       Find <input type="text" name="find">
       <select name="location" required>
       	{% for city in cities %}
-        <option value={{ city[0]|urlencode() }}>{{ city[0] }}</option>
+        <option value={{ city[0] }}>{{ city[0] }}</option>
         {% endfor %}
       </select>
       <input type="submit" value="Search">
