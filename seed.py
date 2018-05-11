@@ -4,7 +4,7 @@ from model import *
 init_app()
 
 def seed_restaurants(filename):
-	"""Import restaurants (minus price and yelp_ratings) from data file."""
+	"""Import restaurants (minus price and yelp_ratings) from data file. Use sf_data.txt and oak_data.txt."""
 
 	with open(filename) as f:
 		for line in f:
@@ -44,7 +44,7 @@ def seed_restaurants(filename):
 
 
 def seed_categories(filename):
-	"""Import categories from data file."""
+	"""Import categories from data file. Use sf_data.txt and oak_data.txt."""
 
 	aliases = []
 
@@ -82,7 +82,7 @@ def seed_prices():
 
 
 def seed_rest_cats(filename):
-	"""Populate rest_cats table."""
+	"""Populate rest_cats table. Use sf_data.txt and oak_data.txt."""
 
 	with open(filename) as f:
 		for line in f:
@@ -99,3 +99,17 @@ def seed_rest_cats(filename):
 
 	db.session.commit()
 
+def seed_price_ratings(filename):
+	"""Populate price and rating data for each restaurant from ratings_prices.txt."""
+
+	with open(filename, 'r') as f:
+		line = f.read()
+		seed_dct = json.loads(line)
+
+	all_restaurants = Restaurant.query.all()
+
+	for a in all_restaurants:
+		a.price = seed_dct[a.restaurant_id]['price']
+		a.yelp_rating = seed_dct[a.restaurant_id]['yelp_rating']
+
+		db.session.commit()
