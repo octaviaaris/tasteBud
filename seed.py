@@ -81,3 +81,21 @@ def seed_prices():
 	db.session.commit()
 
 
+def seed_rest_cats(filename):
+	"""Populate rest_cats table."""
+
+	with open(filename) as f:
+		for line in f:
+			line = json.loads(line)
+			restaurant_id = line['id']
+			categories = line['categories']
+
+			for c in categories:
+				alias = c['alias']
+
+				new = Rest_cat(restaurant_id=restaurant_id,
+							   category=alias)
+				db.session.add(new)
+
+	db.session.commit()
+
