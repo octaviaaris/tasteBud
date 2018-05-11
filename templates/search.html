@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Search{% endblock%}
+
+{% block content %}
+
+<p>SEARCH RESULTS:</p>
+
+<p>Restaurants in {{ location }}</p>
+
+<ul>
+	{% for restaurant in restaurants %}
+	<li><a href={{ restaurant.url }} target="_blank">{{restaurant.name}}</a></li>
+	{% endfor %}
+</ul>
+
+{% endblock %}
