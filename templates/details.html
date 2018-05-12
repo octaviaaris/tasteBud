@@ -1,15 +1,53 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile{% endblock%}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
-
-<p>{{ restaurant.name }}</p>
+<h3>{{ restaurant.name }}</h3>
+{% for c in restaurant.rest_cats %}
+{{ c.category }} |
+{% endfor %}
 <p>Price: {{ restaurant.price }}</p>
 <p>Yelp Rating: {{ restaurant.yelp_rating }}</p>
 
 <h2>DETAILS!</h2>
 
+{% if user %}
+{% if rating %}
+<p>Your rating: {{ rating }}</p>
+{% else %}
+<p>Tell us what you think about {{ restaurant.name }}:</p>
+{% endif %}
+<div>
+  <form action="/rate-restaurant" method="POST">
+  	<input type="hidden" name="rating" value="1">
+  	<input type="hidden" name="restaurant_id" value="{{ restaurant.restaurant_id }}">
+   	<input type="submit" value="1">
+  </form>
+  <form action="/rate-restaurant" method="POST">
+  	<input type="hidden" name="rating" value="2">
+  	<input type="hidden" name="restaurant_id" value="{{ restaurant.restaurant_id }}">
+   	<input type="submit" value="2">
+  </form>
+  <form action="/rate-restaurant" method="POST">
+  	<input type="hidden" name="rating" value="3">
+  	<input type="hidden" name="restaurant_id" value="{{ restaurant.restaurant_id }}">
+   	<input type="submit" value="3">
+  </form>
+  <form action="/rate-restaurant" method="POST">
+  	<input type="hidden" name="rating" value="4">
+  	<input type="hidden" name="restaurant_id" value="{{ restaurant.restaurant_id }}">
+   	<input type="submit" value="4">
+  </form>
+  <form action="/rate-restaurant" method="POST">
+  	<input type="hidden" name="rating" value="5">
+  	<input type="hidden" name="restaurant_id" value="{{ restaurant.restaurant_id }}">
+   	<input type="submit" value="5">
+  </form> 	
+</div>
+{% endif %}
+
+<p><a href="/profile" target="_blank">Back to profile</a></p>
 <p><a href="{{ restaurant.url }}" target="_blank">Go to yelp page</a></p>
 
 {% endblock %}
