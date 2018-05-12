@@ -73,14 +73,29 @@ def create_user_account():
 @app.route("/profile")
 def show_profile():
 
+	if 'username' not in session:
+		flash("Uh oh, you don't have a profile. Create one now!")
+		return redirect("/signup")
+
+	else:
+		cities = Restaurant.query.with_entities(Restaurant.city, 
+												func.count(Restaurant.city)).group_by(Restaurant.city).all()
+
+		cities.sort()
+
+		return render_template("profile.html", cities=cities, session=session)
+
+@app.route("/search")
+def show_search():
+
 	cities = Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city).all()
+												func.count(Restaurant.city)).group_by(Restaurant.city).all()
 
 	cities.sort()
 
-	return render_template("profile.html", cities=cities, session=session)
+	return render_template("search-form.html", cities=cities)
 
-@app.route("/search")
+@app.route("/handle-search")
 def search_restaurants():
 
 	# find = request.args.get('find')
@@ -90,14 +105,46 @@ def search_restaurants():
 
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
-	return render_template('search.html', location=location, restaurants=restaurants)
+	return render_template('search-results.html', location=location, restaurants=restaurants)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
 
 	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
 
-	return render_template("details.html", restaurant=r)
+	if 'username' in session:
+		user = User.query.filter_by(username=session['username']).one()
+		rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
+		
+		if rating:
+			rating = float(rating[0].user_rating)
+	else:
+		user = None
+		rating = None
+
+	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating)
+
+@app.route("/rate-restaurant", methods=['POST'])
+def record_rating():
+
+	rating = request.form.get('rating')
+	restaurant_id = request.form.get('restaurant_id')
+	user = User.query.filter_by(username=session['username']).one()
+
+	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
+	if existing_rating:
+		existing_rating[0].user_rating = rating
+		db.session.commit()
+	else:
+		new_rating = Rating(restaurant_id=restaurant_id,
+							user_id=user.user_id,
+							user_rating=rating)
+
+		db.session.add(new_rating)
+		db.session.commit()
+
+	return redirect("/details/" + restaurant_id)
+
 
 if __name__ == "__main__":
 	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
