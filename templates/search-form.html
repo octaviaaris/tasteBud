@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title></title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.11/css/all.css">
-  </head>
-  <body>
-    <form>
-      Find <input type="text" name="search">
-      <select name="city">
-        <option value="San Francisco">San Francisco</option>
-        <option value="East Bay">East Bay</option>
-      </select>
-      <input type="submit" value="Search">
-    </form>
-  <body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock%}
+
+{% block content %}
+
+		<form action="/handle-search">
+			Find <input type="text" name="find">
+			<select name="location" required>
+				{% for city in cities %}
+				<option value={{ city[0] }}>{{ city[0] }}</option>
+				{% endfor %}
+			</select>
+			<input type="submit" value="Search">
+		</form>
+{% endblock %}
