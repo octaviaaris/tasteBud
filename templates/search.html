@@ -10,7 +10,7 @@
 
 <ul>
 	{% for restaurant in restaurants %}
-	<li><a href={{ restaurant.url }} target="_blank">{{restaurant.name}}</a></li>
+	<li><a href="/details/{{ restaurant.restaurant_id }}">{{restaurant.name}}</a></li>
 	{% endfor %}
 </ul>
 
