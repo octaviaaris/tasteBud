@@ -44,29 +44,39 @@ def seed_restaurants(filename):
 
 
 def seed_categories(filename):
-	"""Import categories from data file. Use sf_data.txt and oak_data.txt."""
-
-	aliases = []
+	"""Import categories from data file. Use categories.txt."""
 
 	with open(filename) as f:
 		for line in f:
-			line = json.loads(line)
-			categories = line['categories']
-			
-			for c in categories:
-				alias = c['alias']
-
-				# ensure no duplicates
-				if alias not in aliases:
-					aliases.append(alias)
-
-	# add all items in aliases list not already in db
-	for a in aliases:
-		if not Category.query.filter_by(category=a).all():
-			new = Category(category=a)
+			line.strip()
+			new = Category(category=line)
 			db.session.add(new)
 
 	db.session.commit()
+
+	# Import categories from data file. Use sf_data.txt and oak_data.txt.
+
+	# aliases = []
+
+	# with open(filename) as f:
+		# for line in f:
+	# 		line = json.loads(line)
+	# 		categories = line['categories']
+			
+	# 		for c in categories:
+	# 			alias = c['alias']
+
+	# 			# ensure no duplicates
+	# 			if alias not in aliases:
+	# 				aliases.append(alias)
+
+	# # add all items in aliases list not already in db
+	# for a in aliases:
+	# 	if not Category.query.filter_by(category=a).all():
+	# 		new = Category(category=a)
+	# 		db.session.add(new)
+
+	# db.session.commit()
 
 
 def seed_prices():
