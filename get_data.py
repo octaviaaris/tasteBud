@@ -110,3 +110,14 @@ def save_price_rating():
 
 	return price_rating
 
+def save_categories():
+	"""Save categories in txt file for easy reseeding."""
+
+	categories = Category.query.all()
+
+	with open('database/categories.txt', 'w') as f:
+		for c in categories:
+			f.write(c.category)
+			f.write("\n")
+
+
