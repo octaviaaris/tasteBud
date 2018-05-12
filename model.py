@@ -22,6 +22,22 @@ class User(db.Model):
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
+	def calc_similarity(self, other):
+		"""Calculate similarity between self and other users."""
+
+		# dictionary of user's ratings
+		self_ratings = {}
+
+		for r in self.ratings:
+			self_rating[r.restaurant_id] = r.user_rating
+
+		#  list of tuples that hold self's rating and other's rating of a restaurant
+		pairs = []
+
+		for r in other.ratings:
+			pass
+
+
 class Restaurant(db.Model):
 	"""Restaurant model."""
 
@@ -64,10 +80,10 @@ class Rating(db.Model):
 
 
 	restaurants = db.relationship('Restaurant', backref='ratings')
-	users = db.relationship('User', backref='ratings')
+	users = db.relationship('User', backref='u_ratings')
 
 	def __repr__(self):
-		return "<Rating rating_id={id}> user_rating={rating}".format(id=self.rating_id,
+		return "<Rating rating_id={id} user_rating={rating}>".format(id=self.rating_id,
 																	 rating=self.user_rating)
 
 
