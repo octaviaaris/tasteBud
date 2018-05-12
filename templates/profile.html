@@ -6,17 +6,17 @@
 
 <p>Welcome back, {{ session.username }}!</p>
 
-<p>Top Picks For You</p>
+<div id="top-picks">TOP PICKS FOR YOU (5)</div>
 
-<form action="/search">
-      Find <input type="text" name="find">
-      <select name="location" required>
-      	{% for city in cities %}
-        <option value={{ city[0] }}>{{ city[0] }}</option>
-        {% endfor %}
-      </select>
-      <input type="submit" value="Search">
-    </form>
+<form action="/handle-search">
+	Find <input type="text" name="find">
+	<select name="location" required>
+		{% for city in cities %}
+		<option value={{ city[0] }}>{{ city[0] }}</option>
+		{% endfor %}
+	</select>
+	<input type="submit" value="Search">
+</form>
 
 <p><a href="/handle-logout">Log Out</a></p>
 
