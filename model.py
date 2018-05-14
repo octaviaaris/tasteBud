@@ -22,20 +22,47 @@ class User(db.Model):
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
-	def calc_similarity(self, other):
-		"""Calculate similarity between self and other users."""
+	def calc_user_similarity(self):
+		"""FInd five most similar users to self."""
 
-		# dictionary of user's ratings
+
+		# list of restaurants self has rated
+		self_restaurants = [r.restaurants for r in self.ratings]
+
+		# dictionary of all users who have rated restaurants in self_restaurants (excluding self)
+		common_users = {}
+
+		for r in self_restaurants:
+			other_users = [u.users for u in r.ratings if u.users.username != self.username]
+			common_users[r] = other_users
+
+		# dictionary of user and the number of common ratings they have to self
+		# sort by users for whom we have the most datapoints (most ratings in common with self)
+
+		for record in common_users.values():
+			for user in record:
+				count_common_users[user] = count_common_users.get(user,0) + 1
+
+		sorted_users = sorted(count_common_users.iteritems(), key=lambda(k,v): (v,k), reverse=True)
+
+		# calculate similarity for each user in sorted_users
+
+
+		# dictionary of restaurants user has rated and the ratings she gave
 		self_ratings = {}
 
 		for r in self.ratings:
-			self_rating[r.restaurant_id] = r.user_rating
+			self_rating[r.restaurant_id] = r
 
 		#  list of tuples that hold self's rating and other's rating of a restaurant
 		pairs = []
 
 		for r in other.ratings:
 			pass
+
+		# find all users who have rated the same restaurants as self
+		# calculate similarity score for each
+		# find top five similar users
 
 
 class Restaurant(db.Model):
@@ -79,8 +106,10 @@ class Rating(db.Model):
 	user_rating = db.Column(db.Float(asdecimal=True), nullable=False)
 
 
-	restaurants = db.relationship('Restaurant', backref='ratings')
-	users = db.relationship('User', backref='u_ratings')
+	restaurants = db.relationship('Restaurant', backref=db.backref('ratings',
+																	order_by=rating_id))
+	users = db.relationship('User', backref=db.backref('ratings',
+														order_by=rating_id))
 
 	def __repr__(self):
 		return "<Rating rating_id={id} user_rating={rating}>".format(id=self.rating_id,
@@ -110,8 +139,10 @@ class Rest_cat(db.Model):
 					  	 db.ForeignKey('categories.category'), nullable=False)
 
 
-	restaurants = db.relationship('Restaurant', backref='rest_cats')
-	categories = db.relationship('Category', backref='rest_cats')
+	restaurants = db.relationship('Restaurant', backref=db.backref('rest_cats',
+																   order_by=rest_cat_id))
+	categories = db.relationship('Category', backref=db.backref('rest_cats',
+																order_by=rest_cat_id))
 
 	def __repr__(self):
 		return "<Rest_cat restaurant_id={rest_id} category={category}>".format(rest_id=self.restaurant_id,
@@ -125,7 +156,8 @@ class Price(db.Model):
 
 	price = db.Column(db.Integer, primary_key=True)
 
-	restaurants = db.relationship('Restaurant', backref='prices')
+	restaurants = db.relationship('Restaurant', backref=db.backref('prices',
+																   order_by=price))
 
 	def __repr__(self):
 		return "<Price price={price}>".format(price=self.price)
