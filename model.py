@@ -17,7 +17,7 @@ class User(db.Model):
 	username = db.Column(db.String(25), unique=True)
 	password = db.Column(db.String(25), unique=True)
 	# email = db.Column(db.String(50), nullable=False)
-	score_avg = db.Column(db.Float(asdecimal=True))
+	score_avg = db.Column(db.Float)
 
 	def __repr__(self):
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
@@ -55,16 +55,37 @@ class User(db.Model):
 			for other_rating in other_user.ratings:
 				self_rating = self_ratings_dict.get(other_rating.restaurant_id)
 
-			if self_rating:
-				pairs.append((float(self_rating.user_rating), float(other_rating.user_rating)))
+				if self_rating:
+					pairs.append((float(self_rating.user_rating), float(other_rating.user_rating)))
 
-			# filter out len(pairs) < 5 ?
 			if len(pairs) >= 5:
-				similarities.append(pearson(pairs), other_user)
+				similarities.append((pearson(pairs), other_user))
 
 		similarities.sort(reverse=True)
 
-		print similarities
+		# get 50th percentile of similar users
+		sim_users = similarities[:(len(similarities) / 2)]
+
+		return sim_users
+
+
+	def user_based_recs(self):
+		"""Return list of restaurants other similar users have rated 4 or above."""
+
+		sim_users = self.calc_user_similarity()
+		self_ratings_dict = {r.restaurant_id:r for r in self.ratings}
+
+		recommendations = []
+
+		for s in sim_users:
+			user = s[1]
+
+			for r in user.ratings:
+				if not self_ratings_dict.get(r.restaurant_id) and r.user_rating >= 4:
+					recommendations.append(r)
+
+		return recommendations
+
 
 class Restaurant(db.Model):
 	"""Restaurant model."""
@@ -80,12 +101,12 @@ class Restaurant(db.Model):
 	city = db.Column(db.String(25), nullable=False)
 	state = db.Column(db.String(25), nullable=False)
 	zipcode = db.Column(db.String(10), nullable=False)
-	latitude = db.Column(db.Float(asdecimal=True))
-	longitude = db.Column(db.Float(asdecimal=True))
+	latitude = db.Column(db.Float)
+	longitude = db.Column(db.Float)
 	hours = db.Column(db.String(500))
 	price = db.Column(db.Integer,
 					  db.ForeignKey('prices.price'))
-	yelp_rating = db.Column(db.Float(precision=1, asdecimal=True))
+	yelp_rating = db.Column(db.Float)
 
 	def __repr__(self):
 		name = self.name
@@ -104,7 +125,7 @@ class Rating(db.Model):
 							  db.ForeignKey('restaurants.restaurant_id'), nullable=False)
 	user_id = db.Column(db.Integer,
 						db.ForeignKey('users.user_id'), nullable=False)
-	user_rating = db.Column(db.Float(asdecimal=True), nullable=False)
+	user_rating = db.Column(db.Float, nullable=False)
 
 
 	restaurants = db.relationship('Restaurant', backref=db.backref('ratings',
