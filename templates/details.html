@@ -10,7 +10,12 @@
 <p>Price: {{ restaurant.price }}</p>
 <p>Yelp Rating: {{ restaurant.yelp_rating }}</p>
 
+<div>
 <h2>DETAILS!</h2>
+<p>Address:</p>
+{{ restaurant.address1 }}<br>
+{{ restaurant.city }}, {{ restaurant.state }} {{ restaurant.zipcode }}
+</div>
 
 {% if user %}
 {% if rating %}
@@ -47,7 +52,7 @@
 </div>
 {% endif %}
 
-<p><a href="/profile" target="_blank">Back to profile</a></p>
+<p><a href="/profile">Back to profile</a></p>
 <p><a href="{{ restaurant.url }}" target="_blank">Go to yelp page</a></p>
 
 {% endblock %}
