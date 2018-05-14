@@ -59,7 +59,8 @@ class User(db.Model):
 				pairs.append((float(self_rating.user_rating), float(other_rating.user_rating)))
 
 			# filter out len(pairs) < 5 ?
-			similarities.append(pearson(pairs), other_user)
+			if len(pairs) >= 5:
+				similarities.append(pearson(pairs), other_user)
 
 		similarities.sort(reverse=True)
 
