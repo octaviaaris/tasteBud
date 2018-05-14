@@ -4,6 +4,7 @@ from urllib import urlencode
 import os
 import requests
 import json
+import csv
 from model import *
 
 init_app()
@@ -111,7 +112,7 @@ def save_price_rating():
 	return price_rating
 
 def save_categories():
-	"""Save categories in txt file for easy reseeding."""
+	"""Save current categories in database to categories.txt for easy reseeding."""
 
 	categories = Category.query.all()
 
@@ -120,4 +121,27 @@ def save_categories():
 			f.write(c.category)
 			f.write("\n")
 
+def save_users():
+	"""Save current users in database to users.csv."""
+
+	users = User.query.all()
+
+	with open('database/users.csv', 'a+') as f:
+		rowwriter = csv.writer(f)
+		for u in users:
+			row = [u.user_id, u.username, u.password, u.score_avg]
+			rowwriter.writerow(row)
+
+def save_ratings():
+	"""Save current ratings in database to ratings.csv."""
+
+	ratings = Rating.query.all()
+
+	with open('database/ratings.csv', 'a+') as f:
+		rowwriter = csv.writer(f)
+		header = ['rating_id', 'restaurant_id', 'user_id', 'user_rating']
+		rowwriter.writerow(header)
+		for r in ratings:
+			row = [r.rating_id, r.restaurant_id, r.user_id, r.user_rating]
+			rowwriter.writerow(row)
 
