@@ -4,7 +4,8 @@ from model import *
 init_app()
 
 def seed_restaurants(filename):
-	"""Import restaurants (minus price and yelp_ratings) from data file. Use sf_data.txt and oak_data.txt."""
+	"""Import restaurants (minus price and yelp_ratings) from data file.
+	Use all_restaurants.txt (or sf_data.txt and oak_data.txt)."""
 
 	with open(filename) as f:
 		for line in f:
@@ -42,6 +43,20 @@ def seed_restaurants(filename):
 
 		db.session.commit()
 
+def seed_price_ratings(filename):
+	"""Populate price and rating data for each restaurant from ratings_prices.txt."""
+
+	with open(filename, 'r') as f:
+		line = f.read()
+		seed_dct = json.loads(line)
+
+	all_restaurants = Restaurant.query.all()
+
+	for a in all_restaurants:
+		a.price = seed_dct[a.restaurant_id]['price']
+		a.yelp_rating = seed_dct[a.restaurant_id]['yelp_rating']
+
+		db.session.commit()
 
 def seed_categories(filename):
 	"""Import categories from data file. Use categories.txt."""
@@ -54,31 +69,6 @@ def seed_categories(filename):
 
 	db.session.commit()
 
-	# Import categories from data file. Use sf_data.txt and oak_data.txt.
-
-	# aliases = []
-
-	# with open(filename) as f:
-		# for line in f:
-	# 		line = json.loads(line)
-	# 		categories = line['categories']
-			
-	# 		for c in categories:
-	# 			alias = c['alias']
-
-	# 			# ensure no duplicates
-	# 			if alias not in aliases:
-	# 				aliases.append(alias)
-
-	# # add all items in aliases list not already in db
-	# for a in aliases:
-	# 	if not Category.query.filter_by(category=a).all():
-	# 		new = Category(category=a)
-	# 		db.session.add(new)
-
-	# db.session.commit()
-
-
 def seed_prices():
 	"""Populate price table."""
 
@@ -90,9 +80,9 @@ def seed_prices():
 	db.session.add_all([one, two, three, four])
 	db.session.commit()
 
-
 def seed_rest_cats(filename):
-	"""Populate rest_cats table. Use sf_data.txt and oak_data.txt."""
+	"""Populate rest_cats table. 
+	Use all_restaurants.txt (or sf_data.txt and oak_data.txt)."""
 
 	with open(filename) as f:
 		for line in f:
@@ -109,17 +99,50 @@ def seed_rest_cats(filename):
 
 	db.session.commit()
 
-def seed_price_ratings(filename):
-	"""Populate price and rating data for each restaurant from ratings_prices.txt."""
+def seed_users(filename):
+	"""Populate users table.
+	Use users.csv"""
 
-	with open(filename, 'r') as f:
-		line = f.read()
-		seed_dct = json.loads(line)
+	with open(filename) as f:
+		for line in f:
+			line = line.split(",")
+			username = str(line[0].strip())
+			password = str(line[1].strip())
 
-	all_restaurants = Restaurant.query.all()
+			new = User(username=username,
+					   password=password,
+					   score_avg=None)
 
-	for a in all_restaurants:
-		a.price = seed_dct[a.restaurant_id]['price']
-		a.yelp_rating = seed_dct[a.restaurant_id]['yelp_rating']
+			db.session.add(new)
 
-		db.session.commit()
+	db.session.commit()
+
+def seed_ratings(filename):
+	"""Populate ratings table.
+	Use ratings.csv."""
+
+	with open(filename) as f:
+		for line in f:
+			line = line.strip().split(",")
+			restaurant_id = line[0]
+			user_id = line[1]
+			user_rating = line[2]
+
+			new = Rating(restaurant_id=restaurant_id,
+						 user_id=user_id,
+						 user_rating=user_rating)
+
+			db.session.add(new)
+
+	db.session.commit()
+
+
+if __name__ == "__main__":
+
+	seed_prices()
+	seed_categories('database/categories.txt')
+	seed_restaurants('database/all_restaurants.txt')
+	seed_price_ratings('database/ratings_prices.txt')
+	seed_rest_cats('database/all_restaurants.txt')
+	seed_users('database/users.csv')
+	seed_ratings('database/ratings.csv')
