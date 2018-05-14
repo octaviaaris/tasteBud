@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from correlation import pearson
 
 db = SQLAlchemy()
 
@@ -22,48 +23,47 @@ class User(db.Model):
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
-	def calc_user_similarity(self):
-		"""FInd five most similar users to self."""
-
+	def find_other_users(self):
+		"""Find users to compare."""
 
 		# list of restaurants self has rated
 		self_restaurants = [r.restaurants for r in self.ratings]
 
-		# dictionary of all users who have rated restaurants in self_restaurants (excluding self)
-		common_users = {}
+		other_users = []
 
 		for r in self_restaurants:
-			other_users = [u.users for u in r.ratings if u.users.username != self.username]
-			common_users[r] = other_users
+			other_users += [u.users for u in r.ratings if u.users.username != self.username]
 
-		# dictionary of user and the number of common ratings they have to self
-		# sort by users for whom we have the most datapoints (most ratings in common with self)
+		other_users = list(set(other_users))
 
-		for record in common_users.values():
-			for user in record:
-				count_common_users[user] = count_common_users.get(user,0) + 1
+		return other_users
 
-		sorted_users = sorted(count_common_users.iteritems(), key=lambda(k,v): (v,k), reverse=True)
+	def calc_user_similarity(self):
+		"""Find five most similar users to self."""
+
+		other_users = self.find_other_users()
+		self_ratings_dict = {r.restaurant_id:r for r in self.ratings}
 
 		# calculate similarity for each user in sorted_users
+		# for each user, for each rating, find the corresponding rating of self
+		# put them in a tuple and append to pairs
+		similarities = []
 
+		for other_user in other_users:
+			pairs = []
 
-		# dictionary of restaurants user has rated and the ratings she gave
-		self_ratings = {}
+			for other_rating in other_user.ratings:
+				self_rating = self_ratings_dict.get(other_rating.restaurant_id)
 
-		for r in self.ratings:
-			self_rating[r.restaurant_id] = r
+			if self_rating:
+				pairs.append((float(self_rating.user_rating), float(other_rating.user_rating)))
 
-		#  list of tuples that hold self's rating and other's rating of a restaurant
-		pairs = []
+			# filter out len(pairs) < 5 ?
+			similarities.append(pearson(pairs), other_user)
 
-		for r in other.ratings:
-			pass
+		similarities.sort(reverse=True)
 
-		# find all users who have rated the same restaurants as self
-		# calculate similarity score for each
-		# find top five similar users
-
+		print similarities
 
 class Restaurant(db.Model):
 	"""Restaurant model."""
