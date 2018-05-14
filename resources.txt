@@ -6,3 +6,6 @@ https://www.yelp.com/developers/documentation/v3/get_started
 
 Ratings lab code for login/logout functionality:
 https://github.com/octaviaaris/ratings/blob/master/server.py
+
+Sorting dictionary by values:
+https://www.saltycrane.com/blog/2007/09/how-to-sort-python-dictionary-by-keys/
