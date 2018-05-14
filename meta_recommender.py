@@ -37,7 +37,7 @@ def get_restaurants_info():
 	return rest_info
 
 def create_row(columns_lst, rest_info, filename):
-	"""Create a record for each restaurants, adding value to relevant columns."""
+	"""Create a record for each restaurant, adding value to relevant columns."""
 
 	with open(filename, 'a+') as f:
 		rowwriter = csv.writer(f)
