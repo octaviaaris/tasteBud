@@ -48,7 +48,7 @@ def seed_categories(filename):
 
 	with open(filename) as f:
 		for line in f:
-			line.strip()
+			line = line.strip()
 			new = Category(category=line)
 			db.session.add(new)
 
