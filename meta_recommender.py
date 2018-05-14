@@ -27,16 +27,17 @@ def get_restaurants_info():
 
 	all_restaurants = Restaurant.query.all()
 
-	rest_and_cats = {}
+	rest_info = {}
 	for a in all_restaurants:
 		# remove duplicate categories (find out why there are duplicates)
-		rest_and_cats[a.restaurant_id] = {'categories': list(set([r.category for r in a.rest_cats])),
+		rest_info[a.restaurant_id] = {'categories': list(set([r.category for r in a.rest_cats])),
 										  'price': a.price,
 										  'yelp_rating': float(a.yelp_rating)}
 
-	return rest_and_cats
+	return rest_info
 
 def create_row(columns_lst, rest_info, filename):
+	"""Create a record for each restaurants, adding value to relevant columns."""
 
 	with open(filename, 'a+') as f:
 		rowwriter = csv.writer(f)
