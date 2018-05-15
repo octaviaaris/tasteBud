@@ -6,7 +6,15 @@
 
 <p>Welcome back, {{ session.username }}!</p>
 
-<div id="top-picks">TOP PICKS FOR YOU (5)</div>
+<div id="top-picks">
+<p>TOP PICKS FOR YOU (5)</p>
+<ul>
+	{% for rec in user_recs %}
+	<li>{{ rec.restaurants.name }}</li>
+	{% endfor %}
+</ul>
+
+</div>
 
 <form action="/handle-search">
 	Find <input type="text" name="find">
