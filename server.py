@@ -83,7 +83,10 @@ def show_profile():
 
 		cities.sort()
 
-		return render_template("profile.html", cities=cities, session=session)
+		user = User.query.filter_by(username=session['username']).one()
+		user_recs = user.user_based_recs()
+
+		return render_template("profile.html", cities=cities, session=session, user_recs=user_recs)
 
 @app.route("/search")
 def show_search():
