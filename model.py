@@ -56,7 +56,7 @@ class User(db.Model):
 				self_rating = self_ratings_dict.get(other_rating.restaurant_id)
 
 				if self_rating:
-					pairs.append((float(self_rating.user_rating), float(other_rating.user_rating)))
+					pairs.append((self_rating.user_rating, other_rating.user_rating))
 
 			if len(pairs) >= 5:
 				similarities.append((pearson(pairs), other_user))
@@ -113,6 +113,28 @@ class Restaurant(db.Model):
 		name_for_output = name.encode('utf8', 'replace')
 		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
 															  		name=name_for_output)
+
+	def get_attributes(self):
+		"""Return dictionary of self's attributes."""
+
+		attributes = {}
+
+		categories = [r.category for r in self.rest_cats]
+		attributes['categories'] = categories
+		attributes['price'] = self.price
+		attributes['yelp_rating'] = self.yelp_rating
+		# total is the total number of points a perfect match restaurant can have (total number of categories plus one for price and yelp_rating each)
+		attributes['total'] = len(categories) + 2
+
+		return attributes
+
+	def calc_similar_restaurants(self):
+
+		all_restaurants = Restaurant.query.all()
+		self_attributes = self.get_attributes()
+
+		for r in all_restaurants:
+			pass
 
 
 class Rating(db.Model):
