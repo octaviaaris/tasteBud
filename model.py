@@ -128,14 +128,44 @@ class Restaurant(db.Model):
 
 		return attributes
 
-	def calc_similar_restaurants(self):
+	def find_sim_restaurants(self, city=None, price=None):
+		"""Compares restaurant to all other restaurants in database and counts match score (based on attribute)."""
 
-		all_restaurants = Restaurant.query.all()
-		self_attributes = self.get_attributes()
+		matches = []
+		anchor_attributes = self.get_attributes()
+		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id)
 
-		for r in all_restaurants:
-			pass
+		for r in other_restaurants:
+			other_attributes = r.get_attributes()
+			match_score = 0.0
 
+			for c in anchor_attributes['categories']:
+				if c in other_attributes['categories']:
+					match_score += 1
+
+			# if anchor_attributes['price'] == other_attributes['price']:
+			# 	match_score += 1
+
+			# if anchor_attributes['yelp_rating'] == other_attributes['yelp_rating']:
+			# 	match_score += 1
+
+			# divide category match score by total possible points (number of anchor's categories + number of other's categories)
+			match_score /= len(set(anchor_attributes['categories'] + other_attributes['categories']))
+
+			matches.append((match_score, r))
+
+		matches.sort(reverse=True)
+
+		# save only restaurants with 4 or 5 stars
+		top_matches = []
+
+		for m in matches:
+			if m[1].yelp_rating > 3:
+				top_matches.append(m)
+
+		top_matches = top_matches[:10]
+
+		return top_matches
 
 class Rating(db.Model):
 	"""Rating model."""
