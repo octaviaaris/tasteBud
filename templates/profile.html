@@ -10,7 +10,7 @@
 <p>TOP PICKS FOR YOU (5)</p>
 <ul>
 	{% for rec in recs %}
-	<li>{{ rec.name }} ({{ rec.city }})</li>
+	<li><a href="/details/{{ rec.restaurant_id }}" target="_blank">{{ rec.name }}</a> ({{ rec.city }})</li>
 	{% endfor %}
 </ul>
 
@@ -18,7 +18,8 @@
 
 <form action="/search-results">
 	Find <input type="text" name="find">
-	<select name="location" required>
+	<select name="location">
+		<option value="San Francisco">Choose a city</option>
 		{% for city in cities %}
 		<option value="{{ city[0] }}">{{ city[0] }}</option>
 		{% endfor %}

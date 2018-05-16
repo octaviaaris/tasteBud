@@ -7,6 +7,28 @@
 <p>SEARCH RESULTS:</p>
 
 <p>Restaurants in {{ location }}</p>
+<div>
+  <form action="/search-results">
+  	<input type="hidden" name="price" value="1">
+  	<input type="hidden" name="location" value="{{ location }}">
+   	<input type="submit" value="1">
+  </form>
+  <form action="/search-results">
+  	<input type="hidden" name="price" value="2">
+  	<input type="hidden" name="location" value="{{ location }}">
+   	<input type="submit" value="2">
+  </form>
+  <form action="/search-results">
+  	<input type="hidden" name="price" value="3">
+  	<input type="hidden" name="location" value="{{ location }}">
+   	<input type="submit" value="3">
+  </form>
+  <form action="/search-results">
+  	<input type="hidden" name="price" value="4">
+  	<input type="hidden" name="location" value="{{ location }}">
+   	<input type="submit" value="4">
+  </form>	
+</div>
 
 <ul>
 	{% for restaurant in restaurants %}

@@ -84,7 +84,7 @@ def show_profile():
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True)
+		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True,)
 
 @app.route("/search")
 def show_search():
@@ -99,12 +99,15 @@ def show_search():
 @app.route("/search-results")
 def search_restaurants():
 
-	# find = request.args.get('find')
-	location = request.args['location']
+	find = request.args.get('find')
+	price = request.args.get('price')
+	location = request.args.get('location')
+
+	print request.args
 	
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
-	return render_template('search-results.html', location=location, restaurants=restaurants)
+	return render_template('search-results.html', location=location, restaurants=restaurants, price=price)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
