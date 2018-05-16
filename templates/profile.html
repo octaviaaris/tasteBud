@@ -9,8 +9,8 @@
 <div id="top-picks">
 <p>TOP PICKS FOR YOU (5)</p>
 <ul>
-	{% for rec in user_recs %}
-	<li>{{ rec.restaurants.name }}</li>
+	{% for rec in recs %}
+	<li>{{ rec.name }} ({{ rec.city }})</li>
 	{% endfor %}
 </ul>
 
@@ -20,7 +20,7 @@
 	Find <input type="text" name="find">
 	<select name="location" required>
 		{% for city in cities %}
-		<option value={{ city[0] }}>{{ city[0] }}</option>
+		<option value="{{ city[0] }}">{{ city[0] }}</option>
 		{% endfor %}
 	</select>
 	<input type="submit" value="Search">
