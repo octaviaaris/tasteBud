@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from correlation import pearson
+from collections import defaultdict
 
 db = SQLAlchemy()
 
@@ -23,69 +24,54 @@ class User(db.Model):
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
-	def find_other_users(self):
-		"""Find other users who have rated the same restaurants as self."""
+	def get_user_recs(self):
+		"""Find other users who are most similar in their ratings to self."""
 
-		# list of restaurants self has rated
-		self_restaurants = [rating.restaurants for rating in self.ratings]
+		UserRestaurants = db.aliased(Rating)
+		RestaurantUsers = db.aliased(Rating)
+		SimilarUsers = db.aliased(Rating)
 
-		other_users = []
+		query = (db.session.query(Rating.user_id, Rating.user_rating, 
+						  UserRestaurants.user_rating, UserRestaurants.restaurant_id,
+						  RestaurantUsers.user_rating, RestaurantUsers.user_id).join(UserRestaurants, UserRestaurants.restaurant_id == Rating.restaurant_id)
+																			   .join(RestaurantUsers, Rating.user_id == RestaurantUsers.user_id)
+																			   .filter(UserRestaurants.user_id == self.user_id))
 
-		for restaurant in self_restaurants:
-			other_users += [r.users for r in restaurant.ratings if r.users.username != self.username]
+		paired_ratings = defaultdict(list)
 
-		other_users = list(set(other_users))
+		#  pairs are being duplicated (why?)
+		#  create pairs of self's ratings and other user's ratings of restaurants
+		for (rating_user_id, rating_user_rating,
+			 user_restaurants_user_rating, user_restaurants_restaurant_id,
+			 restaurant_users_user_rating, restaurant_users_user_id) in query:
+			paired_ratings[rating_user_id].append((user_restaurants_user_rating, rating_user_rating))
 
-		return other_users
-
-	def calc_user_similarity(self):
-		"""Calculate similarity of other users to self and return a list of the five most similar other users."""
-
-		other_users = self.find_other_users()
-		self_ratings_dict = {rating.restaurant_id:rating for rating in self.ratings}
+		# find most similar users to self
 		similarities = []
 
-		# for each other_user
-		for other_user in other_users:
-			pairs = []
-
-			# find every rating they have in common with self and put the pair of ratings in tuple (self's rating, other's rating) and append to the pairs list
-			for other_rating in other_user.ratings:
-				self_rating = self_ratings_dict.get(other_rating.restaurant_id)
-
-				if self_rating:
-					pairs.append((self_rating.user_rating, other_rating.user_rating))
-
-			# if there are more than 5 common ratings, calculate the similarity of the user and put in similarities list as tuple (similarity score, other_user)
-			if len(pairs) >= 5:
-				similarities.append((pearson(pairs), other_user))
-
-		# sort by similarity scores in descending order
+		for user, pairs in paired_ratings.iteritems():
+			sim_score = pearson(pairs)
+			similarities.append((pearson(pairs), user))
+		
 		similarities.sort(reverse=True)
+		sim_users = similarities[:len(similarities)/2 + 1]
+		sim_users_id = [s[1] for s in sim_users]
 
-		# get top half of most similar users
-		sim_users = similarities[:(len(similarities) / 2)]
+		#  use sim_users_id to generate user-based recommendations
+		self_restaurants = set(r.restaurant_id for r in self.ratings)
+		sim_user_restaurants = defaultdict(set)
+		recommendations = set()
 
-		return sim_users
+		for s in sim_users_id:
+			sim_user_restaurants = (db.session.query(Rating, Restaurant)
+				  				   .join(Restaurant, Restaurant.restaurant_id == Rating.restaurant_id)
+				  				   .filter(Rating.user_id == s))
 
-
-	def user_based_recs(self):
-		"""Return list of restaurants other similar users have rated 4 or above."""
-
-		sim_users = self.calc_user_similarity()
-		self_ratings_dict = {r.restaurant_id:r for r in self.ratings}
-		recommendations = []
-
-		for s in sim_users:
-			other_user = s[1]
-
-			#  only add restaurants if self has not rated a restaurant and the other user's rating is 4 or above
-			for r in other_user.ratings:
-				if not self_ratings_dict.get(r.restaurant_id) and r.user_rating >= 4:
-					recommendations.append(r.restaurants)
+			for rating, restaurant in sim_user_restaurants:
+				if rating.restaurant_id not in self_restaurants and rating.user_rating >= 4:
+					recommendations.add(restaurant)
 
 		return recommendations
-
 
 class Restaurant(db.Model):
 	"""Restaurant model."""
