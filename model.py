@@ -24,46 +24,46 @@ class User(db.Model):
 																username=self.username)
 
 	def find_other_users(self):
-		"""Find users to compare."""
+		"""Find other users who have rated the same restaurants as self."""
 
 		# list of restaurants self has rated
-		self_restaurants = [r.restaurants for r in self.ratings]
+		self_restaurants = [rating.restaurants for rating in self.ratings]
 
 		other_users = []
 
-		for r in self_restaurants:
-			other_users += [u.users for u in r.ratings if u.users.username != self.username]
+		for restaurant in self_restaurants:
+			other_users += [r.users for r in restaurant.ratings if r.users.username != self.username]
 
 		other_users = list(set(other_users))
 
 		return other_users
 
 	def calc_user_similarity(self):
-		"""Find five most similar users to self."""
+		"""Calculate similarity of other users to self and return a list of the five most similar other users."""
 
 		other_users = self.find_other_users()
-		self_ratings_dict = {r.restaurant_id:r for r in self.ratings}
-
-		# calculate similarity for each user in sorted_users
-		# for each user, for each rating, find the corresponding rating of self
-		# put them in a tuple and append to pairs
+		self_ratings_dict = {rating.restaurant_id:rating for rating in self.ratings}
 		similarities = []
 
+		# for each other_user
 		for other_user in other_users:
 			pairs = []
 
+			# find every rating they have in common with self and put the pair of ratings in tuple (self's rating, other's rating) and append to the pairs list
 			for other_rating in other_user.ratings:
 				self_rating = self_ratings_dict.get(other_rating.restaurant_id)
 
 				if self_rating:
 					pairs.append((self_rating.user_rating, other_rating.user_rating))
 
+			# if there are more than 5 common ratings, calculate the similarity of the user and put in similarities list as tuple (similarity score, other_user)
 			if len(pairs) >= 5:
 				similarities.append((pearson(pairs), other_user))
 
+		# sort by similarity scores in descending order
 		similarities.sort(reverse=True)
 
-		# get 50th percentile of similar users
+		# get top half of most similar users
 		sim_users = similarities[:(len(similarities) / 2)]
 
 		return sim_users
@@ -74,15 +74,15 @@ class User(db.Model):
 
 		sim_users = self.calc_user_similarity()
 		self_ratings_dict = {r.restaurant_id:r for r in self.ratings}
-
 		recommendations = []
 
 		for s in sim_users:
-			user = s[1]
+			other_user = s[1]
 
-			for r in user.ratings:
+			#  only add restaurants if self has not rated a restaurant and the other user's rating is 4 or above
+			for r in other_user.ratings:
 				if not self_ratings_dict.get(r.restaurant_id) and r.user_rating >= 4:
-					recommendations.append(r)
+					recommendations.append(r.restaurants)
 
 		return recommendations
 
@@ -129,41 +129,37 @@ class Restaurant(db.Model):
 		return attributes
 
 	def find_sim_restaurants(self, city=None, price=None):
-		"""Compares restaurant to all other restaurants in database and counts match score (based on attribute)."""
+		"""Compares restaurant to all other restaurants in database and counts match score (based on categories, price and yelp_rating).
+		Return top 5 matches."""
 
 		matches = []
-		anchor_attributes = self.get_attributes()
-		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id)
+		self_attributes = self.get_attributes()
+
+		#  only look at restaurants with 4 stars or above on yelp
+		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id, Restaurant.yelp_rating >= 4)
 
 		for r in other_restaurants:
 			other_attributes = r.get_attributes()
 			match_score = 0.0
 
-			for c in anchor_attributes['categories']:
+			for c in self_attributes['categories']:
 				if c in other_attributes['categories']:
 					match_score += 1
 
-			# if anchor_attributes['price'] == other_attributes['price']:
-			# 	match_score += 1
+			if self_attributes['price'] == other_attributes['price']:
+				match_score += 1
 
-			# if anchor_attributes['yelp_rating'] == other_attributes['yelp_rating']:
-			# 	match_score += 1
+			if self_attributes['yelp_rating'] == other_attributes['yelp_rating']:
+				match_score += 1
 
 			# divide category match score by total possible points (number of anchor's categories + number of other's categories)
-			match_score /= len(set(anchor_attributes['categories'] + other_attributes['categories']))
+			match_score /= (self_attributes['total'] + other_attributes['total'])
 
 			matches.append((match_score, r))
 
 		matches.sort(reverse=True)
 
-		# save only restaurants with 4 or 5 stars
-		top_matches = []
-
-		for m in matches:
-			if m[1].yelp_rating > 3:
-				top_matches.append(m)
-
-		top_matches = top_matches[:10]
+		top_matches = matches[:5]
 
 		return top_matches
 
@@ -188,7 +184,6 @@ class Rating(db.Model):
 	def __repr__(self):
 		return "<Rating rating_id={id} user_rating={rating}>".format(id=self.rating_id,
 																	 rating=self.user_rating)
-
 
 class Category(db.Model):
 	"""Category model."""
@@ -238,7 +233,8 @@ class Price(db.Model):
 
 
 ##############################################################################
-# Helper functions
+############################## Helper functions ##############################
+##############################################################################
 
 def init_app():
 	from flask import Flask
