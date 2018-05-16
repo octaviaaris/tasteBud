@@ -4,9 +4,6 @@ from sqlalchemy import func
 from model import *
 from recommender import *
 
-import urllib
-import urllib2
-
 # -- coding: utf-8 --
 
 app = Flask(__name__)
@@ -87,7 +84,7 @@ def show_profile():
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, recs=recs)
+		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True)
 
 @app.route("/search")
 def show_search():
