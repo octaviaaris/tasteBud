@@ -29,7 +29,7 @@ def show_top_picks(user):
 
 	top_picks = []
 
-	user_recs = user.user_based_recs()
+	user_recs = user.get_user_recs()
 	rest_sim = get_new_restaurant_recs(user)
 
 	if user_recs and rest_sim:
