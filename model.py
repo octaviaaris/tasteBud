@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from correlation import pearson
 from collections import defaultdict
+from lookup import *
 
 db = SQLAlchemy()
 
@@ -41,8 +42,7 @@ class User(db.Model):
 
 		#  pairs are being duplicated (why?)
 		#  create pairs of self's ratings and other user's ratings of restaurants
-		for (rating_user_id, rating_user_rating,
-			 user_restaurants_user_rating, user_restaurants_restaurant_id,
+		for (rating_user_id, rating_user_rating,user_restaurants_user_rating, user_restaurants_restaurant_id,
 			 restaurant_users_user_rating, restaurant_users_user_id) in query:
 			paired_ratings[rating_user_id].append((user_restaurants_user_rating, rating_user_rating))
 
@@ -100,32 +100,26 @@ class Restaurant(db.Model):
 		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
 															  		name=name_for_output)
 
-	def get_attributes(self):
-		"""Return dictionary of self's attributes."""
-
-		attributes = {}
-
-		categories = [r.category for r in self.rest_cats]
-		attributes['categories'] = categories
-		attributes['price'] = self.price
-		attributes['yelp_rating'] = self.yelp_rating
-		# total is the total number of points a perfect match restaurant can have (total number of categories plus one for price and yelp_rating each)
-		attributes['total'] = len(categories) + 2
-
-		return attributes
-
 	def find_sim_restaurants(self, city=None, price=None):
 		"""Compares restaurant to all other restaurants in database and counts match score (based on categories, price and yelp_rating).
 		Return top 5 matches."""
 
-		matches = []
-		self_attributes = self.get_attributes()
+		def get_attributes(restaurant_id):
+			attributes = {}
+			attributes['categories'] = rtc[restaurant_id]
+			attributes['price'] = rp[restaurant_id]['price']
+			attributes['yelp_rating'] = rp[restaurant_id]['yelp_rating']
 
-		#  only look at restaurants with 4 stars or above on yelp
-		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id, Restaurant.yelp_rating >= 4)
+			return attributes
+
+		matches = []
+		self_attributes = get_attributes(self.restaurant_id)
+
+		# only look at restaurants with 4 stars or above on yelp
+		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id, Restaurant.yelp_rating >= 4).all()
 
 		for r in other_restaurants:
-			other_attributes = r.get_attributes()
+			other_attributes = get_attributes(r.restaurant_id)
 			match_score = 0.0
 
 			for c in self_attributes['categories']:
@@ -138,8 +132,10 @@ class Restaurant(db.Model):
 			if self_attributes['yelp_rating'] == other_attributes['yelp_rating']:
 				match_score += 1
 
+			total = len(set(self_attributes['categories'] + other_attributes['categories'])) + 2
+
 			# divide category match score by total possible points (number of anchor's categories + number of other's categories)
-			match_score /= (self_attributes['total'] + other_attributes['total'])
+			match_score /= total
 
 			matches.append((match_score, r))
 
