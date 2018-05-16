@@ -96,7 +96,7 @@ def show_search():
 
 	return render_template("search-form.html", cities=cities)
 
-@app.route("/handle-search")
+@app.route("/search-results")
 def search_restaurants():
 
 	# find = request.args.get('find')
