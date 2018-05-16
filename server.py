@@ -2,6 +2,7 @@ from flask import Flask, session, render_template, request, flash, redirect, Mar
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy import func
 from model import *
+from recommender import *
 
 import urllib
 import urllib2
@@ -83,16 +84,16 @@ def show_profile():
 
 		cities.sort()
 
-		user = User.query.filter_by(username=session['username']).one()
-		user_recs = user.user_based_recs()
+		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
+		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, user_recs=user_recs)
+		return render_template("profile.html", cities=cities, session=session, recs=recs)
 
 @app.route("/search")
 def show_search():
 
 	cities = Restaurant.query.with_entities(Restaurant.city, 
-												func.count(Restaurant.city)).group_by(Restaurant.city).all()
+											func.count(Restaurant.city)).group_by(Restaurant.city).all()
 
 	cities.sort()
 
@@ -104,8 +105,6 @@ def search_restaurants():
 	# find = request.args.get('find')
 	location = request.args['location']
 	
-	print request.args
-
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
 	return render_template('search-results.html', location=location, restaurants=restaurants)
@@ -150,11 +149,12 @@ def record_rating():
 
 
 if __name__ == "__main__":
-	# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+	app.debug = True
 
 	connect_to_db(app)
 
 	# Use the DebugToolbar
 	DebugToolbarExtension(app)
 
-	app.run(debug=True, host="0.0.0.0")
+	app.run(host="0.0.0.0")
