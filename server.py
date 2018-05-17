@@ -12,7 +12,7 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	return render_template("index.html")
+	return render_template("index.html", profile=True)
 
 @app.route("/login")
 def display_login():
@@ -84,7 +84,7 @@ def show_profile():
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True,)
+		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True)
 
 @app.route("/search")
 def show_search():
