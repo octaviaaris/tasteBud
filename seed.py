@@ -44,7 +44,7 @@ def seed_restaurants(filename):
 		db.session.commit()
 
 def seed_price_ratings(filename):
-	"""Populate price and rating data for each restaurant from ratings_prices.txt."""
+	"""Populate price and rating data for each restaurant from price_ratings.txt."""
 
 	with open(filename, 'r') as f:
 		line = f.read()
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 	seed_prices()
 	seed_categories('database/categories.txt')
 	seed_restaurants('database/all_restaurants.txt')
-	seed_price_ratings('database/ratings_prices.txt')
+	seed_price_ratings('database/price_ratings.txt')
 	seed_rest_cats('database/all_restaurants.txt')
 	seed_users('database/users.csv')
 	seed_ratings('database/ratings.csv')
