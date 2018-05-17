@@ -3,6 +3,8 @@ from correlation import pearson
 from collections import defaultdict
 from lookup import *
 
+
+
 db = SQLAlchemy()
 
 ##############################################################################
@@ -215,6 +217,82 @@ class Price(db.Model):
 
 
 ##############################################################################
+########################## Sample data for testing ###########################
+##############################################################################
+
+from random import randint
+
+def example_users():
+	"""Create sample data for testing."""
+
+	# create users
+	octavia = User(username="Octavia", password="octavia")
+	claire = User(username="Claire", password="claire")
+
+	db.session.add_all([octavia, claire])
+	db.session.commit()
+
+def example_ratings():
+
+	# create Octavia's ratings
+	o_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
+						user_id=1,
+						user_rating=float(randint(1, 5)),
+						)
+
+	o_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
+						user_id=1,
+						user_rating=float(randint(1, 5)),
+						)
+
+	o_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
+						user_id=1,
+						user_rating=float(randint(1, 5)),
+						)
+
+	o_rating_4 = Rating(restaurant_id='UHFjEP5dVn4wqcjt7ByUog',
+						user_id=1,
+						user_rating=float(randint(1, 5)),
+						)
+
+	o_rating_5 = Rating(restaurant_id='yyi2GpG_p7TX7XAq_eHSZA',
+						user_id=1,
+						user_rating=float(randint(1, 5)),
+						)
+
+	# create Claire's ratings
+	c_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
+						user_id=2,
+						user_rating=float(randint(1, 5)),
+						)
+
+	c_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
+						user_id=2,
+						user_rating=float(randint(1, 5)),
+						)
+
+	c_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
+						user_id=2,
+						user_rating=float(randint(1, 5)),
+						)
+
+	c_rating_4 = Rating(restaurant_id='YH82tozaJi_cCKU6xF6IxQ',
+						user_id=2,
+						user_rating=float(randint(1, 5)),
+						)
+
+	c_rating_5 = Rating(restaurant_id='eYXwVR4mMAjzkJnm5wneHQ',
+						user_id=2,
+						user_rating=float(randint(1, 5)),
+						)
+
+
+	db.session.add_all([o_rating_1, o_rating_2, o_rating_3, o_rating_4, o_rating_5,
+						c_rating_1, c_rating_2, c_rating_3, c_rating_4, c_rating_5])
+	db.session.commit()
+
+
+##############################################################################
 ############################## Helper functions ##############################
 ##############################################################################
 
@@ -226,10 +304,10 @@ def init_app():
 	print "Connected to DB"
 
 
-def connect_to_db(app):
+def connect_to_db(app, URI='postgres:///projectdb'):
 	"""Connect the database to my Flask app"""
 
-	app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///projectdb'
+	app.config['SQLALCHEMY_DATABASE_URI'] = URI
 	app.config['SQLALCHEMY_ECHO'] = False
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.app = app
