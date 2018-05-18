@@ -226,8 +226,8 @@ def example_users():
 	"""Create sample data for testing."""
 
 	# create users
-	octavia = User(username="Octavia", password="octavia")
-	claire = User(username="Claire", password="claire")
+	octavia = User(username="Octavia", password="octaviapw")
+	claire = User(username="Claire", password="clairepw")
 
 	db.session.add_all([octavia, claire])
 	db.session.commit()
@@ -316,6 +316,6 @@ def connect_to_db(app, URI='postgres:///projectdb'):
 
 if __name__ == "__main__":
 
-	init_app()
+	init_app()	
 	db.create_all()
 
