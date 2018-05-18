@@ -6,7 +6,7 @@
   </head>
   <body>
     <h4>Zelp</h4>
-    {% if profile %}
+    {% if 'username' in session %}
     <p><a href="/profile">Back to profile</a></p>
     {% endif %}
     {% for message in get_flashed_messages() %}
