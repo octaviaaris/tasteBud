@@ -105,15 +105,13 @@ def show_search():
 def search_restaurants():
 
 	profile = False
-	
+
 	if 'username' in session:
 		profile=True
 
 	find = request.args.get('find')
 	price = request.args.get('price')
 	location = request.args.get('location')
-
-	print request.args
 	
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
