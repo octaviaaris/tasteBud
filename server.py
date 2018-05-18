@@ -84,38 +84,28 @@ def show_profile():
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, recs=recs, profile=True)
+		return render_template("profile.html", cities=cities, session=session, recs=recs)
 
 @app.route("/search")
 def show_search():
-
-	profile = False
-
-	if 'username' in session:
-		profile = True
 
 	cities = Restaurant.query.with_entities(Restaurant.city, 
 											func.count(Restaurant.city)).group_by(Restaurant.city).all()
 
 	cities.sort()
 
-	return render_template("search-form.html", cities=cities, profile=profile)
+	return render_template("search-form.html", cities=cities)
 
 @app.route("/search-results")
 def search_restaurants():
 
-	profile = False
-
-	if 'username' in session:
-		profile=True
-
-	find = request.args.get('find')
-	price = request.args.get('price')
+	# find = request.args.get('find')
+	# price = request.args.get('price')
 	location = request.args.get('location')
 	
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
-	return render_template('search-results.html', location=location, restaurants=restaurants, price=price, profile=profile)
+	return render_template('search-results.html', location=location, restaurants=restaurants)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
@@ -132,7 +122,7 @@ def show_details(restaurant_id):
 		user = None
 		rating = None
 
-	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating, profile=True)
+	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating)
 
 @app.route("/rate-restaurant", methods=['POST'])
 def record_rating():
