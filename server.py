@@ -56,7 +56,7 @@ def create_user_account():
 
 	# redirect to login page if user already has account
 	if User.query.filter_by(username=username, password=pw).all():
-		flash(Markup('Account already exists. Please log in.'))
+		flash('Account already exists. Please log in.')
 		return redirect("/login")
 	# if user does not yet exist, add to db and redirect to login
 	else:
@@ -72,8 +72,8 @@ def create_user_account():
 def show_profile():
 
 	if 'username' not in session:
-		flash("Uh oh, you don't have a profile. Create one now!")
-		return redirect("/signup")
+		flash(Markup('Log in to see your profile or <a href="/signup">create one now</a>!'))
+		return redirect("/login")
 
 	else:
 		cities = Restaurant.query.with_entities(Restaurant.city, 
