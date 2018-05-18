@@ -89,8 +89,10 @@ def show_profile():
 @app.route("/search")
 def show_search():
 
+	profile = False
+
 	if 'username' in session:
-		profile=True
+		profile = True
 
 	cities = Restaurant.query.with_entities(Restaurant.city, 
 											func.count(Restaurant.city)).group_by(Restaurant.city).all()
@@ -102,6 +104,8 @@ def show_search():
 @app.route("/search-results")
 def search_restaurants():
 
+	profile = False
+	
 	if 'username' in session:
 		profile=True
 
