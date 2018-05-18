@@ -12,7 +12,7 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	return render_template("index.html", profile=True)
+	return render_template("index.html")
 
 @app.route("/login")
 def display_login():
@@ -89,15 +89,21 @@ def show_profile():
 @app.route("/search")
 def show_search():
 
+	if 'username' in session:
+		profile=True
+
 	cities = Restaurant.query.with_entities(Restaurant.city, 
 											func.count(Restaurant.city)).group_by(Restaurant.city).all()
 
 	cities.sort()
 
-	return render_template("search-form.html", cities=cities)
+	return render_template("search-form.html", cities=cities, profile=profile)
 
 @app.route("/search-results")
 def search_restaurants():
+
+	if 'username' in session:
+		profile=True
 
 	find = request.args.get('find')
 	price = request.args.get('price')
@@ -107,7 +113,7 @@ def search_restaurants():
 	
 	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
 
-	return render_template('search-results.html', location=location, restaurants=restaurants, price=price)
+	return render_template('search-results.html', location=location, restaurants=restaurants, price=price, profile=profile)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
@@ -124,7 +130,7 @@ def show_details(restaurant_id):
 		user = None
 		rating = None
 
-	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating)
+	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating, profile=True)
 
 @app.route("/rate-restaurant", methods=['POST'])
 def record_rating():
