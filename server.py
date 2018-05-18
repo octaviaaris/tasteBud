@@ -14,6 +14,32 @@ def welcome_user():
 
 	return render_template("index.html")
 
+@app.route("/signup")
+def display_signup():
+
+	return render_template("signup.html")
+
+@app.route("/handle-signup", methods=['POST'])
+def create_user_account():
+
+	# get username from form submission
+	username = request.form['username']
+	pw = request.form['password']
+
+	# redirect to login page if user already has account
+	if User.query.filter_by(username=username, password=pw).all():
+		flash('Account already exists. Please log in.')
+		return redirect("/login")
+	# if user does not yet exist, add to db and redirect to login
+	else:
+		new_user = User(username=username,
+						password=pw,
+						score_avg=None)
+		db.session.add(new_user)
+		db.session.commit()
+		flash("Account created! Please log in.")
+		return redirect("/login")
+
 @app.route("/login")
 def display_login():
 
@@ -41,32 +67,6 @@ def handle_logout():
 	session.clear()
 
 	return redirect("/")
-
-@app.route("/signup")
-def display_signup():
-
-	return render_template("signup.html")
-
-@app.route("/handle-signup", methods=['POST'])
-def create_user_account():
-
-	# get username from form submission
-	username = request.form['username']
-	pw = request.form['password']
-
-	# redirect to login page if user already has account
-	if User.query.filter_by(username=username, password=pw).all():
-		flash('Account already exists. Please log in.')
-		return redirect("/login")
-	# if user does not yet exist, add to db and redirect to login
-	else:
-		new_user = User(username=username,
-						password=pw,
-						score_avg=None)
-		db.session.add(new_user)
-		db.session.commit()
-		flash("Account created! Please log in.")
-		return redirect("/login")
 
 @app.route("/profile")
 def show_profile():
@@ -146,7 +146,7 @@ def record_rating():
 	return redirect("/details/" + restaurant_id)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
 	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 	app.debug = True
 

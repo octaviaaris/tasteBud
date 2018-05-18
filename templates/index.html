@@ -4,7 +4,9 @@
 
 {% block content %}
 
+{% if 'username' not in session %}
 <h2><a href="/login">Log In</a></h2>
 <h2><a href="/signup">Sign Up</a></h2>
+{% endif %}
 
 {% endblock %}

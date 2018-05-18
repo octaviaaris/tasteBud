@@ -23,7 +23,7 @@ class User(db.Model):
 	# email = db.Column(db.String(50), nullable=False)
 	score_avg = db.Column(db.Float)
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		return "<User user_id={id} username={username}>".format(id=self.user_id,
 																username=self.username)
 
@@ -96,7 +96,7 @@ class Restaurant(db.Model):
 					  db.ForeignKey('prices.price'))
 	yelp_rating = db.Column(db.Float)
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		name = self.name
 		name_for_output = name.encode('utf8', 'replace')
 		return "<Restaurant restaurant_id={id} name={name}>".format(id=self.restaurant_id,
@@ -165,7 +165,7 @@ class Rating(db.Model):
 	users = db.relationship('User', backref=db.backref('ratings',
 														order_by=rating_id))
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		return "<Rating rating_id={id} user_rating={rating}>".format(id=self.rating_id,
 																	 rating=self.user_rating)
 
@@ -176,7 +176,7 @@ class Category(db.Model):
 
 	category = db.Column(db.String(50), primary_key=True)
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		return "<Category category={category}>".format(category=self.category)
 
 
@@ -197,7 +197,7 @@ class Rest_cat(db.Model):
 	categories = db.relationship('Category', backref=db.backref('rest_cats',
 																order_by=rest_cat_id))
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		return "<Rest_cat restaurant_id={rest_id} category={category}>".format(rest_id=self.restaurant_id,
 																     		   category=self.category)
 
@@ -212,7 +212,7 @@ class Price(db.Model):
 	restaurants = db.relationship('Restaurant', backref=db.backref('prices',
 																   order_by=price))
 
-	def __repr__(self):
+	def __repr__(self): # pragma: no cover
 		return "<Price price={price}>".format(price=self.price)
 
 
@@ -236,53 +236,53 @@ def example_ratings():
 
 	# create Octavia's ratings
 	o_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
-						user_id=1,
+						user_id=4,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
-						user_id=1,
+						user_id=4,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
-						user_id=1,
+						user_id=4,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_4 = Rating(restaurant_id='UHFjEP5dVn4wqcjt7ByUog',
-						user_id=1,
+						user_id=4,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_5 = Rating(restaurant_id='yyi2GpG_p7TX7XAq_eHSZA',
-						user_id=1,
+						user_id=4,
 						user_rating=float(randint(1, 5)),
 						)
 
 	# create Claire's ratings
 	c_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
-						user_id=2,
+						user_id=5,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
-						user_id=2,
+						user_id=5,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
-						user_id=2,
+						user_id=5,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_4 = Rating(restaurant_id='YH82tozaJi_cCKU6xF6IxQ',
-						user_id=2,
+						user_id=5,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_5 = Rating(restaurant_id='eYXwVR4mMAjzkJnm5wneHQ',
-						user_id=2,
+						user_id=5,
 						user_rating=float(randint(1, 5)),
 						)
 

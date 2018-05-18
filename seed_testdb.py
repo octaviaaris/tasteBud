@@ -8,20 +8,28 @@ from seed import (seed_prices,
 				  seed_users,
 				  seed_ratings)
 
-connect_to_db(app, 'postgres:///testdb')
+def seed_testdb():
+	connect_to_db(app, 'postgres:///testdb')
 
-# create tables
-db.create_all()
+	# create tables
+	db.create_all()
 
-# seed testdb
-seed_prices()
-seed_categories('database/categories.txt')
-seed_restaurants('database/all_restaurants.txt')
-seed_price_ratings('database/price_ratings.txt')
-seed_rest_cats('database/all_restaurants.txt')
-seed_users('database/users.csv')
-seed_ratings('database/ratings.csv')
+	# seed testdb
+	seed_prices()
+	seed_categories('database/categories.txt')
+	seed_restaurants('database/all_restaurants.txt')
+	seed_price_ratings('database/price_ratings.txt')
+	seed_rest_cats('database/all_restaurants.txt')
+	seed_users('database/users.csv')
+	seed_ratings('database/ratings.csv')
 
-# create test users and ratings
-example_users()
-example_ratings()
+	# create test users and ratings
+	example_users()
+	example_ratings()
+
+def seed_usersdb():
+
+	connect_to_db(app, 'postgres:///usersdb')
+
+	# create tables
+	db.create_all()
