@@ -44,7 +44,7 @@ class User(db.Model):
 
 		#  pairs are being duplicated (why?)
 		#  create pairs of self's ratings and other user's ratings of restaurants
-		for (rating_user_id, rating_user_rating,user_restaurants_user_rating, user_restaurants_restaurant_id,
+		for (rating_user_id, rating_user_rating, user_restaurants_user_rating, user_restaurants_restaurant_id,
 			 restaurant_users_user_rating, restaurant_users_user_id) in query:
 			paired_ratings[rating_user_id].append((user_restaurants_user_rating, rating_user_rating))
 
@@ -233,6 +233,7 @@ def example_users():
 	db.session.commit()
 
 def example_ratings():
+	"""Create sample ratings."""
 
 	# create Octavia's ratings
 	o_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',

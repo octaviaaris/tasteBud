@@ -8,6 +8,7 @@ from seed import (seed_prices,
 				  seed_users,
 				  seed_ratings)
 
+
 def seed_testdb():
 	connect_to_db(app, 'postgres:///testdb')
 
@@ -17,11 +18,11 @@ def seed_testdb():
 	# seed testdb
 	seed_prices()
 	seed_categories('database/categories.txt')
-	seed_restaurants('database/all_restaurants.txt')
-	seed_price_ratings('database/price_ratings.txt')
-	seed_rest_cats('database/all_restaurants.txt')
+	seed_restaurants('database/restaurant_subset.txt')
+	seed_price_ratings('database/price_rating_subset.txt')
+	seed_rest_cats('database/restaurant_subset.txt')
 	seed_users('database/users.csv')
-	seed_ratings('database/ratings.csv')
+	# seed_ratings('database/ratings.csv')
 
 	# create test users and ratings
 	example_users()
@@ -33,3 +34,7 @@ def seed_usersdb():
 
 	# create tables
 	db.create_all()
+
+	# create test users and ratings
+	example_users()
+	example_ratings()

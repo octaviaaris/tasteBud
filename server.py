@@ -132,6 +132,7 @@ def record_rating():
 	user = User.query.filter_by(username=session['username']).one()
 
 	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
+	
 	if existing_rating:
 		existing_rating[0].user_rating = rating
 		db.session.commit()

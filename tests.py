@@ -18,10 +18,14 @@ class DatabaseTests(unittest.TestCase):
 		# connect to test database
 		connect_to_db(app, "postgresql:///testdb")
 
+		# seed ratings, users, example ratings, example users
+
 	def tearDown(self):
 		"""Run at the end of every test."""
 
 		db.session.close()
+		# figure out how to delete users and ratings for logged_in_unrated and 
+
 
 	def test_profile_no_login(self):
 		"""Test profile route with user not logged in."""
@@ -65,7 +69,7 @@ class DatabaseTests(unittest.TestCase):
 
 		self.assertIn("Back to profile", result.data)
 		self.assertIn("Restaurants in Oakland", result.data)
-		self.assertIn("130 Cafe", result.data)
+		self.assertIn("Cholita Linda", result.data)
 
 	def test_search_results_logged_out(self):
 		"""Test search-results route (logged out)."""
@@ -75,7 +79,7 @@ class DatabaseTests(unittest.TestCase):
 
 
 		self.assertIn("Restaurants in Oakland", result.data)
-		self.assertIn("130 Cafe", result.data)
+		self.assertIn("Cholita Linda", result.data)
 
 		self.assertNotIn("Back to profile", result.data)
 
@@ -103,11 +107,11 @@ class DatabaseTests(unittest.TestCase):
 			with c.session_transaction() as session:
 				session['username'] = 'Octavia'
 
-		result = self.client.get("/details/7X76HyhNAUTcYuY6t6ionQ",
-								 query_string={'restaurant_id': '7X76HyhNAUTcYuY6t6ionQ'})
+		result = self.client.get("/details/PkLfjhJ_XExjwARO1RkQIw",
+								 query_string={'restaurant_id': 'PkLfjhJ_XExjwARO1RkQIw'})
 
 		self.assertIn("Back to profile", result.data)
-		self.assertIn("Chisme", result.data)
+		self.assertIn("Bakesale Betty", result.data)
 		self.assertIn("Price", result.data)
 		self.assertIn("Yelp Rating", result.data)
 		self.assertIn("Tell us what you think", result.data)
@@ -128,10 +132,38 @@ class DatabaseTests(unittest.TestCase):
 		self.assertNotIn("Back to profile", result.data)
 		self.assertNotIn("Your rating", result.data)
 
-	def test_rate_restaurant(self):
-		"""Test rate-restaurant route."""
+	def test_rate_restaurant_new(self):
+		"""Test rate-restaurant route new rating."""
 
-		pass
+		with self.client as c:
+			with c.session_transaction() as session:
+				session['username'] = 'Octavia'
+
+		result = self.client.post("/rate-restaurant",
+								 data={'rating': '4',
+								 	   'restaurant_id': 'eYXwVR4mMAjzkJnm5wneHQ'},
+								 follow_redirects=True)
+
+		self.assertEqual(result.status_code, 200)
+		self.assertIn("Your rating: 4.0", result.data)
+
+
+	def test_rate_restaurant_overwrite(self):
+		"""Test rate-restaurant route, overwrite existing rating."""
+
+		with self.client as c:
+			with c.session_transaction() as session:
+				session['username'] = 'Octavia'
+
+		result = self.client.post("/rate-restaurant",
+								 data={'rating': '4',
+								 	   'restaurant_id': '1048yN4bQRt_h3zQ04GDSA'},
+								 follow_redirects=True)
+
+		self.assertEqual(result.status_code, 200)
+		self.assertIn("East Ocean Seafood Restaurant", result.data)
+		self.assertIn("Your rating: 4.0", result.data)
+
 
 class LoginSignUpTests(unittest.TestCase):
 	"""Test login/logout and signup functionality."""
@@ -203,7 +235,7 @@ class LoginSignUpTests(unittest.TestCase):
 		self.assertNotIn('Back to profile', result.data)
 		self.assertNotIn('Sign Up', result.data)
 
-	def handle-logout(self):
+	def handle_logout(self):
 		"""Test logout functionality."""
 
 		with self.client as c:
@@ -216,6 +248,12 @@ class LoginSignUpTests(unittest.TestCase):
 			with c.session_transaction() as session:
 				self.assertNotIn('username', session)
 
+		self.assertEqual(result.status_code, 200)
+		self.assertIn("Log In", result.data)
+		self.assertIn("Sign Up", result.data)
+
+		self.assertNotIn("Back to profile", result.data)
+		self.assertNotIn("Log Out")
 
 	def test_signup(self):
 		"""Test signup route."""
@@ -245,6 +283,21 @@ class LoginSignUpTests(unittest.TestCase):
 
 		self.assertIn('Account already exists. Please log in.', result.data)
 
+	# def test_rate_restaurant_overwrite(self):
+	# 	"""Test rate-restaurant route."""
+
+	# 	with self.client as c:
+	# 		with c.session_transaction() as session:
+	# 			session['username'] = 'Octavia'
+
+	# 	result = self.client.post("/rate-restaurant",
+	# 							 data={'rating': '4',
+	# 							 	   'restaurant_id': 'gQMpKljmisp-wDT5W0OOTA'},
+	# 							 follow_redirects=True)
+
+	# 	self.assertEqual(result.status_code, 200)
+	# 	self.assertIn("Mae Krua", result.data)
+	# 	self.assertIn("Your rating: 4.0", result.data)
 
 class UnitTests(unittest.TestCase):
 	"""Test helper functions."""
@@ -281,6 +334,7 @@ class FlaskTests(unittest.TestCase):
 		self.assertEqual(result.status_code, 200)
 		self.assertIn('Log In', result.data)
 		self.assertIn('Sign Up', result.data)
+
 		self.assertNotIn('Back to profile', result.data)
 
 
