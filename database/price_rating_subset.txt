@@ -1,0 +1,5 @@
+{"qGf1STU58RroSfnUdghLBA": {"price": 2, "yelp_rating": 4.0}, "NaVAKG3SMfwtHbGSLozLyg": {"price": 2, "yelp_rating": 3.0}, "Jk_8l8cprbHIs4RbPfOnhg": {"price": 2, "yelp_rating": 4.0}, "7bO6OHn52SJP4Mi3U-XflQ": {"price": 2, "yelp_rating": 4.5}, "34gRRbMBcR8LU2eWGpoZ9Q": {"price": 1, "yelp_rating": 4.0}, "B09WOy0W83Od-Xw4xEXxog": {"price": 2, "yelp_rating": 4.5}, "I0FLt32Xwxjd8S9jUKgv4A": {"price": 2, "yelp_rating": 3.5}, "eozQsh2UnHM9aok46zGgyA": {"price": 1, "yelp_rating": 4.0}, "ayMENfQ7-t8kU_l4nYb6Sg": {"price": 2, "yelp_rating": 4.5}, "LbeL3KUv6JP298uGXxt_fg": {"price": 1, "yelp_rating": 4.5},
+"1048yN4bQRt_h3zQ04GDSA": {"price": 2, "yelp_rating": 4.0}, "PkLfjhJ_XExjwARO1RkQIw": {"price": 1, "yelp_rating": 4.0},
+"679OXOvmJ5ZAaj9GdMZlHQ": {"price": 2, "yelp_rating": 4.5}, "UHFjEP5dVn4wqcjt7ByUog": {"price": 2, "yelp_rating": 4.5},
+"yyi2GpG_p7TX7XAq_eHSZA": {"price": 2, "yelp_rating": 4.0}, "YH82tozaJi_cCKU6xF6IxQ": {"price": 1, "yelp_rating": 4.5},
+"eYXwVR4mMAjzkJnm5wneHQ": {"price": 2, "yelp_rating": 4.0}}
