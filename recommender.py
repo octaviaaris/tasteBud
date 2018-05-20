@@ -31,9 +31,14 @@ def get_new_restaurant_recs(user):
 def show_top_picks(user):
 	"""Uses restaurant and user similarity recommendations to create a top 5 picks list."""
 
-	top_picks = []
+	top_picks = user.get_user_recs() + get_new_restaurant_recs(user)
 
-	top_picks += user.get_user_recs()
-	top_picks += get_new_restaurant_recs(user)
+	if len(top_picks) >= 5:
+		return sample(top_picks, 5)
 
-	return sample(top_picks, 5)
+	else:
+	
+		top_yelp = Restaurant.query.filter(Restaurant.yelp_rating >= 4).all()
+
+		return top_picks + sample(top_yelp, 5 - len(top_picks))
+
