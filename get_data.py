@@ -77,47 +77,9 @@ def get_oak(filename):
 	return "Done!"
 
 
-def restaurant_price_and_rating(restaurants):
-	"""Get prices for each restaurant in a list of restaurant objects."""
-
-	# restaurants = Restaurant.query.all()
-	
-	for rst in restaurants:
-
-		url = API_HOST + BUSINESS_PATH + rst.restaurant_id
-		response = requests.request("GET", url, headers=HEADER)
-		r = response.json()
-
-		price = r.get('price', None)
-		if price:
-			price = len(price)
-		yelp_rating = r.get('rating', None)
-
-		rst.price = price
-		rst.yelp_rating = yelp_rating
-
-		db.session.commit()
-
-	return "Done!"
-
 ############################################################################################################
 #################################### Save db to files for easy reseeding ###################################
 ############################################################################################################
-
-def save_price_rating():
-	"""Save price and yelp_rating data for each restaurant to txt file for easy reseeding."""
-
-	all_restaurants = Restaurant.query.all()
-
-	price_rating = {}
-
-	for a in all_restaurants:
-		price_rating[a.restaurant_id] = {'price': a.price, 'yelp_rating': float(a.yelp_rating)}
-
-	with open('database/ratings_prices.txt', 'a+') as f:
-		f.write(json.dumps(price_rating))
-
-	return price_rating
 
 def save_categories():
 	"""Save current categories in database to categories.txt for easy reseeding."""
