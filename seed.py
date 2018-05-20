@@ -22,6 +22,8 @@ def seed_restaurants(filename):
 			zipcode = line['location']['zip_code']
 			latitude = line['coordinates']['latitude']
 			longitude = line['coordinates']['longitude']
+			price = len(line['price'])
+			yelp_rating = float(line['rating'])
 
 			new = Restaurant(restaurant_id=restaurant_id,
 							 name=name,
@@ -35,26 +37,11 @@ def seed_restaurants(filename):
 							 latitude=latitude,
 							 longitude=longitude,
 							 hours=None,
-							 price=None,
-							 yelp_rating=None)
+							 price=price,
+							 yelp_rating=yelp_rating)
 
 			if not Restaurant.query.filter_by(restaurant_id=restaurant_id).all():
 				db.session.add(new)
-
-		db.session.commit()
-
-def seed_price_ratings(filename):
-	"""Populate price and rating data for each restaurant from price_ratings.txt."""
-
-	with open(filename, 'r') as f:
-		line = f.read()
-		seed_dct = json.loads(line)
-
-	all_restaurants = Restaurant.query.all()
-
-	for a in all_restaurants:
-		a.price = seed_dct[a.restaurant_id]['price']
-		a.yelp_rating = seed_dct[a.restaurant_id]['yelp_rating']
 
 		db.session.commit()
 
@@ -142,7 +129,6 @@ if __name__ == "__main__":
 	seed_prices()
 	seed_categories('database/categories.txt')
 	seed_restaurants('database/all_restaurants.txt')
-	seed_price_ratings('database/price_ratings.txt')
 	seed_rest_cats('database/all_restaurants.txt')
 	seed_users('database/users.csv')
 	seed_ratings('database/ratings.csv')
