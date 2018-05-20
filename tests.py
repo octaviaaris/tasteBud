@@ -2,6 +2,7 @@ import unittest
 
 from server import app
 from model import db, connect_to_db, example_users, example_ratings
+from correlation import pearson
 from seed import (seed_users,
 				  seed_ratings)
 
@@ -26,6 +27,25 @@ class DatabaseTests(unittest.TestCase):
 		db.session.close()
 		# figure out how to delete users and ratings for logged_in_unrated and 
 
+
+	def test_handle_login(self):
+		"""Test handle-login route with existing user."""
+
+		result = self.client.post("/handle-login",
+								  data={'username': 'Octavia',
+								  		'password': 'octaviapw'},
+								  follow_redirects=True)
+
+		with self.client as c:
+			with c.session_transaction() as session:
+				self.assertIn('username', session)
+
+		self.assertIn('Welcome back, Octavia!', result.data)
+		self.assertIn('TOP PICKS FOR YOU', result.data)
+		self.assertIn('Find', result.data)
+		self.assertIn('Choose a city', result.data)
+		self.assertIn('Log Out', result.data)
+		self.assertNotIn('Sign Up', result.data)
 
 	def test_profile_no_login(self):
 		"""Test profile route with user not logged in."""
@@ -164,7 +184,6 @@ class DatabaseTests(unittest.TestCase):
 		self.assertIn("East Ocean Seafood Restaurant", result.data)
 		self.assertIn("Your rating: 4.0", result.data)
 
-
 class LoginSignUpTests(unittest.TestCase):
 	"""Test login/logout and signup functionality."""
 
@@ -185,25 +204,6 @@ class LoginSignUpTests(unittest.TestCase):
 
 		db.session.close()
 		db.drop_all()
-
-	def test_handle_login(self):
-		"""Test handle-login route with user."""
-
-		result = self.client.post("/handle-login",
-								  data={'username': 'Octavia',
-								  		'password': 'octaviapw'},
-								  follow_redirects=True)
-
-		with self.client as c:
-			with c.session_transaction() as session:
-				self.assertIn('username', session)
-
-		self.assertIn('Welcome back, Octavia!', result.data)
-		self.assertIn('TOP PICKS FOR YOU', result.data)
-		self.assertIn('Find', result.data)
-		self.assertIn('Choose a city', result.data)
-		self.assertIn('Log Out', result.data)
-		self.assertNotIn('Sign Up', result.data)
 
 	def test_handle_login_no_user(self):
 		"""Test handle-login route without user."""
@@ -311,6 +311,19 @@ class UnitTests(unittest.TestCase):
 		"""Run at the end of every test."""
 
 		pass
+
+	def test_pearson(self):
+
+		pairs_1 = [(1.0, 1.0), (3.0, 3.0), (4.0, 4.0), (2.0, 2.0)]
+		pairs_2 = [(1.0, 5.0), (3.0, 3.0), (1.0, 4.0), (3.0, 2.0)]
+		pairs_3 = [(1.0, 2.0), (3.0, 3.0), (1.0, 1.0), (3.0, 2.0)]
+		pairs_4 = [(0.0, 5.0), (0.0, 2.0), (0.0, 1.0), (0.0, 3.0)]
+
+		self.assertEqual(pearson(pairs_1), 1.0)
+		self.assertEqual(pearson(pairs_2), -0.8944271909999159)
+		self.assertEqual(pearson(pairs_3), 0.7071067811865475)
+		self.assertEqual(pearson(pairs_4), 0)
+
 
 class FlaskTests(unittest.TestCase):
 	"""Test front-end functionality (no database)."""
