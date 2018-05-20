@@ -73,7 +73,7 @@ class User(db.Model):
 				if rating.restaurant_id not in self_restaurants and rating.user_rating >= 4:
 					recommendations.add(restaurant)
 
-		return recommendations
+		return list(recommendations)
 
 class Restaurant(db.Model):
 	"""Restaurant model."""
