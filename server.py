@@ -117,7 +117,7 @@ def show_details(restaurant_id):
 		rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
 		
 		if rating:
-			rating = float(rating[0].user_rating)
+			rating = rating[0].user_rating
 	else:
 		user = None
 		rating = None
