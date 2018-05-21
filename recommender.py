@@ -42,21 +42,31 @@ def show_top_picks(user):
 
 		return top_picks + sample(top_yelp, 5 - len(top_picks))
 
-def search_results(city, search_term=None):
+def user_search_results(city, search_string=None):
 	"""Returns restaurants from user search."""
 
 	#  eager load all restaurants and their categories in city
 	q = (Restaurant.query.join(Rest_cat, Restaurant.restaurant_id == Rest_cat.restaurant_id)
 						 .filter(Restaurant.city==city).order_by(Restaurant.name))
 
+	results = []
+
 	# filter for restaurants whose name or category matches find term
-	if search_term:
-		query = '.*' + search_term + '.*'
-		results = q.filter(Rest_cat.category.op('~*')(query) | Restaurant.name.op('~*')(query))
-		return results
+	if search_string:
+		search_string = search_string.lower()
+		if "," in search_string:
+			search_terms = search_string.split(",")
+		else:
+			search_terms = search_string.split()
+	
+		for term in search_terms:
+			print term
+			query = '.*' + term.strip(" ") + '.*'
+			results += q.filter(Rest_cat.category.op('~*')(query) | Restaurant.name.op('~*')(query)).all()
+		return set(results)
 
 	else:
-		return q
+		return set(q.all())
 
 
 

@@ -102,18 +102,16 @@ def search_restaurants():
 	form_cities = Restaurant.query.with_entities(Restaurant.city, 
 											func.count(Restaurant.city)).group_by(Restaurant.city).order_by(Restaurant.city)
 
-	search_term = request.args.get('search_term', None)
-	if search_term:
-		search_term = search_term.strip().lower()
+	search_string = request.args.get('search_string', None)
 	city = request.args.get('city')
 	price = request.args.get('price', None)
 	
-	results = search_results(city, search_term)
+	results = user_search_results(city, search_string)
 
 	if price:
 		price = int(price)
 
-	return render_template('search-results.html', form_cities=form_cities, city=city, search_term=search_term, results=results, price=price)
+	return render_template('search-results.html', form_cities=form_cities, city=city, search_string=search_string, results=results, price=price)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
