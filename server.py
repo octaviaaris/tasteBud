@@ -36,7 +36,7 @@ def create_user_account():
 		new_user = User(username=username,
 						password=pw,
 						score_avg=None)
-		
+
 		db.session.add(new_user)
 		db.session.commit()
 		flash("Account created! Please log in.")
@@ -92,22 +92,28 @@ def show_profile():
 def show_search():
 
 	cities = Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city).all()
-
-	cities.sort()
+											func.count(Restaurant.city)).group_by(Restaurant.city).order_by(Restaurant.city)
 
 	return render_template("search-form.html", cities=cities)
 
 @app.route("/search-results")
 def search_restaurants():
 
-	# find = request.args.get('find')
-	# price = request.args.get('price')
-	location = request.args.get('location')
-	
-	restaurants = Restaurant.query.filter_by(city=location).order_by(Restaurant.name)
+	form_cities = Restaurant.query.with_entities(Restaurant.city, 
+											func.count(Restaurant.city)).group_by(Restaurant.city).order_by(Restaurant.city)
 
-	return render_template('search-results.html', location=location, restaurants=restaurants)
+	search_term = request.args.get('search_term', None)
+	if search_term:
+		search_term = search_term.strip().lower()
+	city = request.args.get('city')
+	price = request.args.get('price', None)
+	
+	results = search_results(city, search_term)
+
+	if price:
+		price = int(price)
+
+	return render_template('search-results.html', form_cities=form_cities, city=city, search_term=search_term, results=results, price=price)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
