@@ -20,19 +20,4 @@ def seed_testdb():
 	seed_restaurants('database/restaurant_subset.txt')
 	seed_rest_cats('database/restaurant_subset.txt')
 	seed_users('database/users.csv')
-	# seed_ratings('database/ratings.csv')
-
-	# create test users and ratings
-	example_users()
-	example_ratings()
-
-def seed_usersdb():
-
-	connect_to_db(app, 'postgres:///usersdb')
-
-	# create tables
-	db.create_all()
-
-	# create test users and ratings
-	example_users()
-	example_ratings()
+	seed_ratings('database/ratings.csv')
