@@ -235,55 +235,59 @@ def example_users():
 def example_ratings():
 	"""Create sample ratings."""
 
+	octavia = User.query.filter_by(username="Octavia").one()
+
 	# create Octavia's ratings
 	o_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
-						user_id=4,
+						user_id=octavia.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
-						user_id=4,
+						user_id=octavia.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
-						user_id=4,
+						user_id=octavia.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_4 = Rating(restaurant_id='UHFjEP5dVn4wqcjt7ByUog',
-						user_id=4,
+						user_id=octavia.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	o_rating_5 = Rating(restaurant_id='yyi2GpG_p7TX7XAq_eHSZA',
-						user_id=4,
+						user_id=octavia.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
+	claire = User.query.filter_by(username="Claire").one()
+
 	# create Claire's ratings
 	c_rating_1 = Rating(restaurant_id='1048yN4bQRt_h3zQ04GDSA',
-						user_id=5,
+						user_id=claire.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_2 = Rating(restaurant_id='PkLfjhJ_XExjwARO1RkQIw',
-						user_id=5,
+						user_id=claire.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_3 = Rating(restaurant_id='679OXOvmJ5ZAaj9GdMZlHQ',
-						user_id=5,
+						user_id=claire.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_4 = Rating(restaurant_id='YH82tozaJi_cCKU6xF6IxQ',
-						user_id=5,
+						user_id=claire.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
 	c_rating_5 = Rating(restaurant_id='eYXwVR4mMAjzkJnm5wneHQ',
-						user_id=5,
+						user_id=claire.user_id,
 						user_rating=float(randint(1, 5)),
 						)
 
@@ -291,6 +295,29 @@ def example_ratings():
 	db.session.add_all([o_rating_1, o_rating_2, o_rating_3, o_rating_4, o_rating_5,
 						c_rating_1, c_rating_2, c_rating_3, c_rating_4, c_rating_5])
 	db.session.commit()
+
+def delete_test_users():
+	"""Delete test users."""
+
+	test_users = User.query.filter(User.username != "opi",
+								   User.username != "claire",
+								   User.username != "emily").delete()
+
+	db.session.commit()
+
+	# for user in test_users:
+	# 	db.session.delete(user)
+	# 	db.session.commit()
+
+def delete_test_ratings():
+	"""Delete test ratings."""
+
+	test_ratings = Rating.query.filter(Rating.user_id != 1,
+									   Rating.user_id != 2,
+									   Rating.user_id != 3).delete()
+
+	db.session.commit()
+
 
 
 ##############################################################################
