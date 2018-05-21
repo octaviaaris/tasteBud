@@ -4,36 +4,59 @@
 
 {% block content %}
 
+<form action="/search-results">
+  Find <input type="text" name="search_term" placeholder="Restaurant name">
+  <select name="city">
+    <option value="San Francisco">Choose a city</option>
+    {% for city in form_cities %}
+    <option value="{{ city[0] }}">{{ city[0] }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit" value="Search">
+</form>
+
 <p>SEARCH RESULTS:</p>
 
-<p>Restaurants in {{ location }}</p>
+<p>Restaurants in {{ city }}</p>
 <div>
   <form action="/search-results">
   	<input type="hidden" name="price" value="1">
-  	<input type="hidden" name="location" value="{{ location }}">
-   	<input type="submit" value="1">
+  	<input type="hidden" name="city" value="{{ city }}">
+    <input type="hidden" name="search_term" value="{{ search_term }}">
+   	<input type="submit" value="$">
   </form>
   <form action="/search-results">
   	<input type="hidden" name="price" value="2">
-  	<input type="hidden" name="location" value="{{ location }}">
-   	<input type="submit" value="2">
+  	<input type="hidden" name="city" value="{{ city }}">
+    <input type="hidden" name="search_term" value="{{ search_term }}">
+   	<input type="submit" value="$$">
   </form>
   <form action="/search-results">
   	<input type="hidden" name="price" value="3">
-  	<input type="hidden" name="location" value="{{ location }}">
-   	<input type="submit" value="3">
+  	<input type="hidden" name="city" value="{{ city }}">
+    <input type="hidden" name="search_term" value="{{ search_term }}">
+   	<input type="submit" value="$$$">
   </form>
   <form action="/search-results">
   	<input type="hidden" name="price" value="4">
-  	<input type="hidden" name="location" value="{{ location }}">
-   	<input type="submit" value="4">
+  	<input type="hidden" name="city" value="{{ city }}">
+    <input type="hidden" name="search_term" value="{{ search_term }}">
+   	<input type="submit" value="$$$$">
   </form>	
 </div>
 
 <ul>
-	{% for restaurant in restaurants %}
-	<li><a href="/details/{{ restaurant.restaurant_id }}">{{restaurant.name}}</a></li>
-	{% endfor %}
+  {% if price %}
+  {% for result in results %}
+  {% if result.price==price %}
+  <li><a href="/details/{{ result.restaurant_id }}">{{result.name}} ({{ result.price }})</a></li>
+  {% endif %}
+  {% endfor %}
+  {% else %}
+	{% for result in results %}
+  <li><a href="/details/{{ result.restaurant_id }}">{{result.name}} ({{ result.price }})</a></li>
+  {% endfor %}
+  {% endif %}
 </ul>
 
 {% endblock %}
