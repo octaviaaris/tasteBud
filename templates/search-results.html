@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<form action="/search-results">
-  Find <input type="text" name="search_string" placeholder="Restaurant name">
+<form id="search-form">
+  Find <input type="text" name="search_string" placeholder="japanese, asian, Tacorea">
   <select name="city">
     <option value="San Francisco">Choose a city</option>
     {% for city in form_cities %}
@@ -45,18 +45,20 @@
   </form>	
 </div>
 
+<div class="search-results">
 <ul>
   {% if price %}
-  {% for result in results %}
+  {% for result in results.keys() %}
   {% if result.price==price %}
-  <li><a href="/details/{{ result.restaurant_id }}">{{result.name}} ({{ result.price }})</a></li>
+  <li><a href="/details/{{ result }}">{{ results[result].name }} ({{ results[result].price }})</a></li>
   {% endif %}
   {% endfor %}
   {% else %}
-	{% for result in results %}
-  <li><a href="/details/{{ result.restaurant_id }}">{{result.name}} ({{ result.price }})</a></li>
+  {% for result in results %}
+  <li><a href="/details/{{ result }}">{{ results[result].name }} ({{ results[result].price }})</a></li>
   {% endfor %}
   {% endif %}
 </ul>
+</div>
 
 {% endblock %}
