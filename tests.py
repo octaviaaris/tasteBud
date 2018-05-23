@@ -3,6 +3,7 @@ import unittest
 from server import app
 from model import db, connect_to_db, example_users, example_ratings, delete_test_users, delete_test_ratings
 from correlation import pearson
+from recommender import show_top_picks, user_search_results
 
 class DatabaseTests(unittest.TestCase):
 	"""Tests database-related app functionality."""
@@ -26,9 +27,6 @@ class DatabaseTests(unittest.TestCase):
 		delete_test_ratings()
 		delete_test_users()
 		db.session.close()
-
-	def test_root(self):
-		pass
 
 	def test_signup(self):
 		"""Test signup route."""
@@ -161,17 +159,17 @@ class DatabaseTests(unittest.TestCase):
 				session['username'] = 'Octavia'
 
 		result = self.client.get("/search-results",
-								 query_string={'location': 'Oakland'})
+								 query_string={'city': 'Oakland'})
 
 		self.assertIn("Back to profile", result.data)
 		self.assertIn("Restaurants in Oakland", result.data)
-		self.assertIn("Cholita Linda", result.data)
+		self.assertIn("Cholita Linda (2)", result.data)
 
 	def test_search_results_logged_out(self):
 		"""Test search-results route (logged out)."""
 
 		result = self.client.get("/search-results",
-								 query_string={'location': 'Oakland'})
+								 query_string={'city': 'Oakland'})
 
 
 		self.assertIn("Restaurants in Oakland", result.data)
@@ -251,14 +249,16 @@ class UnitTests(unittest.TestCase):
 	def setUp(self):
 		"""Run before every test."""
 
-		pass
+		connect_to_db(app, "postgresql:///testdb")
 
 	def tearDown(self):
 		"""Run at the end of every test."""
 
-		pass
+		delete_test_users()
+		db.session.close()
 
 	def test_pearson(self):
+		"""Test pearson function."""
 
 		pairs_1 = [(1.0, 1.0), (3.0, 3.0), (4.0, 4.0), (2.0, 2.0)]
 		pairs_2 = [(1.0, 5.0), (3.0, 3.0), (1.0, 4.0), (3.0, 2.0)]
@@ -269,6 +269,20 @@ class UnitTests(unittest.TestCase):
 		self.assertEqual(pearson(pairs_2), -0.8944271909999159)
 		self.assertEqual(pearson(pairs_3), 0.7071067811865475)
 		self.assertEqual(pearson(pairs_4), 0)
+
+	def test_show_top_picks(self):
+		"""Test show_top_picks function."""
+
+		user = User(username="NewUser", password="NewPassword")
+
+		show_top_picks(user)
+
+	def test_user_search_results(self):
+		"""Test user_search_results function."""
+
+		self.assertIsNotNone(user_search_results("Oakland", "greek"))
+		self.assertIsNotNone(user_search_results("San Francisco", "japanese asian"))
+		self.assertIsNotNone(user_search_results("San Francisco", "japanese, chinese, korean"))
 
 
 class FlaskTests(unittest.TestCase):
