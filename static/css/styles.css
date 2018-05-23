@@ -6,3 +6,12 @@
 	border-width: 2px;
 	margin: 10px;
 }
+
+#show-results {
+	height: 50px;
+	margin-top: 20px;
+}
+
+#root {
+	height: 50px;
+}
