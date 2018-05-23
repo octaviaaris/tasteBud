@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template, request, flash, redirect, Markup
+from flask import Flask, session, render_template, request, flash, redirect, Markup, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy import func
 from model import *
@@ -12,7 +12,11 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	return render_template("index.html")
+	cities = (Restaurant.query.with_entities(Restaurant.city, 
+											func.count(Restaurant.city)).group_by(Restaurant.city)
+																		.order_by(Restaurant.city))
+
+	return render_template("index.html", cities=cities)
 
 @app.route("/signup")
 def display_signup():
@@ -91,16 +95,29 @@ def show_profile():
 @app.route("/search")
 def show_search():
 
-	cities = Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city).order_by(Restaurant.city)
+	cities = (Restaurant.query.with_entities(Restaurant.city, 
+											func.count(Restaurant.city)).group_by(Restaurant.city)
+																		.order_by(Restaurant.city))
+	
+	# search_string = request.args.get('search_string', None)
+	# city = request.args.get('city')
+	# price = request.args.get('price', None)
 
+	# results = user_search_results(city, search_string)
+
+	# return render_template('search-results.html', cities=cities,
+	# 											  city=city,
+	# 											  search_string=search_string,
+	# 											  results=results,
+	# 											  price=price)
 	return render_template("search-form.html", cities=cities)
 
 @app.route("/search-results")
 def search_restaurants():
 
-	form_cities = Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city).order_by(Restaurant.city)
+	form_cities = (Restaurant.query.with_entities(Restaurant.city, 
+												 func.count(Restaurant.city)).group_by(Restaurant.city)
+																			 .order_by(Restaurant.city))
 
 	search_string = request.args.get('search_string', None)
 	city = request.args.get('city')
@@ -111,7 +128,23 @@ def search_restaurants():
 	if price:
 		price = int(price)
 
-	return render_template('search-results.html', form_cities=form_cities, city=city, search_string=search_string, results=results, price=price)
+	return render_template('search-results.html', form_cities=form_cities,
+												  city=city,
+												  search_string=search_string,
+												  results=results,
+												  price=price)
+
+@app.route("/search.json")
+def show_search_results():
+	"""Return user search results as a list."""
+
+	search_string = request.args.get('search_string', None)
+	city = request.args.get('city')
+	price = request.args.get('price', None)
+	
+	results = user_search_results(city, search_string)
+
+	return jsonify(results)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
