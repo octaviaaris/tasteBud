@@ -60,13 +60,19 @@ def user_search_results(city, search_string=None):
 			search_terms = search_string.split()
 	
 		for term in search_terms:
-			print term
 			query = '.*' + term.strip(" ") + '.*'
 			results += q.filter(Rest_cat.category.op('~*')(query) | Restaurant.name.op('~*')(query)).all()
-		return set(results)
+		set(results)
 
 	else:
-		return set(q.all())
+		results = set(q.all())
+
+	result_dict = {}
+	for r in results:
+		result_dict[r.restaurant_id] = {"name": r.name,
+										"price": r.price}
+
+	return result_dict
 
 
 
