@@ -90,9 +90,9 @@ class SearchResults extends React.Component {
 		let result_key = 0
 		for (let result in this.props.results) {
 			result_key++;
-			result_array.push(<p key={result_key}>{this.props.results[result].name} {this.props.results[result].price}</p>)
+			result_array.push(<p key={result_key}>{this.props.results[result].name} ({this.props.results[result].price})</p>)
 		}
-		
+
 		return (<div>{result_array}</div>)
 	}
 }
