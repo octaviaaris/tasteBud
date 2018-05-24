@@ -28,7 +28,7 @@ class SearchForm extends React.Component {
 							 .then((data) => {
 							 	let cities = []
 							 	for (let city of data.cities) {
-							 		cities.push(city[0]);
+							 		cities.push(city);
 							 	}
 							 	this.setState({cities_array: cities});
 							 });
