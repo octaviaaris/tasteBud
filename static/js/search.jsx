@@ -92,7 +92,7 @@ class SearchResults extends React.Component {
 		}
 
 		else {
-			return (<div>"No results."</div>);
+			return (<div><p>"No results."</p></div>);
 		}
 
 	}
