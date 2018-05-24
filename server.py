@@ -11,7 +11,8 @@ app.secret_key = "athena"
 
 @app.route("/")
 def welcome_user():
-
+	"""Show login, signup, and search forms."""
+	
 	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
 															 .order_by(Restaurant.city))
 	print cities.all()
@@ -21,6 +22,7 @@ def welcome_user():
 @app.route("/cities.json")
 def show_cities():
 	"""Return list of cities from restaurants table."""
+
 	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
 															 .order_by(Restaurant.city)).all()
 
@@ -28,11 +30,13 @@ def show_cities():
 
 @app.route("/signup")
 def display_signup():
+	"""Show signup form."""
 
 	return render_template("signup.html")
 
 @app.route("/handle-signup", methods=['POST'])
 def create_user_account():
+	"""Add new user to database."""
 
 	# get username from form submission
 	username = request.form['username']
@@ -56,6 +60,7 @@ def create_user_account():
 
 @app.route("/login")
 def display_login():
+	"""Show login form."""
 
 	return render_template("login.html")
 
@@ -77,6 +82,7 @@ def handle_login():
 
 @app.route("/handle-logout")
 def handle_logout():
+	"""Clear username from session."""
 
 	session.clear()
 
@@ -84,6 +90,7 @@ def handle_logout():
 
 @app.route("/profile")
 def show_profile():
+	"""Show user's top recommendations."""
 
 	if 'username' not in session:
 		flash(Markup('Log in to see your profile or <a href="/signup">create one now</a>!'))
@@ -102,6 +109,7 @@ def show_profile():
 
 @app.route("/search")
 def show_search():
+	"""Show search form and results."""
 
 	cities = (Restaurant.query.with_entities(Restaurant.city, 
 											func.count(Restaurant.city)).group_by(Restaurant.city)
@@ -123,6 +131,7 @@ def show_search_results():
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
+	"""Show restaurant details."""
 
 	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
 
@@ -140,6 +149,7 @@ def show_details(restaurant_id):
 
 @app.route("/rate-restaurant", methods=['POST'])
 def record_rating():
+	"""Add user_rating to database."""
 
 	rating = request.form.get('rating')
 	restaurant_id = request.form.get('restaurant_id')
@@ -159,6 +169,10 @@ def record_rating():
 		db.session.commit()
 
 	return redirect("/details/" + restaurant_id)
+
+@app.route("/rated")
+def show_rated_restaurants():
+	"""Show user restaurants she has already rated (and the rating she gave)."""
 
 
 if __name__ == "__main__": # pragma: no cover
