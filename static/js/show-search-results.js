@@ -4,7 +4,6 @@
 
 function showSearchResults(evt) {
 	evt.preventDefault();
-	console.log($("#city-field").val());
 	let payload = {
 		"search_string": $("#search-string-field").val(),
 		"city": $("#city-field").val()
