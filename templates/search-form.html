@@ -1,19 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile{% endblock%}
+{% block title %}Search{% endblock%}
 
 {% block content %}
 
-<form id="search-form">
-	Find <input type="text" name="search_string" id="search-string-field" placeholder="japanese, asian, Tacorea">
-	<select name="city" id="city-field">
-		<option value="San Francisco">Choose a city</option>
-		{% for city in cities %}
-		<option value="{{ city[0] }}">{{ city[0] }}</option>
-		{% endfor %}
-	</select>
-	<input type="submit" value="Search">
-</form>
-<div id="show-results"></div>
+<div id="root"></div>
 
 {% endblock %}
