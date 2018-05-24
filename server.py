@@ -12,11 +12,19 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 
-	cities = (Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city)
-																		.order_by(Restaurant.city))
+	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
+															 .order_by(Restaurant.city))
+	print cities.all()
 
 	return render_template("index.html", cities=cities)
+
+@app.route("/cities.json")
+def show_cities():
+	"""Return list of cities from restaurants table."""
+	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
+															 .order_by(Restaurant.city)).all()
+
+	return jsonify({'cities': cities})
 
 @app.route("/signup")
 def display_signup():
