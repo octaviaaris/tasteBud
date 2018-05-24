@@ -7,7 +7,12 @@
   <body>
     <h4>Zelp</h4>
     {% if 'username' in session %}
+    {% if not recs %}
     <p><a href="/profile">Back to profile</a></p>
+    {% endif %}
+    {% if not reviews %}
+    <p><a href="/reviews">See your reviews</a></p>
+    {% endif %}
     <footer><a href="/handle-logout">Log out</a></footer>
     {% endif %}
     {% for message in get_flashed_messages() %}
@@ -23,5 +28,6 @@
 <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
 <script src="/static/js/search.jsx" type="text/jsx"></script>
+<script src="/static/js/top_picks.jsx" type="text/jsx"></script>
 <body>
 </html>
