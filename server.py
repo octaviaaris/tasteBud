@@ -12,7 +12,7 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 	"""Show login, signup, and search forms."""
-	
+
 	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
 															 .order_by(Restaurant.city))
 	print cities.all()
@@ -72,9 +72,12 @@ def handle_login():
 	username = request.form['username']
 	pw = request.form['password']
 
+	user = User.query.filter_by(username=username, password=pw).first()
+
 	# check if username and pw exist in db
-	if User.query.filter_by(username=username, password=pw).all():
-		session['username'] = username
+	if user:
+		session['username'] = user.username
+		session['user_id'] = user.user_id
 		return redirect("/profile")
 	else:
 		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
@@ -97,23 +100,21 @@ def show_profile():
 		return redirect("/login")
 
 	else:
-		cities = Restaurant.query.with_entities(Restaurant.city, 
-												func.count(Restaurant.city)).group_by(Restaurant.city).all()
-
-		cities.sort()
-
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return render_template("profile.html", cities=cities, session=session, recs=recs)
+		return render_template("profile.html", recs=recs)
+
+@app.route("/top-picks.json")
+def send_top_picks():
+		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
+		recs = show_top_picks(user)
+
+		return jsonify({'recs': recs})
 
 @app.route("/search")
 def show_search():
 	"""Show search form and results."""
-
-	cities = (Restaurant.query.with_entities(Restaurant.city, 
-											func.count(Restaurant.city)).group_by(Restaurant.city)
-																		.order_by(Restaurant.city))
 
 	return render_template("search-form.html")
 
@@ -135,9 +136,9 @@ def show_details(restaurant_id):
 
 	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
 
-	if 'username' in session:
-		user = User.query.filter_by(username=session['username']).one()
-		rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
+	if 'user_id' in session:
+		user = User.query.get(session['user_id'])
+		rating = Rating.query.filter(Rating.user_id==session['user_id'], Rating.restaurant_id==restaurant_id).all()
 		
 		if rating:
 			rating = rating[0].user_rating
@@ -170,9 +171,23 @@ def record_rating():
 
 	return redirect("/details/" + restaurant_id)
 
-@app.route("/rated")
+@app.route("/reviews")
 def show_rated_restaurants():
 	"""Show user restaurants she has already rated (and the rating she gave)."""
+
+	if 'user_id' in session:
+		# query for restaurant_id, name, price, user_rating
+		reviews = (db.session.query(Rating.restaurant_id,
+									Restaurant.name,
+									Restaurant.price,
+									Rating.user_rating).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
+													   .filter(Rating.user_id==session['user_id'])
+													   .order_by(Rating.rating_id)).all()
+		
+		return render_template("user-reviews.html", reviews=reviews)
+
+	else:
+		return redirect("/search")
 
 
 if __name__ == "__main__": # pragma: no cover
