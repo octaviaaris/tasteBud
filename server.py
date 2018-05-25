@@ -107,14 +107,15 @@ def show_cities():
 
 @app.route("/top-picks.json")
 def send_top_picks():
-		# import pdb; pdb.set_trace()
-		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
-		recs = show_top_picks(user)
+	"""Return dictionary of top restaurant recommendations."""
+	
+	user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
+	recs = show_top_picks(user)
 
-		recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
-		print recs_dict
+	recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
+	print recs_dict
 
-		return jsonify(recs_dict)
+	return jsonify(recs_dict)
 
 @app.route("/search")
 def show_search():
