@@ -6,18 +6,17 @@ class TopPicks extends React.Component {
 
 	componentDidMount() {
 
-		$.get("/top-picks.json", 
+		// $.get("/top-picks.json", 
 
-			function(result) {
-				this.setState({topPicks: result});
-				}.bind(this)
-			)
+		// 	function(result) {
+		// 		this.setState({topPicks: result});
+		// 		}.bind(this)
+		// 	)
 
-		// look up how to send cookies with fetch
-		// fetch(`/top-picks.json`).then((response) => response.json())
-		// 						.then((data) => this.setState({topPicks: data}));
+		fetch(`/top-picks.json`, {credentials: 'include'}).then((response) => response.json())
+								.then((data) => this.setState({topPicks: data}));
 
-		// console.log(this.state.topPicks);
+		console.log(this.state.topPicks);
 
 	}
 
