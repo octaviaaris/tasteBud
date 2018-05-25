@@ -13,9 +13,9 @@ class TopPicks extends React.Component {
 		// 		}.bind(this)
 		// 	)
 
-		fetch(`/top-picks.json`, {credentials: 'include'}).then((response) => response.json())
-								.then((data) => this.setState({topPicks: data}));
-
+		fetch(`/top-picks.json`,
+			  {credentials: 'include'}).then((response) => response.json())
+									   .then((data) => this.setState({topPicks: data}));
 	}
 
 	render() {
