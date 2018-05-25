@@ -8,12 +8,12 @@
     <h4>Zelp</h4>
     {% if 'username' in session %}
     {% if not recs %}
-    <p><a href="/profile">Back to profile</a></p>
+    <a href="/profile">Back to profile</a>
     {% endif %}
     {% if not reviews %}
-    <p><a href="/reviews">See your reviews</a></p>
+    <a href="/reviews">See your reviews</a>
     {% endif %}
-    <div><footer><a href="/handle-logout">Log out</a></footer></div>
+    <a href="/handle-logout">Log out</a>
     {% endif %}
     {% for message in get_flashed_messages() %}
     <p>{{ message }}</p>
