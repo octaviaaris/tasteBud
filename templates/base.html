@@ -13,7 +13,7 @@
     {% if not reviews %}
     <p><a href="/reviews">See your reviews</a></p>
     {% endif %}
-    <footer><a href="/handle-logout">Log out</a></footer>
+    <div><footer><a href="/handle-logout">Log out</a></footer></div>
     {% endif %}
     {% for message in get_flashed_messages() %}
     <p>{{ message }}</p>
