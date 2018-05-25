@@ -19,15 +19,6 @@ def welcome_user():
 
 	return render_template("index.html", cities=cities)
 
-@app.route("/cities.json")
-def show_cities():
-	"""Return list of cities from restaurants table."""
-
-	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
-															 .order_by(Restaurant.city)).all()
-
-	return jsonify({'cities': cities})
-
 @app.route("/signup")
 def display_signup():
 	"""Show signup form."""
@@ -105,12 +96,25 @@ def show_profile():
 
 		return render_template("profile.html", recs=recs)
 
+@app.route("/cities.json")
+def show_cities():
+	"""Return list of cities from restaurants table."""
+
+	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
+															 .order_by(Restaurant.city)).all()
+
+	return jsonify({'cities': cities})
+
 @app.route("/top-picks.json")
 def send_top_picks():
+		# import pdb; pdb.set_trace()
 		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 		recs = show_top_picks(user)
 
-		return jsonify({'recs': recs})
+		recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
+		print recs_dict
+
+		return jsonify(recs_dict)
 
 @app.route("/search")
 def show_search():
