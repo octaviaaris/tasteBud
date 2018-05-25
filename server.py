@@ -194,6 +194,26 @@ def show_search_results():
 
 	return jsonify(results)
 
+@app.route("/reviews.json")
+def show_user_reviews():
+	"""Return list of restaurants (and details in tuples) user has rated.
+	
+	reviews = [(restaurant_id, name, price, user_rating)]
+
+	"""
+
+	reviews = (db.session.query(Rating.restaurant_id,
+								Restaurant.name,
+								Restaurant.price,
+								Rating.user_rating).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
+												   .filter(Rating.user_id==session['user_id'])
+												   .order_by(Rating.rating_id)).all()
+	
+	# reviews.sort(key=lambda x: x[1])
+	review_dict = {review[0]: [review[1], review[2], review[3]] for review in reviews}
+	
+	return jsonify(review_dict)
+
 if __name__ == "__main__": # pragma: no cover
 	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 	app.debug = True
