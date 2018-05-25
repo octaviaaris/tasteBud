@@ -3,7 +3,7 @@
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {searchString: '', city: 'San Francisco', cities_array: '', results: {}};
+		this.state = {searchString: '', city: 'San Francisco', citiesArray: '', results: {}};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
@@ -19,7 +19,7 @@ class SearchForm extends React.Component {
 		let city = this.state.city;
 
 		fetch(`/search.json?search_string=${search_string}&city=${city}`).then((response) => response.json())
-																		  .then((data) => this.setState({results: data}));
+																		 .then((data) => this.setState({results: data}));
 
 	}
 
@@ -30,18 +30,18 @@ class SearchForm extends React.Component {
 							 	for (let city of data.cities) {
 							 		cities.push(city);
 							 	}
-							 	this.setState({cities_array: cities});
+							 	this.setState({citiesArray: cities});
 							 });
 	}
 
 	render() {
 
-		if (!this.state.cities_array) {
+		if (!this.state.citiesArray) {
 			return <div></div>
 		}
 		
 		let cityOptionIndex = 0;
-		const cityOptions = this.state.cities_array.map(function(city) {
+		const cityOptions = this.state.citiesArray.map(function(city) {
 			cityOptionIndex++;
 			return (<option key={cityOptionIndex} value={city}>{city}</option>);
 		});
