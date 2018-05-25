@@ -78,17 +78,17 @@ class SearchResults extends React.Component {
 	render() {
 		
 		let url = "/details/"
-		let result_array = []
-		let result_key = 0
+		let resultArray = []
+		let resultKey = 0
 
 		for (let result in this.props.results) {
-			result_key++;
-			result_array.push(<p key={result_key}>
+			resultKey++;
+			resultArray.push(<p key={resultKey}>
 				<a href={url + result} target="_blank">{this.props.results[result].name}</a>
 				 &nbsp;({this.props.results[result].price})</p>)
 		}
-		if (result_array.length > 0) {
-			return (<div>{result_array}</div>);
+		if (resultArray.length > 0) {
+			return (<div>{resultArray}</div>);
 		}
 
 		else {
