@@ -12,8 +12,8 @@ class SearchForm extends React.Component {
 		this.setState({[evt.target.name]: evt.target.value})
 	}
 
-	handleSubmit(event) {
-		event.preventDefault();
+	handleSubmit(evt) {
+		evt.preventDefault();
 
 		let search_string = this.state.searchString;
 		let city = this.state.city;
