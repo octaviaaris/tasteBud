@@ -90,32 +90,7 @@ def show_profile():
 		flash(Markup('Log in to see your profile or <a href="/signup">create one now</a>!'))
 		return redirect("/login")
 
-	else:
-		user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
-		recs = show_top_picks(user)
-
-		return render_template("profile.html", recs=recs)
-
-@app.route("/cities.json")
-def show_cities():
-	"""Return list of cities from restaurants table."""
-
-	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
-															 .order_by(Restaurant.city)).all()
-
-	return jsonify({'cities': cities})
-
-@app.route("/top-picks.json")
-def send_top_picks():
-	"""Return dictionary of top restaurant recommendations."""
-	
-	user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
-	recs = show_top_picks(user)
-
-	recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
-	print recs_dict
-
-	return jsonify(recs_dict)
+	return render_template("profile.html")
 
 @app.route("/search")
 def show_search():
@@ -123,17 +98,6 @@ def show_search():
 
 	return render_template("search-form.html")
 
-@app.route("/search.json")
-def show_search_results():
-	"""Return user search results as a list."""
-
-	search_string = request.args.get('search_string', None)
-	city = request.args.get('city')
-	price = request.args.get('price', None)
-	
-	results = user_search_results(city, search_string)
-
-	return jsonify(results)
 
 @app.route("/details/<restaurant_id>")
 def show_details(restaurant_id):
@@ -194,6 +158,41 @@ def show_rated_restaurants():
 	else:
 		return redirect("/search")
 
+########################################
+####### routes for ajax requests #######
+########################################
+
+@app.route("/cities.json")
+def show_cities():
+	"""Return list of cities from restaurants table."""
+
+	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
+															 .order_by(Restaurant.city)).all()
+
+	return jsonify({'cities': cities})
+
+@app.route("/top-picks.json")
+def send_top_picks():
+	"""Return dictionary of top restaurant recommendations."""
+
+	user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
+	recs = show_top_picks(user)
+
+	recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
+
+	return jsonify(recs_dict)
+
+@app.route("/search.json")
+def show_search_results():
+	"""Return user search results as a list."""
+
+	search_string = request.args.get('search_string', None)
+	city = request.args.get('city')
+	price = request.args.get('price', None)
+	
+	results = user_search_results(city, search_string)
+
+	return jsonify(results)
 
 if __name__ == "__main__": # pragma: no cover
 	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
