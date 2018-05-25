@@ -8,16 +8,11 @@
 
 <div id="top-picks">
 <p>TOP PICKS FOR YOU (5)</p>
-<ul>
-	{% for rec in recs %}
-	<li><a href="/details/{{ rec.restaurant_id }}" target="_blank">{{ rec.name }}</a> ({{ rec.city }})</li>
-	{% endfor %}
-</ul>
-
-</div>
 
 <div id="recommendations"></div>
+</div>
+
 <div id="root"></div>
-<p><a href="/handle-logout">Log Out</a></p>
+<div><p><a href="/handle-logout">Log Out</a></p></div>
 
 {% endblock %}
