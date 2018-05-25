@@ -4,9 +4,6 @@
 
 {% block content %}
 
-<h2>Reviews</h2>
-{% for review in reviews %}
-<p><a href="/details/"+ {{ review[0] }}>{{ review[1] }}</a> | Price: {{ review[2] }} | Your review: {{ review[3] }}</p>
-{% endfor %}
+<div id="reviews"></div>
 
 {% endblock %}
