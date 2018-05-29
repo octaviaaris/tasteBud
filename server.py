@@ -13,11 +13,7 @@ app.secret_key = "athena"
 def welcome_user():
 	"""Show login, signup, and search forms."""
 
-	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
-															 .order_by(Restaurant.city))
-	print cities.all()
-
-	return render_template("index.html", cities=cities)
+	return render_template("index.html")
 
 @app.route("/signup")
 def display_signup():
@@ -103,6 +99,8 @@ def show_search():
 def show_details(restaurant_id):
 	"""Show restaurant details."""
 
+	session["restaurant_id"] = restaurant_id
+
 	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
 
 	if 'user_id' in session:
@@ -126,14 +124,14 @@ def record_rating():
 	user = User.query.filter_by(username=session['username']).one()
 
 	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
-	
+
 	if existing_rating:
 		existing_rating[0].user_rating = rating
 		db.session.commit()
 	else:
 		new_rating = Rating(restaurant_id=restaurant_id,
 							user_id=user.user_id,
-							user_rating=rating)
+							user_rating=float(rating))
 
 		db.session.add(new_rating)
 		db.session.commit()
@@ -193,6 +191,28 @@ def show_search_results():
 	results = user_search_results(city, search_string)
 
 	return jsonify(results)
+
+@app.route("/details.json")
+def get_retaurant_details():
+	"""Return dictionary of retaurant details."""
+
+	restaurant_id = session["restaurant_id"]
+
+	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
+
+	details = {'restaurant_id': restaurant_id,
+			   'name': r.name,
+			   'categories': [c.category for c in r.rest_cats],
+			   'price': r.price,
+			   'yelp_rating': r.yelp_rating,
+			   'address1': r.address1,
+			   'city': r.city,
+			   'state': r.state,
+			   'zipcode': r.zipcode}
+
+	print details
+
+	return jsonify(details)
 
 @app.route("/reviews.json")
 def show_user_reviews():
