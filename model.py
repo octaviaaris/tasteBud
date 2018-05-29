@@ -305,10 +305,6 @@ def delete_test_users():
 
 	db.session.commit()
 
-	# for user in test_users:
-	# 	db.session.delete(user)
-	# 	db.session.commit()
-
 def delete_test_ratings():
 	"""Delete test ratings."""
 
