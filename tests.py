@@ -1,7 +1,7 @@
 import unittest
 
 from server import app
-from model import db, connect_to_db, example_users, example_ratings, delete_test_users, delete_test_ratings
+from model import db, connect_to_db, example_users, example_ratings, delete_test_users, delete_test_ratings, User
 from correlation import pearson
 from recommender import show_top_picks, user_search_results
 
@@ -73,9 +73,7 @@ class DatabaseTests(unittest.TestCase):
 
 		self.assertIn('Welcome back, Octavia!', result.data)
 		self.assertIn('TOP PICKS FOR YOU', result.data)
-		self.assertIn('Find', result.data)
-		self.assertIn('Choose a city', result.data)
-		self.assertIn('Log Out', result.data)
+		self.assertIn('Log out', result.data)
 		self.assertNotIn('Sign Up', result.data)
 
 	def test_handle_login_no_user(self):
@@ -147,35 +145,37 @@ class DatabaseTests(unittest.TestCase):
 		
 		result = self.client.get("/search")
 
-		self.assertIn("Find", result.data)
-		self.assertIn("Alameda", result.data)
 		self.assertIn("Back to profile", result.data)
+		self.assertIn("See your reviews", result.data)
+		self.assertIn("Log out", result.data)
 
-	def test_search_results_logged_in(self):
-		"""Test search-results route (logged in)."""
+	# jasmine test
+	# def test_search_results_logged_in(self):
+	# 	"""Test search-results route (logged in)."""
 
-		with self.client as c:
-			with c.session_transaction() as session:
-				session['username'] = 'Octavia'
+	# 	with self.client as c:
+	# 		with c.session_transaction() as session:
+	# 			session['username'] = 'Octavia'
 
-		result = self.client.get("/search-results",
-								 query_string={'city': 'Oakland'})
+	# 	result = self.client.get("/search-results",
+	# 							 query_string={'city': 'Oakland'})
 
-		self.assertIn("Back to profile", result.data)
-		self.assertIn("Restaurants in Oakland", result.data)
-		self.assertIn("Cholita Linda (2)", result.data)
+	# 	self.assertIn("Back to profile", result.data)
+	# 	self.assertIn("Restaurants in Oakland", result.data)
+	# 	self.assertIn("Cholita Linda (2)", result.data)
 
-	def test_search_results_logged_out(self):
-		"""Test search-results route (logged out)."""
+	# jasmine test 
+	# def test_search_results_logged_out(self):
+	# 	"""Test search-results route (logged out)."""
 
-		result = self.client.get("/search-results",
-								 query_string={'city': 'Oakland'})
+	# 	result = self.client.get("/search-results",
+	# 							 query_string={'city': 'Oakland'})
 
 
-		self.assertIn("Restaurants in Oakland", result.data)
-		self.assertIn("Cholita Linda", result.data)
+	# 	self.assertIn("Restaurants in Oakland", result.data)
+	# 	self.assertIn("Cholita Linda", result.data)
 
-		self.assertNotIn("Back to profile", result.data)
+	# 	self.assertNotIn("Back to profile", result.data)
 
 	def test_details_logged_in(self):
 		"""Test details route (logged in)."""
@@ -183,6 +183,7 @@ class DatabaseTests(unittest.TestCase):
 		with self.client as c:
 			with c.session_transaction() as session:
 				session['username'] = 'Octavia'
+				session['user_id'] = 1
 
 		result = self.client.get("/details/UHFjEP5dVn4wqcjt7ByUog",
 								 query_string={'restaurant_id': 'UHFjEP5dVn4wqcjt7ByUog'})
@@ -200,6 +201,7 @@ class DatabaseTests(unittest.TestCase):
 		with self.client as c:
 			with c.session_transaction() as session:
 				session['username'] = 'Octavia'
+				session['user_id'] = 1
 
 		result = self.client.get("/details/eYXwVR4mMAjzkJnm5wneHQ",
 								 query_string={'restaurant_id': 'eYXwVR4mMAjzkJnm5wneHQ'})
@@ -218,10 +220,13 @@ class DatabaseTests(unittest.TestCase):
 		with self.client as c:
 			with c.session_transaction() as session:
 				session['username'] = 'Octavia'
+				octavia = User.query.filter_by(username="Octavia").one()
+				session['user_id'] = octavia.user_id
+				session["restaurant_id"] = 'YH82tozaJi_cCKU6xF6IxQ'
 
 		result = self.client.post("/rate-restaurant",
 								 data={'rating': '4',
-								 	   'restaurant_id': 'eYXwVR4mMAjzkJnm5wneHQ'},
+								 	   'restaurant_id': 'YH82tozaJi_cCKU6xF6IxQ'},
 								 follow_redirects=True)
 
 		self.assertEqual(result.status_code, 200)
@@ -233,6 +238,9 @@ class DatabaseTests(unittest.TestCase):
 		with self.client as c:
 			with c.session_transaction() as session:
 				session['username'] = 'Octavia'
+				octavia = User.query.filter_by(username="Octavia").one()
+				session['user_id'] = octavia.user_id
+				session["restaurant_id"] = '1048yN4bQRt_h3zQ04GDSA'
 
 		result = self.client.post("/rate-restaurant",
 								 data={'rating': '4',
@@ -251,10 +259,11 @@ class UnitTests(unittest.TestCase):
 
 		connect_to_db(app, "postgresql:///testdb")
 
+
 	def tearDown(self):
 		"""Run at the end of every test."""
 
-		delete_test_users()
+		# delete_test_users()
 		db.session.close()
 
 	def test_pearson(self):
@@ -310,15 +319,16 @@ class FlaskTests(unittest.TestCase):
 
 		self.assertNotIn('Back to profile', result.data)
 
-	def test_search_logged_out(self):
-		"""Test search route when user is logged out."""
+	# jasmine test
+	# def test_search_logged_out(self):
+	# 	"""Test search route when user is logged out."""
 
-		result = self.client.get("/search")
+	# 	result = self.client.get("/search")
 
-		self.assertIn("Find", result.data)
-		self.assertIn("Choose a city", result.data)
+	# 	self.assertIn("Find", result.data)
+	# 	self.assertIn("Choose a city", result.data)
 
-		self.assertNotIn("Back to profile", result.data)
+	# 	self.assertNotIn("Back to profile", result.data)
 
 	def test_details_logged_out(self):
 		"""Test details route (logged out)."""
