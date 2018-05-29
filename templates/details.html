@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Details{% endblock %}
 
 {% block content %}
 <h3>{{ restaurant.name }}</h3>
@@ -53,5 +53,9 @@
 {% endif %}
 
 <p><a href="{{ restaurant.url }}" target="_blank">Go to yelp page</a></p>
+
+<div id="details"></div>
+
+<div id="rating"></div>
 
 {% endblock %}
