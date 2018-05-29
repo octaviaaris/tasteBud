@@ -3,7 +3,11 @@
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {searchString: '', city: 'San Francisco', citiesArray: '', results: {}};
+		this.state = {searchString: '',
+					  city: 'San Francisco',
+					  citiesArray: '',
+					  price: 0,
+					  results: {}};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
