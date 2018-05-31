@@ -1,54 +1,29 @@
 class RestaurantDetails extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {details: {}};
+		this.state = {details: {},
+					  categories: [],
+					  userRating: "Rate below"};
 	}
 
 	componentDidMount() {
 
 		fetch('/details.json',
 			  {credentials: 'include'}).then((response) => response.json())
-									   .then((data) => this.setState({details: data}));
+									   .then((data) => this.setState({details: data, categories: data['categories']}));
 	}
 
 	render() {
 
-		let url = "/details/"
-		let detailArray = []
-		let detailObject = {}
-		let detailKey = 0
-
-		for (let detail in this.state.details) {
-			detailKey++;
-			detailArray.push(
-				<p key={detailKey}>{detail, this.state.details[detail]}</p>
-				)
-		}
-
-		for (let key in this.state.details) {
-			detailObject[key] = this.state.details[key];
-		}
-
-		// name = this.state.details['name'];
-		// categories = this.state.details['categories'];
-		// price = this.state.details['price'];
-		// yelp_rating = this.state.details['yelp_rating'];
-		// address1 = this.state.details['address1'];
-		// city = this.state.details['city'];
-		// state = this.state.details['state'];
-		// zipcode = this.state.details['zipcode'];
-
 		return (
 			<div>
-				{/*<h3>{name}</h3>*/}
-				<p>React details</p>
-				<h3>{detailObject['name']}</h3>
-				<p>{detailObject['categories']}</p>
-				<p>Price: {detailObject['price']}</p>
-				<p>Yelp Rating: {detailObject['yelp_rating']}</p>
+				<h3>{this.state.details['name']}</h3>
+				Yelp: {'*'.repeat(this.state.details['yelp_rating'])} | You: {this.state.userRating}
+				<p>{'$'.repeat(this.state.details['price'])} | {this.state.categories.join(", ")}</p>
 				<p>Address:</p>
-				<p>{detailObject['address1']}</p>
-				<p>{detailObject['city']}, {detailObject['state']} {detailObject['zipcode']}</p>
+				{this.state.details['address1']}<br/>
+				{this.state.details['city']}, {this.state.details['state']} {this.state.details['zipcode']}
+				<p><a href={this.state.details['yelp_url']} target="_blank">Go to yelp page</a></p>
 			</div>
 			)
 	}
