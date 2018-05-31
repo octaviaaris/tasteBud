@@ -196,7 +196,7 @@ def show_search_results():
 def get_retaurant_details():
 	"""Return dictionary of retaurant details."""
 
-	restaurant_id = session["restaurant_id"]
+	restaurant_id = session['restaurant_id']
 
 	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
 
@@ -211,9 +211,23 @@ def get_retaurant_details():
 			   'zipcode': r.zipcode,
 			   'yelp_url': r.url}
 
-	print details
-
 	return jsonify(details)
+
+@app.route("/user-rating.json")
+def get_user_rating():
+	"""Return user rating for retaurant."""
+
+	restaurant_id = session['restaurant_id']
+	user_id = session['user_id']
+
+	rating = Rating.query.filter(Rating.restaurant_id==restaurant_id,
+								 Rating.user_id==user_id).first()
+
+	if rating:
+		return jsonify({'userRating': rating.user_rating})
+
+	return None
+
 
 @app.route("/reviews.json")
 def show_user_reviews():
