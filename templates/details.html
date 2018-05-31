@@ -3,19 +3,6 @@
 {% block title %}Details{% endblock %}
 
 {% block content %}
-<h3>{{ restaurant.name }}</h3>
-{% for c in restaurant.rest_cats %}
-{{ c.category }} |
-{% endfor %}
-<p>Price: {{ restaurant.price }}</p>
-<p>Yelp Rating: {{ restaurant.yelp_rating }}</p>
-
-<div>
-<h2>DETAILS!</h2>
-<p>Address:</p>
-{{ restaurant.address1 }}<br>
-{{ restaurant.city }}, {{ restaurant.state }} {{ restaurant.zipcode }}
-</div>
 
 {% if user %}
 {% if rating %}
@@ -51,8 +38,6 @@
   </form> 	
 </div>
 {% endif %}
-
-<p><a href="{{ restaurant.url }}" target="_blank">Go to yelp page</a></p>
 
 <div id="details"></div>
 
