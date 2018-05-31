@@ -3,6 +3,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy import func
 from model import *
 from recommender import *
+import json
 
 # -- coding: utf-8 --
 
@@ -120,13 +121,13 @@ def record_rating():
 	"""Add user_rating to database."""
 
 	rating = request.form.get('rating')
-	restaurant_id = request.form.get('restaurant_id')
+	restaurant_id = session['restaurant_id']
 	user = User.query.filter_by(username=session['username']).one()
 
-	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).all()
+	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).first()
 
 	if existing_rating:
-		existing_rating[0].user_rating = rating
+		existing_rating.user_rating = rating
 		db.session.commit()
 	else:
 		new_rating = Rating(restaurant_id=restaurant_id,
@@ -212,6 +213,39 @@ def get_retaurant_details():
 			   'yelp_url': r.url}
 
 	return jsonify(details)
+
+@app.route("/rate-restaurant.json", methods=['POST'])
+def record_rating_json():
+	"""Add user_rating to database."""
+
+	rating = json.loads(request.form.get('json'))
+	restaurant_id = session['restaurant_id']
+	user = User.query.filter_by(username=session['username']).first()
+
+	print float(rating['rating'])
+	print user
+
+	# existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).first()
+
+	# if existing_rating:
+	# 	existing_rating.user_rating = rating
+	# 	db.session.commit()
+	# else:
+	# 	new_rating = Rating(restaurant_id=restaurant_id,
+	# 						user_id=user.user_id,
+	# 						user_rating=float(rating))
+
+	# 	db.session.add(new_rating)
+	# 	db.session.commit()
+
+	return jsonify({"testing": "test value"})
+
+@app.route("/rate-with-get.json")
+def rate_with_get():
+	
+	print request.args.get('rating')
+
+	return jsonify({"test_get": "get success"})
 
 @app.route("/user-rating.json")
 def get_user_rating():
