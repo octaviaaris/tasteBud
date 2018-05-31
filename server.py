@@ -116,29 +116,6 @@ def show_details(restaurant_id):
 
 	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating)
 
-@app.route("/rate-restaurant", methods=['POST'])
-def record_rating():
-	"""Add user_rating to database."""
-
-	rating = request.form.get('rating')
-	restaurant_id = session['restaurant_id']
-	user = User.query.filter_by(username=session['username']).one()
-
-	existing_rating = Rating.query.filter(Rating.user_id==user.user_id, Rating.restaurant_id==restaurant_id).first()
-
-	if existing_rating:
-		existing_rating.user_rating = rating
-		db.session.commit()
-	else:
-		new_rating = Rating(restaurant_id=restaurant_id,
-							user_id=user.user_id,
-							user_rating=float(rating))
-
-		db.session.add(new_rating)
-		db.session.commit()
-
-	return redirect("/details/" + restaurant_id)
-
 @app.route("/reviews")
 def show_rated_restaurants():
 	"""Show user restaurants she has already rated (and the rating she gave)."""
@@ -239,8 +216,8 @@ def get_retaurant_details():
 
 # 	return jsonify({"testing": "test value"})
 
-@app.route("/rate-with-get.json")
-def rate_with_get():
+@app.route("/rate-restaurant.json")
+def rate_restaurant():
 	
 	rating = float(request.args.get('rating'))
 	restaurant_id = session['restaurant_id']
@@ -257,7 +234,7 @@ def rate_with_get():
 							user_id=user_id,
 							user_rating=rating)
 
-	return jsonify({"test_get": "get success"})
+	return jsonify({"rating": rating})
 
 @app.route("/user-rating.json")
 def get_user_rating():
@@ -268,6 +245,8 @@ def get_user_rating():
 
 	rating = Rating.query.filter(Rating.restaurant_id==restaurant_id,
 								 Rating.user_id==user_id).first()
+
+	print "I got called"
 
 	if rating:
 		return jsonify({'userRating': rating.user_rating})
