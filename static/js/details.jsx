@@ -11,6 +11,12 @@ class RestaurantDetails extends React.Component {
 		fetch('/details.json',
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => this.setState({details: data, categories: data['categories']}));
+
+		fetch('/user-rating.json',
+			  {credentials: 'include'}).then((response) => response.json())
+									   .then((data) => (data) ? this.setState({userRating: '*'.repeat(data['userRating'])}) 
+									   						  : this.setState({userRating: "Changed"}));
+
 	}
 
 	render() {
