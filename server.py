@@ -208,7 +208,8 @@ def get_retaurant_details():
 			   'address1': r.address1,
 			   'city': r.city,
 			   'state': r.state,
-			   'zipcode': r.zipcode}
+			   'zipcode': r.zipcode,
+			   'yelp_url': r.url}
 
 	print details
 
