@@ -4,26 +4,43 @@ class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {searchString: '',
-					  city: 'San Francisco',
+					  city: '',
 					  citiesArray: '',
 					  price: 0,
+					  article: "near",
+					  submitCity: "San Francisco",
+					  submitSearch: "Restaurants",
+					  submitted: false,
 					  results: {}};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	handleChange(evt) {
-		this.setState({[evt.target.name]: evt.target.value})
+		this.setState({[evt.target.name]: evt.target.value});
 	}
 
 	handleSubmit(evt) {
 		evt.preventDefault();
-
+		
 		let search_string = this.state.searchString;
+		if (search_string) {
+			this.setState({submitSearch: search_string});
+		} else {
+			this.setState({submitSearch: "Restaurants"})
+		}
 		let city = this.state.city;
+		if (city) {
+			this.setState({submitCity: city, article: "in"});
+		} else {
+			this.setState({submitCity: "San Francisco", article: "near"});
+		}
+		this.setState({submitted: true});
+
 
 		fetch(`/search.json?search_string=${search_string}&city=${city}`).then((response) => response.json())
 																		 .then((data) => this.setState({results: data}));
+		
 
 	}
 
@@ -39,7 +56,6 @@ class SearchForm extends React.Component {
 	}
 
 	render() {
-
 		if (!this.state.citiesArray) {
 			return <div></div>
 		}
@@ -64,14 +80,19 @@ class SearchForm extends React.Component {
 				<select name="city"
 						value={this.state.city} 
 						onChange={this.handleChange}>
-					<option value="San Francisco">Choose a city</option>
+					<option value="">Choose a city</option>
 					{cityOptions}
 				</select>
 				</label>
 				<input type="submit" value="Search" />
 			</form>
 
-			<SearchResults results={this.state.results} />
+			<SearchResults 
+				results={this.state.results} 
+				submitCity={this.state.submitCity}
+				submitSearch={this.state.submitSearch}
+				submitted={this.state.submitted}
+				article={this.state.article} />
 			</div>
 		);
 	}
@@ -91,12 +112,21 @@ class SearchResults extends React.Component {
 				<a href={url + result} target="_blank">{this.props.results[result].name}</a>
 				 &nbsp;({this.props.results[result].price})</p>)
 		}
+
+
 		if (resultArray.length > 0) {
-			return (<div>{resultArray}</div>);
+			return (
+				<div>
+				<h3>{this.props.submitSearch} {this.props.article} {this.props.submitCity}</h3>
+				{resultArray}
+				</div>);
 		}
 
+		else if (resultArray.length == 0 && this.props.submitted == true) {
+			return (<div><p>No results for "{this.props.submitSearch}" {this.props.article} {this.props.submitCity}.</p></div>);
+		}
 		else {
-			return (<div><p>"No results."</p></div>);
+			return (<div></div>)
 		}
 
 	}
