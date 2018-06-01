@@ -11,6 +11,7 @@ class SearchForm extends React.Component {
 					  submitCity: "San Francisco",
 					  submitSearch: "Restaurants",
 					  submitted: false,
+					  reroute: "false",
 					  results: {}};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,7 +23,7 @@ class SearchForm extends React.Component {
 
 	handleSubmit(evt) {
 		evt.preventDefault();
-		
+
 		let search_string = this.state.searchString;
 		if (search_string) {
 			this.setState({submitSearch: search_string});
@@ -40,7 +41,6 @@ class SearchForm extends React.Component {
 
 		fetch(`/search.json?search_string=${search_string}&city=${city}`).then((response) => response.json())
 																		 .then((data) => this.setState({results: data}));
-		
 
 	}
 
@@ -102,6 +102,10 @@ class SearchResults extends React.Component {
 
 	render() {
 		
+		// if (this.props.reroute == true) {
+		// 	this.props.submitSearch()
+		// }
+
 		let url = "/details/"
 		let resultArray = []
 		let resultKey = 0
@@ -133,6 +137,6 @@ class SearchResults extends React.Component {
 }
 
 ReactDOM.render(
-	<SearchForm />,
+	<SearchForm reroute={false} />,
 	document.getElementById("root")
 );
