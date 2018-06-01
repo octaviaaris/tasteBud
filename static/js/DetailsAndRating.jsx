@@ -2,7 +2,7 @@ class RatingParent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleRatingChange = this.handleRatingChange.bind(this);
-		this.state = {currentRating: ""};
+		this.state = {currentRating: "Rate below"};
 	}
 
 	componentDidMount() {
