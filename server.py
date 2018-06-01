@@ -55,7 +55,7 @@ def display_login():
 @app.route("/handle-login", methods=['POST'])
 def handle_login():
 	"""Validate user info and save username in session."""
-	
+
 	# get username from form submission
 	username = request.form['username']
 	pw = request.form['password']
@@ -92,7 +92,7 @@ def show_profile():
 @app.route("/search")
 def show_search():
 	"""Show search form and results."""
-
+	
 	return render_template("search-form.html")
 
 
@@ -257,20 +257,24 @@ def get_user_rating():
 def show_user_reviews():
 	"""Return list of restaurants (and details in tuples) user has rated.
 	
-	reviews = [(restaurant_id, name, price, user_rating)]
+	reviews = [(restaurant_id, name, price, city, user_rating)]
 
 	"""
 
 	reviews = (db.session.query(Rating.restaurant_id,
 								Restaurant.name,
 								Restaurant.price,
-								Rating.user_rating).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
-												   .filter(Rating.user_id==session['user_id'])
-												   .order_by(Rating.rating_id)).all()
+								Restaurant.city,
+								Rating.user_rating,).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
+												    .filter(Rating.user_id==session['user_id'])
+												    .order_by(Rating.rating_id)).all()
 	
 	# reviews.sort(key=lambda x: x[1])
-	review_dict = {review[0]: [review[1], review[2], review[3]] for review in reviews}
-	
+	review_dict = {review[0]: {'name': review[1],
+							   'price': review[2],
+							   'city': review[3],
+							   'user_rating': review[4]} for review in reviews}
+
 	return jsonify(review_dict)
 
 if __name__ == "__main__": # pragma: no cover
