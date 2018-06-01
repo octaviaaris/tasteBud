@@ -6,7 +6,6 @@ init_app()
 def get_new_restaurant_recs(user):
 	"""Finds restaurants based on restaurants similar to what user has rated 4 or above."""
 
-
 	# get restaurants from user's ratings where user's rating is 4 or above
 	user_favorites = [r.restaurants for r in user.ratings if r.user_rating >= 4]
 	
@@ -36,8 +35,8 @@ def show_top_picks(user):
 	if len(top_picks) >= 5:
 		return sample(top_picks, 5)
 
+	# pull based on yelp_ratings if not enough based on user history
 	else:
-	
 		top_yelp = Restaurant.query.filter(Restaurant.yelp_rating >= 4).all()
 
 		return top_picks + sample(top_yelp, 5 - len(top_picks))
