@@ -45,11 +45,14 @@ def show_top_picks(user):
 def user_search_results(city, search_string=None):
 	"""Returns restaurants from user search."""
 
-	#  eager load all restaurants and their categories in city
+	#  eager load all restaurants and their categories in all cities
 	q = (Restaurant.query.join(Rest_cat, Restaurant.restaurant_id == Rest_cat.restaurant_id)
-						 .filter(Restaurant.city==city).order_by(Restaurant.name))
+						 .order_by(Restaurant.name))
 
 	results = []
+
+	if city:
+		q = q.filter(Restaurant.city==city)
 
 	# filter for restaurants whose name or category matches find term
 	if search_string:
@@ -70,7 +73,8 @@ def user_search_results(city, search_string=None):
 	result_dict = {}
 	for r in results:
 		result_dict[r.restaurant_id] = {"name": r.name,
-										"price": r.price}
+										"price": r.price,
+										"city": r.city}
 
 	return result_dict
 
