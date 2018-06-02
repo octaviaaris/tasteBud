@@ -16,7 +16,6 @@ class UserReviews extends React.Component {
 	}
 
 	handleChange(evt) {
-		console.log(evt.target.value);
 		let params = evt.target.value.split(" ")
 		this.sortReviews(params[0], params[1]);
 	}
