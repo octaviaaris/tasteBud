@@ -1,14 +1,53 @@
 class UserReviews extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {reviews: {}};
+		this.handleChange = this.handleChange.bind(this);
+		this.sortReviews = this.sortReviews.bind(this);
+		this.state = {reviews: {},
+					  sortedArray: []};
 	}
 
 	componentDidMount() {
 
 		fetch('/reviews.json',
 			  {credentials: 'include'}).then((response) => response.json())
-									   .then((data) => this.setState({reviews: data}));
+									   .then((data) => this.setState({reviews: data}, this.sortReviews));
+
+	}
+
+	handleChange(evt) {
+		console.log(evt.target.value);
+		if (evt.target.value == 1) {
+			this.sortReviews();
+		} else if (evt.target.value == 2) {
+			this.sortReviews("price");
+		} else if (evt.target.value == 3) {
+			this.sortReviews("price", "asc");
+		}
+	}
+
+	sortReviews(key="user_rating", order="desc") {
+		let unsorted = [];
+
+		for (let review in this.state.reviews) {
+			unsorted.push(this.state.reviews[review]);
+		}
+
+		let sorted = unsorted.sort(function(a, b) {
+			const itemA = a[key];
+			const itemB = b[key];
+
+			let comparison = 0;
+			if (itemA > itemB) {
+				comparison = -1;
+			} else if (itemA < itemB) {
+				comparison = 1;
+			}
+
+			return ((order == 'asc') ? (comparison * -1) : comparison);
+		});
+
+		this.setState({sortedArray: sorted});
 	}
 	
 	render() {
@@ -17,16 +56,33 @@ class UserReviews extends React.Component {
 		let reviewArray = []
 		let reviewKey = 0
 
-		for (let review in this.state.reviews) {
+		for (let review in this.state.sortedArray) {
 			reviewKey++;
-			reviewArray.push(
-				<p key={reviewKey}><a href={url + review} target="_blank">{this.state.reviews[review][0]}</a> | Price: {this.state.reviews[review][1]} | Your review: {this.state.reviews[review][2]}</p>
-				)
+			let restaurant_id = this.state.sortedArray[review].restaurant_id
+			let name = this.state.sortedArray[review].name;
+			let city = this.state.sortedArray[review].city;
+			let price = this.state.sortedArray[review].price;
+			let userRating = this.state.sortedArray[review].user_rating;
+
+		reviewArray.push(
+			<p key={reviewKey}><a href={url + restaurant_id} target="_blank">{name}</a> ({city}) | Price: {price} | Your review: {userRating}</p>
+			)
 		}
+
+		let sortPrice = [
+			<form key={1} onSubmit={this.handleSubmit}>
+				<select name="sortBy" onChange={this.handleChange}>
+					<option value="1">Rating</option>
+					<option value="2">Price (high to low)</option>
+					<option value="3">Price (low to high)</option>
+				</select>
+			</form>
+		]
 
 		return (
 			<div>
 				<h2>Reviews</h2>
+				{sortPrice}
 				{reviewArray}
 			</div>
 			)
