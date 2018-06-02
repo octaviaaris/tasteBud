@@ -17,13 +17,8 @@ class UserReviews extends React.Component {
 
 	handleChange(evt) {
 		console.log(evt.target.value);
-		if (evt.target.value == 1) {
-			this.sortReviews();
-		} else if (evt.target.value == 2) {
-			this.sortReviews("price");
-		} else if (evt.target.value == 3) {
-			this.sortReviews("price", "asc");
-		}
+		let params = evt.target.value.split(" ")
+		this.sortReviews(params[0], params[1]);
 	}
 
 	sortReviews(key="user_rating", order="desc") {
@@ -72,9 +67,9 @@ class UserReviews extends React.Component {
 		let sortPrice = [
 			<form key={1} onSubmit={this.handleSubmit}>
 				<select name="sortBy" onChange={this.handleChange}>
-					<option value="1">Rating</option>
-					<option value="2">Price (high to low)</option>
-					<option value="3">Price (low to high)</option>
+					<option value="user_rating">Rating</option>
+					<option value="price">Price (high to low)</option>
+					<option value="price asc">Price (low to high)</option>
 				</select>
 			</form>
 		]
