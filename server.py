@@ -270,10 +270,21 @@ def show_user_reviews():
 												    .order_by(Rating.rating_id)).all()
 	
 	# reviews.sort(key=lambda x: x[1])
-	review_dict = {review[0]: {'name': review[1],
-							   'price': review[2],
-							   'city': review[3],
-							   'user_rating': review[4]} for review in reviews}
+	review_dict = {}
+	i = 0
+	for review in reviews:
+		review_dict[i] = {'restaurant_id': review[0],
+						  'name': review[1],
+						  'price': review[2],
+						  'city': review[3],
+						  'user_rating': review[4]}
+		i+= 1
+
+	# review_dict = {review[0]: {'restaurant_id': review[0],
+	# 						   'name': review[1],
+	# 						   'price': review[2],
+	# 						   'city': review[3],
+	# 						   'user_rating': review[4]} for review in reviews}
 
 	return jsonify(review_dict)
 
