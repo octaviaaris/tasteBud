@@ -1,11 +1,12 @@
 class UserReviews extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleChange = this.handleChange.bind(this);
+		this.checkFilters = this.checkFilters.bind(this);
 		this.handlePriceFilter = this.handlePriceFilter.bind(this);
 		this.handleRatingFilter = this.handleRatingFilter.bind(this);
-		this.sortReviews = this.sortReviews.bind(this);
 		this.filterReviews = this.filterReviews.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.sortReviews = this.sortReviews.bind(this);
 		this.state = {reviews: {},
 					  priceFilter: new Set(),
 					  ratingFilter: new Set(),
@@ -19,42 +20,36 @@ class UserReviews extends React.Component {
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => this.setState({reviews: data}, this.sortReviews));
 
-		sort()
+	}
 
+	checkFilters(filter, evt) {
+		const currentFilters = filter;
+		const newValue = evt.target.value;
+
+		if (currentFilters.has(newValue)) {
+			currentFilters.delete(newValue);
+		} else {
+			currentFilters.add(newValue);}
+
+		return currentFilters;
 	}
 
 	handlePriceFilter(evt) {
-		let priceFilters = this.state.priceFilter;
-
-		if (priceFilters.has(evt.target.value)) {
-			priceFilters.delete(evt.target.value);
-		} else {
-			priceFilters.add(evt.target.value);
-		}
-
+		const priceFilters = this.checkFilters(this.state.priceFilter, evt);
 		this.setState({priceFilter: priceFilters}, this.filterReviews);
 	}
 
 	handleRatingFilter(evt) {
-		let ratingFilters = this.state.ratingFilter;
-
-		if (ratingFilters.has(evt.target.value)) {
-			ratingFilters.delete(evt.target.value);
-		} else {
-			ratingFilters.add(evt.target.value);
-		}
-
+		const ratingFilters = this.checkFilters(this.state.ratingFilter, evt);
 		this.setState({ratingFilter: ratingFilters}, this.filterReviews);
 	}
 
 	filterReviews() {
 		let prices = this.state.priceFilter;
 		let stars = this.state.ratingFilter;
-		let filterOne = [];
-		let filterTwo = [];
+		let filteredByPrice = [];
+		let filteredByRating = [];
 		let unfiltered = this.state.sortedArray;
-		console.log(prices);
-		console.log(stars);
 
 		if (prices.size === 0 && stars.size === 0) {
 			this.setState({filteredArray: unfiltered});
@@ -63,25 +58,22 @@ class UserReviews extends React.Component {
 			if (prices.size > 0) {
 				for (let item of this.state.sortedArray) {
 						if (prices.has(String(item.price))) {
-							filterOne.push(item);
+							filteredByPrice.push(item);
 						}
 					}
-			
 			} else {
-				filterOne = unfiltered;
-			}
+				filteredByPrice = unfiltered;}
 
 			if (stars.size > 0) {
-				for (let record of filterOne) {
-					if (stars.has(String(record.user_rating))) {
-						filterTwo.push(record);
+				for (let item of filteredByPrice) {
+					if (stars.has(String(item.user_rating))) {
+						filteredByRating.push(item);
 					}
 				}
 			} else {
-				filterTwo = filterOne;
-			}
+				filteredByRating = filteredByPrice;}
 
-			this.setState({filteredArray: filterTwo});
+			this.setState({filteredArray: filteredByRating});
 		}
 	}
 
@@ -116,21 +108,22 @@ class UserReviews extends React.Component {
 	
 	render() {
 
-
+		const reviews = this.state.filteredArray;
 		let url = "/details/"
 		let reviewArray = []
 		let reviewKey = 0
 
-		for (let review in this.state.filteredArray) {
+		for (let review in reviews) {
 			reviewKey++;
-			let restaurant_id = this.state.filteredArray[review].restaurant_id
-			let name = this.state.filteredArray[review].name;
-			let city = this.state.filteredArray[review].city;
-			let price = this.state.filteredArray[review].price;
-			let userRating = this.state.filteredArray[review].user_rating;
+			let restaurant_id = reviews[review].restaurant_id
+			let name = reviews[review].name;
+			let city = reviews[review].city;
+			let price = reviews[review].price;
+			let userRating = reviews[review].user_rating;
 
-		reviewArray.push(
-			<p key={reviewKey}><a href={url + restaurant_id} target="_blank">{name}</a> ({city}) | Price: {price} | Your review: {userRating}</p>
+			reviewArray.push(
+				<p key={reviewKey}><a href={url + restaurant_id} target="_blank">{name}</a> ({city}) 
+				&nbsp;| Price: {price} | Your review: {userRating}</p>
 			)
 		}
 
@@ -180,7 +173,7 @@ class UserReviews extends React.Component {
 				{ratingFilterBtns}
 				{reviewArray}
 			</div>
-			)
+		)
 	}
 }
 

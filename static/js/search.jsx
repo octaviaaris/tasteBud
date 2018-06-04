@@ -3,6 +3,12 @@
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
+		this.sortResults = this.sortResults.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleSortChange = this.handleSortChange.bind(this);
+		this.handlePriceFilter = this.handlePriceFilter.bind(this);
+		this.filterResults = this.filterResults.bind(this);
 		this.state = {searchString: '',
 					  city: '',
 					  citiesArray: '',
@@ -15,12 +21,6 @@ class SearchForm extends React.Component {
 					  results: {},
 					  sortedArray: [],
 					  filteredArray: []};
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSortChange = this.handleSortChange.bind(this);
-		this.handlePriceFilter = this.handlePriceFilter.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.sortResults = this.sortResults.bind(this);
-		this.filterResults = this.filterResults.bind(this);
 	}
 
 	sortResults(key="yelp_rating", order="desc") {
@@ -99,16 +99,14 @@ class SearchForm extends React.Component {
 		console.log(filters);
 
 		if (filters.size > 0) {for (let item of this.state.sortedArray) {
-					if (filters.has(String(item.price))) {
-						filtered.push(item);
-					}
-				}
-		
-				this.setState({filteredArray: filtered});
+			if (filters.has(String(item.price))) {
+				filtered.push(item);
+			}
+		}
+			this.setState({filteredArray: filtered});
 		} else {
 			this.setState({filteredArray: unfiltered})
 		}
-
 	}
 
 	componentDidMount() {
@@ -132,6 +130,27 @@ class SearchForm extends React.Component {
 			cityOptionIndex++;
 			return (<option key={cityOptionIndex} value={city}>{city}</option>);
 		});
+
+		const searchForm = [
+			<form onSubmit={this.handleSubmit}>
+				<label>
+				Find <input name="searchString"
+							type="text" 
+							placeholder="japanese, asian, Tacorea" 
+							value={this.state.searchString} 
+							onChange={this.handleChange} />
+				</label>
+				<label>
+				<select name="city"
+						value={this.state.city} 
+						onChange={this.handleChange}>
+					<option value="">Choose a city</option>
+					{cityOptions}
+				</select>
+				</label>
+				<input type="submit" value="Search" />
+			</form>
+		]
 
 		const sortForm = [
 			<form key={1}>
@@ -158,25 +177,8 @@ class SearchForm extends React.Component {
 
 		return(
 			<div>
-			<form onSubmit={this.handleSubmit}>
-				<label>
-				Find <input name="searchString"
-							type="text" 
-							placeholder="japanese, asian, Tacorea" 
-							value={this.state.searchString} 
-							onChange={this.handleChange} />
-				</label>
-				<label>
-				<select name="city"
-						value={this.state.city} 
-						onChange={this.handleChange}>
-					<option value="">Choose a city</option>
-					{cityOptions}
-				</select>
-				</label>
-				<input type="submit" value="Search" />
-			</form>
 
+			{searchForm}
 			{sortForm}
 			{priceFilterBtns}
 
@@ -197,27 +199,28 @@ class SearchResults extends React.Component {
 		super(props);
 	}
 
-
 	render() {
 
+		const results = this.props.filteredArray;
 		let url = "/details/";
 		let resultArray = [];
 		let resultKey = 0;
 		
-		for (let result in this.props.filteredArray) {
+		for (let result in results) {
 			resultKey++;
-			let restaurant_id = this.props.filteredArray[result].restaurant_id
-			let name = this.props.filteredArray[result].name;
-			let city = this.props.filteredArray[result].city;
-			let price = this.props.filteredArray[result].price;
-			let yelp_rating = this.props.filteredArray[result].yelp_rating;
+			let restaurant_id = results[result].restaurant_id
+			let name = results[result].name;
+			let city = results[result].city;
+			let price = results[result].price;
+			let yelp_rating = results[result].yelp_rating;
 
 			resultArray.push(
 				<div key={resultKey}>
 				<a href={url + restaurant_id} target="_blank">{name}</a><br/>
 				Price: {price} | Yelp Rating: {yelp_rating}
 				<p></p>
-				</div>)
+				</div>
+			)
 		}
 
 
@@ -226,12 +229,14 @@ class SearchResults extends React.Component {
 				<div>
 				<h3>{this.props.submitSearch} {this.props.article} {this.props.submitCity}</h3>
 				{resultArray}
-				</div>);
+				</div>
+			);
 		}
 
 		else if (resultArray.length == 0 && this.props.submitted == true) {
 			return (<div><p>No results for "{this.props.submitSearch}" {this.props.article} {this.props.submitCity}.</p></div>);
 		}
+
 		else {
 			return (<div></div>)
 		}
