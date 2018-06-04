@@ -19,6 +19,8 @@ class UserReviews extends React.Component {
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => this.setState({reviews: data}, this.sortReviews));
 
+		sort()
+
 	}
 
 	handlePriceFilter(evt) {
