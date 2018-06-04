@@ -2,9 +2,15 @@ class UserReviews extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
+		this.handlePriceFilter = this.handlePriceFilter.bind(this);
+		this.handleRatingFilter = this.handleRatingFilter.bind(this);
 		this.sortReviews = this.sortReviews.bind(this);
+		this.filterReviews = this.filterReviews.bind(this);
 		this.state = {reviews: {},
-					  sortedArray: []};
+					  priceFilter: new Set(),
+					  ratingFilter: new Set(),
+					  sortedArray: [],
+					  filteredArray: []};
 	}
 
 	componentDidMount() {
@@ -13,6 +19,66 @@ class UserReviews extends React.Component {
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => this.setState({reviews: data}, this.sortReviews));
 
+	}
+
+	handlePriceFilter(evt) {
+		let priceFilters = this.state.priceFilter;
+
+		if (priceFilters.has(evt.target.value)) {
+			priceFilters.delete(evt.target.value);
+		} else {
+			priceFilters.add(evt.target.value);
+		}
+
+		this.setState({priceFilter: priceFilters}, this.filterReviews);
+	}
+
+	handleRatingFilter(evt) {
+		let ratingFilters = this.state.ratingFilter;
+
+		if (ratingFilters.has(evt.target.value)) {
+			ratingFilters.delete(evt.target.value);
+		} else {
+			ratingFilters.add(evt.target.value);
+		}
+
+		this.setState({ratingFilter: ratingFilters}, this.filterReviews);
+	}
+
+	filterReviews() {
+		let prices = this.state.priceFilter;
+		let stars = this.state.ratingFilter;
+		let filterOne = [];
+		let filterTwo = [];
+		let unfiltered = this.state.sortedArray;
+		console.log(prices);
+		console.log(stars);
+
+		if (prices.size === 0 && stars.size === 0) {
+			this.setState({filteredArray: unfiltered});
+		} else {
+
+			if (prices.size > 0) {
+				for (let item of this.state.sortedArray) {
+						if (prices.has(String(item.price))) {
+							filterOne.push(item);
+						}
+					}
+			
+			} else {
+				filterOne = unfiltered;
+			}
+
+			if (stars.size > 0) {
+				for (let record of filterOne) {
+					if (stars.has(String(record.user_rating))) {
+						filterTwo.push(record);
+					}
+				}
+
+				this.setState({filteredArray: filterTwo})
+			}
+		}
 	}
 
 	handleChange(evt) {
@@ -41,30 +107,31 @@ class UserReviews extends React.Component {
 			return ((order == 'asc') ? (comparison * -1) : comparison);
 		});
 
-		this.setState({sortedArray: sorted});
+		this.setState({sortedArray: sorted}, this.filterReviews);
 	}
 	
 	render() {
+
 
 		let url = "/details/"
 		let reviewArray = []
 		let reviewKey = 0
 
-		for (let review in this.state.sortedArray) {
+		for (let review in this.state.filteredArray) {
 			reviewKey++;
-			let restaurant_id = this.state.sortedArray[review].restaurant_id
-			let name = this.state.sortedArray[review].name;
-			let city = this.state.sortedArray[review].city;
-			let price = this.state.sortedArray[review].price;
-			let userRating = this.state.sortedArray[review].user_rating;
+			let restaurant_id = this.state.filteredArray[review].restaurant_id
+			let name = this.state.filteredArray[review].name;
+			let city = this.state.filteredArray[review].city;
+			let price = this.state.filteredArray[review].price;
+			let userRating = this.state.filteredArray[review].user_rating;
 
 		reviewArray.push(
 			<p key={reviewKey}><a href={url + restaurant_id} target="_blank">{name}</a> ({city}) | Price: {price} | Your review: {userRating}</p>
 			)
 		}
 
-		let sortPrice = [
-			<form key={1} onSubmit={this.handleSubmit}>
+		let sortForm = [
+			<form key={1}>
 				<select name="sortBy" onChange={this.handleChange}>
 					<option value="user_rating">Rating</option>
 					<option value="price">Price (high to low)</option>
@@ -73,10 +140,40 @@ class UserReviews extends React.Component {
 			</form>
 		]
 
+		const priceFilterBtns = [
+			<div className="priceFilter" key={1}>
+				<button value="1"
+						onClick={this.handlePriceFilter}>$</button>
+				<button value="2"
+						onClick={this.handlePriceFilter}>$$</button>
+				<button value="3" 
+						onClick={this.handlePriceFilter}>$$$</button>
+				<button value="4"
+						onClick={this.handlePriceFilter}>$$$$</button>
+			</div>
+		]
+
+		const ratingFilterBtns = [
+			<div className="ratingFilter" key={1}>
+				<button value="1"
+						onClick={this.handleRatingFilter}>*</button>
+				<button value="2"
+						onClick={this.handleRatingFilter}>**</button>
+				<button value="3" 
+						onClick={this.handleRatingFilter}>***</button>
+				<button value="4"
+						onClick={this.handleRatingFilter}>****</button>
+				<button value="5"
+						onClick={this.handleRatingFilter}>*****</button>
+			</div>
+		]
+
 		return (
 			<div>
 				<h2>Reviews</h2>
-				{sortPrice}
+				{sortForm}
+				{priceFilterBtns}
+				{ratingFilterBtns}
 				{reviewArray}
 			</div>
 			)
