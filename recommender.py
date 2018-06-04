@@ -70,10 +70,14 @@ def user_search_results(city, search_string=None):
 		results = set(q.all())
 
 	result_dict = {}
+	i = 0
 	for r in results:
-		result_dict[r.restaurant_id] = {"name": r.name,
-										"price": r.price,
-										"city": r.city}
+		result_dict[i] = {"restaurant_id": r.restaurant_id,
+						  "name": r.name,
+						  "price": r.price,
+						  "city": r.city,
+						  "yelp_rating": r.yelp_rating}
+		i+=1
 
 	return result_dict
 
