@@ -191,31 +191,6 @@ def get_retaurant_details():
 
 	return jsonify(details)
 
-# @app.route("/rate-restaurant.json", methods=['POST'])
-# def record_rating_json():
-# 	"""Add user_rating to database."""
-
-# 	rating = json.loads(request.form.get('json'))
-# 	rating = float(rating['rating'])
-# 	restaurant_id = session['restaurant_id']
-# 	user_id = session['user_id']
-
-# 	existing_rating = Rating.query.filter(Rating.user_id==user_id,
-# 									  Rating.restaurant_id==restaurant_id).first()
-
-# 	if existing_rating:
-# 		existing_rating.user_rating = rating
-# 		db.session.commit()
-# 	else:
-# 		new_rating = Rating(restaurant_id=restaurant_id,
-# 							user_id=user_id,
-# 							user_rating=rating)
-
-# 		db.session.add(new_rating)
-# 		db.session.commit()
-
-# 	return jsonify({"testing": "test value"})
-
 @app.route("/rate-restaurant.json")
 def rate_restaurant():
 	
@@ -245,8 +220,6 @@ def get_user_rating():
 
 	rating = Rating.query.filter(Rating.restaurant_id==restaurant_id,
 								 Rating.user_id==user_id).first()
-
-	print "I got called"
 
 	if rating:
 		return jsonify({'userRating': rating.user_rating})
@@ -279,12 +252,6 @@ def show_user_reviews():
 						  'city': review[3],
 						  'user_rating': review[4]}
 		i+= 1
-
-	# review_dict = {review[0]: {'restaurant_id': review[0],
-	# 						   'name': review[1],
-	# 						   'price': review[2],
-	# 						   'city': review[3],
-	# 						   'user_rating': review[4]} for review in reviews}
 
 	return jsonify(review_dict)
 
