@@ -11,10 +11,41 @@ class SearchForm extends React.Component {
 					  submitCity: "San Francisco",
 					  submitSearch: "Restaurants",
 					  submitted: false,
-					  reroute: "false",
-					  results: {}};
+					  priceFilter: new Set(),
+					  results: {},
+					  sortedArray: [],
+					  filteredArray: []};
 		this.handleChange = this.handleChange.bind(this);
+		this.handleSortChange = this.handleSortChange.bind(this);
+		this.handlePriceFilter = this.handlePriceFilter.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.sortResults = this.sortResults.bind(this);
+		this.filterResults = this.filterResults.bind(this);
+	}
+
+	sortResults(key="yelp_rating", order="desc") {
+		
+		let unsorted = [];
+
+		for (let result in this.state.results) {
+			unsorted.push(this.state.results[result]);
+		}
+
+		let sorted = unsorted.sort(function(a, b) {
+			const itemA = a[key];
+			const itemB = b[key];
+
+			let comparison = 0;
+			if (itemA > itemB) {
+				comparison = -1;
+			} else if (itemA < itemB) {
+				comparison = 1;
+			}
+
+			return ((order == 'asc') ? (comparison * -1) : comparison);
+		});
+
+		this.setState({sortedArray: sorted}, this.filterResults);
 	}
 
 	handleChange(evt) {
@@ -40,7 +71,43 @@ class SearchForm extends React.Component {
 
 
 		fetch(`/search.json?search_string=${search_string}&city=${city}`).then((response) => response.json())
-																		 .then((data) => this.setState({results: data}));
+																		 .then((data) => this.setState({results: data, priceFilter: new Set()}, this.sortResults));
+
+	}
+
+	handleSortChange(evt) {
+		let params = evt.target.value.split(" ");
+		this.sortResults(params[0], params[1]);
+	}
+
+	handlePriceFilter(evt) {
+		let filters = this.state.priceFilter;
+
+		if (filters.has(evt.target.value)) {
+			filters.delete(evt.target.value);
+		} else {
+			filters.add(evt.target.value);
+		}
+
+		this.setState({priceFilter: filters}, this.filterResults);
+	}
+
+	filterResults() {
+		let filters = this.state.priceFilter;
+		let filtered = [];
+		let unfiltered = this.state.sortedArray;
+		console.log(filters);
+
+		if (filters.size > 0) {for (let item of this.state.sortedArray) {
+					if (filters.has(String(item.price))) {
+						filtered.push(item);
+					}
+				}
+		
+				this.setState({filteredArray: filtered});
+		} else {
+			this.setState({filteredArray: unfiltered})
+		}
 
 	}
 
@@ -66,6 +133,29 @@ class SearchForm extends React.Component {
 			return (<option key={cityOptionIndex} value={city}>{city}</option>);
 		});
 
+		const sortForm = [
+			<form key={1}>
+				<select name="sortBy" onChange={this.handleSortChange}>
+					<option value="yelp_rating">Rating</option>
+					<option value="price">Price (high to low)</option>
+					<option value="price asc">Price (low to high)</option>
+				</select>
+			</form>
+		]
+
+		const priceFilterBtns = [
+			<div className="priceFilter" key={1}>
+				<button value="1"
+						onClick={this.handlePriceFilter}>$</button>
+				<button value="2"
+						onClick={this.handlePriceFilter}>$$</button>
+				<button value="3" 
+						onClick={this.handlePriceFilter}>$$$</button>
+				<button value="4"
+						onClick={this.handlePriceFilter}>$$$$</button>
+			</div>
+		]
+
 		return(
 			<div>
 			<form onSubmit={this.handleSubmit}>
@@ -87,34 +177,47 @@ class SearchForm extends React.Component {
 				<input type="submit" value="Search" />
 			</form>
 
+			{sortForm}
+			{priceFilterBtns}
+
 			<SearchResults 
 				results={this.state.results} 
 				submitCity={this.state.submitCity}
 				submitSearch={this.state.submitSearch}
 				submitted={this.state.submitted}
-				article={this.state.article} />
+				article={this.state.article}
+				filteredArray={this.state.filteredArray} />
 			</div>
 		);
 	}
 }
 
 class SearchResults extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+
 
 	render() {
+
+		let url = "/details/";
+		let resultArray = [];
+		let resultKey = 0;
 		
-		// if (this.props.reroute == true) {
-		// 	this.props.submitSearch()
-		// }
-
-		let url = "/details/"
-		let resultArray = []
-		let resultKey = 0
-
-		for (let result in this.props.results) {
+		for (let result in this.props.filteredArray) {
 			resultKey++;
-			resultArray.push(<p key={resultKey}>
-				<a href={url + result} target="_blank">{this.props.results[result].name}</a>
-				 &nbsp;({this.props.results[result].price})</p>)
+			let restaurant_id = this.props.filteredArray[result].restaurant_id
+			let name = this.props.filteredArray[result].name;
+			let city = this.props.filteredArray[result].city;
+			let price = this.props.filteredArray[result].price;
+			let yelp_rating = this.props.filteredArray[result].yelp_rating;
+
+			resultArray.push(
+				<div key={resultKey}>
+				<a href={url + restaurant_id} target="_blank">{name}</a><br/>
+				Price: {price} | Yelp Rating: {yelp_rating}
+				<p></p>
+				</div>)
 		}
 
 
@@ -137,6 +240,6 @@ class SearchResults extends React.Component {
 }
 
 ReactDOM.render(
-	<SearchForm reroute={false} />,
+	<SearchForm />,
 	document.getElementById("root")
 );
