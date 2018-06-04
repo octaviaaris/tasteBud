@@ -75,9 +75,11 @@ class UserReviews extends React.Component {
 						filterTwo.push(record);
 					}
 				}
-
-				this.setState({filteredArray: filterTwo})
+			} else {
+				filterTwo = filterOne;
 			}
+
+			this.setState({filteredArray: filterTwo});
 		}
 	}
 
