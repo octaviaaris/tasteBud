@@ -72,7 +72,6 @@ class SearchForm extends React.Component {
 
 		fetch(`/search.json?search_string=${search_string}&city=${city}`).then((response) => response.json())
 																		 .then((data) => this.setState({results: data, priceFilter: new Set()}, this.sortResults));
-
 	}
 
 	handleSortChange(evt) {
