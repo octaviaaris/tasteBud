@@ -132,7 +132,7 @@ class SearchForm extends React.Component {
 		});
 
 		const searchForm = [
-			<form onSubmit={this.handleSubmit}>
+			<form key={1} onSubmit={this.handleSubmit}>
 				<label>
 				Find <input name="searchString"
 							type="text" 
@@ -163,7 +163,7 @@ class SearchForm extends React.Component {
 		]
 
 		const priceFilterBtns = [
-			<div className="priceFilter" key={1}>
+			<div key={1} className="priceFilter">
 				<button value="1"
 						onClick={this.handlePriceFilter}>$</button>
 				<button value="2"
