@@ -13,7 +13,8 @@ app.secret_key = "athena"
 @app.route("/")
 def welcome_user():
 	"""Show login, signup, and search forms."""
-
+	if 'username' in session:
+		return redirect("/profile")
 	return render_template("index.html")
 
 @app.route("/signup")
@@ -87,12 +88,16 @@ def show_profile():
 		flash(Markup('Log in to see your profile or <a href="/signup">create one now</a>!'))
 		return redirect("/login")
 
-	return render_template("profile.html")
+	return render_template("profile.html", profile=True)
 
 @app.route("/search")
 def show_search():
 	"""Show search form and results."""
 	
+	if 'username' not in session:
+		flash(Markup('Log in to find new eats or <a href="/signup">create a new profile now</a>!'))
+		return redirect("/login")
+
 	return render_template("search-form.html")
 
 
@@ -102,37 +107,24 @@ def show_details(restaurant_id):
 
 	session["restaurant_id"] = restaurant_id
 
-	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
-
 	if 'user_id' in session:
-		user = User.query.get(session['user_id'])
-		rating = Rating.query.filter(Rating.user_id==session['user_id'], Rating.restaurant_id==restaurant_id).all()
-		
-		if rating:
-			rating = rating[0].user_rating
+		return render_template("details.html")
+	
 	else:
-		user = None
-		rating = None
+		flash(Markup('Log in to review new restaurants or <a href="/signup">create a new profile now</a>!'))
+		return redirect("/login")
 
-	return render_template("details.html", restaurant=r, session=session, user=user, rating=rating)
 
 @app.route("/reviews")
 def show_rated_restaurants():
 	"""Show user restaurants she has already rated (and the rating she gave)."""
 
 	if 'user_id' in session:
-		# query for restaurant_id, name, price, user_rating
-		reviews = (db.session.query(Rating.restaurant_id,
-									Restaurant.name,
-									Restaurant.price,
-									Rating.user_rating).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
-													   .filter(Rating.user_id==session['user_id'])
-													   .order_by(Rating.rating_id)).all()
-		
-		return render_template("user-reviews.html", reviews=reviews)
+		return render_template("user-reviews.html", reviews=True)
 
 	else:
-		return redirect("/search")
+		flash(Markup('Log in to see your reviews or <a href="/signup">create a new profile now</a>!'))
+		return redirect("/login")
 
 ########################################
 ####### routes for ajax requests #######
@@ -144,7 +136,6 @@ def show_cities():
 
 	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
 															 .order_by(Restaurant.city)).all()
-
 	return jsonify({'cities': cities})
 
 @app.route("/top-picks.json")
@@ -164,7 +155,6 @@ def show_search_results():
 
 	search_string = request.args.get('search_string', None)
 	city = request.args.get('city')
-	price = request.args.get('price', None)
 	
 	results = user_search_results(city, search_string)
 
