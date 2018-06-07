@@ -1,21 +1,220 @@
+html, body {
+	height: 100%;
+	font-family: 'Raleway', sans-serif;
+	/*font-family: 'Raleway Dots', cursive;*/
+	font-weight: 300;
+}
 #top-picks {
-	
-	height: 300px;
-	border-style: solid;
-	border-color: black;
-	border-width: 2px;
 	margin: 10px;
+	/*color: #D1457A;
+	font-family: 'Raleway Dots', cursive;*/
+	display: flex;
+	justify-content: space-around;
+}
+
+#top-picks, #reviewTitle {
+	color: #D1457A;
+	font-family: 'Raleway Dots', cursive;
 }
 
 #show-results {
-	height: 50px;
-	margin-top: 20px;
+
 }
 
 #root {
-	height: 50px;
+	
 }
 
-.rateBtn {
-	width: 25px;
+.rateButtons {
+	display: flex;
+}
+
+.container {
+	height: 100%;
+	margin: none;
+}
+
+.main {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 80%;
+	background: url(/static/images/brenda-godinez-227272-unsplash.jpg) no-repeat center center;
+	/*background: url(/static/images/eaters-collective-172258-unsplash.jpg) no-repeat center center;*/
+	background-size: cover;
+}
+
+.column {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+}
+
+#hero-image {
+	height: 100%;
+}
+
+.logo {
+	height: 10%;
+}
+
+#logo {
+	margin-right: auto;
+	font-family: 'Kaushan Script', cursive;
+	color: #00C1BE;
+	font-size: 3em;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+.navbar-style {
+	background-color: none;
+}
+
+.navbar-brand {
+	/*font-family: 'Pacifico', cursive;*/
+	font-family: 'Kaushan Script', cursive;
+	font-size: 1.75em;
+	/*font-family: 'Bungee Shade', cursive;*/
+}
+
+.navbar-brand, #navbarDropdown {
+	color: #00C1BE;
+}
+
+.navbar-nav .dropdown-menu {
+	position: absolute;
+}
+
+.dropdown-item {
+	color: #D1457A;
+}
+
+.dropdown-item:hover {
+	background-color: #D1457A;
+	color: white;
+}
+
+.login-form-container {
+	margin: auto;
+	width: 60%;
+}
+
+#login-form {
+	display: block;
+	position: relative;
+	top: 0%;
+	margin: auto;
+	width: 250px;
+}
+
+.footer {
+	height: 10%;
+	display: flex;
+	align-items: flex-end;
+	font-family: 'Raleway Dots', cursive;
+	font-size: 0.75em;
+}
+
+.carousel {
+	width: 70%;
+	margin: auto;
+}
+
+#carouselExampleIndicators {
+	max-width: 500px;
+	max-height: 400px;
+}
+
+
+.carousel-inner {
+	display: flex;
+	justify-content: space-around;
+	background-size: cover;
+}
+
+.recommendations {
+}
+
+.carousel-item {
+	height: 500px;
+	padding-left: 100px;
+	padding-right: 100px;
+	padding-top: 100px;
+}
+
+.restaurantName {
+	font-size: 1.5em;
+}
+
+a {
+	color: #00C1BE;
+}
+
+a:hover {
+	color: #F9CE3E;
+	text-decoration: none;
+}
+
+#ratingParent {
+	display: flex;
+	justify-content: space-around;
+}
+
+.fa-dollar-sign,
+.fa-star,
+.fa-star-half {
+	color: #D1457A;
+}
+
+.fa-wine-glass {
+	color: #D1457A;
+	/*margin-right: 5px;*/
+}
+
+.home-wine {
+	font-size: 2.5em;
+}
+
+.fa-chevron-circle-left,
+.fa-chevron-circle-right {
+	color: #00C1BE;
+	font-size: 2em;
+	background-color: white;
+}
+
+
+.loginFail {
+	display: none;
+}
+
+.loginFail.loginFailShow {
+	display: block;
+}
+
+.carousel-indicators li {
+	background-color: #dee2e6;
+	width: 10px;
+	height: 10px;
+	border-radius: 8px;
+}
+
+.carousel-indicators .active {
+	background-color: #00C1BE;
+}
+
+.userReview {
+	margin-bottom: 15px;
+	margin-top: 10px;
+}
+
+.reviewName {
+	font-size: 1.2em;
+	font-weight: 500;
+}
+
+.priceFilter:target {
+	background-color: red;
 }

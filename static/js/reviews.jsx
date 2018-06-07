@@ -121,9 +121,21 @@ class UserReviews extends React.Component {
 			let price = reviews[review].price;
 			let userRating = reviews[review].user_rating;
 
+			let priceIcon = [];
+			for (let step = 0; step < price; step++ ) {
+				priceIcon.push(<i key={step} className="fas fa-dollar-sign"></i>)
+			}
+
+			let ratingIcon = [];
+			for (let step = 0; step < userRating; step++ ) {
+				ratingIcon.push(<i key={step} className="fas fa-star"></i>)
+				}
+
 			reviewArray.push(
-				<p key={reviewKey}><a href={url + restaurant_id} target="_blank">{name}</a> ({city}) 
-				&nbsp;| Price: {price} | Your review: {userRating}</p>
+				<div className="userReview" key={reviewKey}>
+				<span className="reviewName"><a href={url + restaurant_id} target="_blank">{name}</a></span> ({city})<br/>
+				Price: {priceIcon} | Your review: {ratingIcon}
+				</div>
 			)
 		}
 
@@ -167,7 +179,7 @@ class UserReviews extends React.Component {
 
 		return (
 			<div>
-				<h2>Reviews</h2>
+				<div id="reviewTitle"><h2>Your Reviews</h2></div>
 				{sortForm}
 				{priceFilterBtns}
 				{ratingFilterBtns}

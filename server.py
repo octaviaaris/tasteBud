@@ -15,13 +15,13 @@ def welcome_user():
 	"""Show login, signup, and search forms."""
 	if 'username' in session:
 		return redirect("/profile")
-	return render_template("index.html")
+	return render_template("index.html", home=True)
 
 @app.route("/signup")
 def display_signup():
 	"""Show signup form."""
 
-	return render_template("signup.html")
+	return render_template("signup.html", signup=True)
 
 @app.route("/handle-signup", methods=['POST'])
 def create_user_account():
@@ -34,7 +34,7 @@ def create_user_account():
 	# redirect to login page if user already has account
 	if User.query.filter_by(username=username, password=pw).all():
 		flash('Account already exists. Please log in.')
-		return redirect("/login")
+		return redirect("/")
 	
 	# if user does not yet exist, add to db and redirect to login
 	else:
@@ -45,32 +45,38 @@ def create_user_account():
 		db.session.add(new_user)
 		db.session.commit()
 		flash("Account created! Please log in.")
-		return redirect("/login")
+		return redirect("/")
 
-@app.route("/login")
-def display_login():
-	"""Show login form."""
+# @app.route("/handle-login", methods=['POST'])
+# def handle_login():
+# 	"""Validate user info and save username in session."""
 
-	return render_template("login.html")
+# 	# get username from form submission
+# 	username = request.form['username']
+# 	pw = request.form['password']
 
-@app.route("/handle-login", methods=['POST'])
+# 	user = User.query.filter_by(username=username, password=pw).first()
+
+# 	# check if username and pw exist in db
+# 	if user:
+# 		session['username'] = user.username
+# 		session['user_id'] = user.user_id
+# 		return redirect("/profile")
+# 	else:
+# 		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
+# 		return redirect("/")
+
+@app.route("/handle-login")
 def handle_login():
-	"""Validate user info and save username in session."""
+	"""Redirects user to profile."""
 
-	# get username from form submission
-	username = request.form['username']
-	pw = request.form['password']
+	return redirect("/profile")
 
-	user = User.query.filter_by(username=username, password=pw).first()
+@app.route("/alert-invalid-login")
+def show_alert():
+	"""Show user alert message."""
 
-	# check if username and pw exist in db
-	if user:
-		session['username'] = user.username
-		session['user_id'] = user.user_id
-		return redirect("/profile")
-	else:
-		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
-		return redirect("/login")
+	return "placeholder"
 
 @app.route("/handle-logout")
 def handle_logout():
@@ -86,7 +92,7 @@ def show_profile():
 
 	if 'username' not in session:
 		flash(Markup('Log in to see your profile or <a href="/signup">create one now</a>!'))
-		return redirect("/login")
+		return redirect("/")
 
 	return render_template("profile.html", profile=True)
 
@@ -96,7 +102,7 @@ def show_search():
 	
 	if 'username' not in session:
 		flash(Markup('Log in to find new eats or <a href="/signup">create a new profile now</a>!'))
-		return redirect("/login")
+		return redirect("/")
 
 	return render_template("search-form.html")
 
@@ -112,7 +118,7 @@ def show_details(restaurant_id):
 	
 	else:
 		flash(Markup('Log in to review new restaurants or <a href="/signup">create a new profile now</a>!'))
-		return redirect("/login")
+		return redirect("/")
 
 
 @app.route("/reviews")
@@ -124,11 +130,29 @@ def show_rated_restaurants():
 
 	else:
 		flash(Markup('Log in to see your reviews or <a href="/signup">create a new profile now</a>!'))
-		return redirect("/login")
+		return redirect("/")
 
 ########################################
 ####### routes for ajax requests #######
 ########################################
+
+@app.route("/check-credentials.json", methods=['POST'])
+def check_credentials():
+	"""Validate user info and save username in session."""
+
+	# get username from form submission
+	username = request.form['username']
+	pw = request.form['password']
+
+	user = User.query.filter_by(username=username, password=pw).first()
+
+	# check if username and pw exist in db, add to session
+	if user:
+		session['username'] = user.username
+		session['user_id'] = user.user_id
+		return redirect("/profile")
+	else:
+		return
 
 @app.route("/cities.json")
 def show_cities():
@@ -145,7 +169,14 @@ def send_top_picks():
 	user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
 	recs = show_top_picks(user)
 
-	recs_dict = {rec.restaurant_id: [rec.name, rec.city] for rec in recs}
+	recs_dict = {rec.restaurant_id: {"name": rec.name,
+									 "price": rec.price,
+									 "yelp_rating": rec.yelp_rating,
+									 "categories": [c.category for c in rec.rest_cats],
+									 "address1": rec.address1,
+									 "city": rec.city,
+									 "state": rec.state,
+									 "zipcode": rec.zipcode} for rec in recs}
 
 	return jsonify(recs_dict)
 

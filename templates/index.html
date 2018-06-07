@@ -4,9 +4,74 @@
 
 {% block content %}
 
-{% if 'username' not in session %}
-<h2><a href="/login">Log In</a></h2>
-<h2><a href="/signup">Sign Up</a></h2>
-{% endif %}
+
+<div class="container">
+	<div class="row logo">
+		<!-- <i class="fas fa-wine-glass home-wine"></i> -->
+		<h1 id="logo">tasteBud</h1>
+	</div>
+	<div class="row main">
+		<div class="column login-form-container">
+			<form class="dropdown-menu p-4" action="/check-credentials.json" id="login-form" method="POST">
+<!-- 				{% for message in get_flashed_messages() %}
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				  {{ message }}
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				    <span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				{% endfor %} -->
+				<div class="loginFail">
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+						Failure!
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					    <span aria-hidden="true">&times;</span>
+					  </button>
+				</div>
+				</div>
+			  <div class="form-group">
+			    <input type="text" class="form-control" name="username" id="username-field" placeholder="Username">
+			  </div>
+			  <div class="form-group">
+			    <input type="password" class="form-control" name="password" id="password-field" placeholder="Password">
+			  </div>
+			  <button type="submit" class="btn btn-primary">Sign in</button>
+			  <div class="signup mt-3"><a href="/signup">Or create new account</a></div>
+			</form>
+		</div>
+
+		<script type="text/javascript">
+			
+			function handleLogin(evt) {
+				
+				if (data.redirect) {
+					window.location.href = data.redirect;
+				} else {
+					$('.loginFail').addClass("loginFailShow");
+				}
+			}
+
+			function checkCredentials(evt) {
+				evt.preventDefault();
+				let payload = {
+					"username": $("#username-field").val(),
+					"password": $("#password-field").val()
+				}
+
+				$.post("/check-credentials.json", payload, handleLogin)
+			}
+
+			$("#login-form").on("submit", checkCredentials);
+
+
+		</script>
+
+		
+	</div>
+	<div class="row footer">
+		<p>Hackbright Project 2018</p>
+	</div>
+</div>
+
 
 {% endblock %}

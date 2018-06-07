@@ -128,7 +128,7 @@ class RateButton extends React.Component {
 		
 		return (
 			<div>
-				<button className="rateButton" onClick={ this.rate }>{this.props.value}
+				<button className="btn btn-outline-info rate" onClick={ this.rate }>{this.props.value}
 				</button>
 			</div>
 			);
