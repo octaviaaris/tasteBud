@@ -66,17 +66,13 @@ def create_user_account():
 # 		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
 # 		return redirect("/")
 
-@app.route("/handle-login")
+@app.route("/handle-login", methods=['POST'])
 def handle_login():
 	"""Redirects user to profile."""
-
-	return redirect("/profile")
-
-@app.route("/alert-invalid-login")
-def show_alert():
-	"""Show user alert message."""
-
-	return "placeholder"
+	if 'username' in session:
+		return redirect("/profile")
+	else:
+		return redirect("/")
 
 @app.route("/handle-logout")
 def handle_logout():
@@ -150,9 +146,9 @@ def check_credentials():
 	if user:
 		session['username'] = user.username
 		session['user_id'] = user.user_id
-		return redirect("/profile")
+		return "success"
 	else:
-		return
+		return "fail"
 
 @app.route("/cities.json")
 def show_cities():
@@ -160,13 +156,17 @@ def show_cities():
 
 	cities = (Restaurant.query.with_entities(Restaurant.city).group_by(Restaurant.city)
 															 .order_by(Restaurant.city)).all()
+	print cities
 	return jsonify({'cities': cities})
 
 @app.route("/top-picks.json")
 def send_top_picks():
 	"""Return dictionary of top restaurant recommendations."""
 
-	user = User.query.options(db.joinedload('ratings').joinedload('restaurants')).filter_by(username=session['username']).one()
+	user = (db.session.query(User).join(Rating, Rating.user_id==User.user_id)
+								 .join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
+								 .filter(User.username==session['username']).one())
+		
 	recs = show_top_picks(user)
 
 	recs_dict = {rec.restaurant_id: {"name": rec.name,
@@ -263,7 +263,6 @@ def show_user_reviews():
 												    .filter(Rating.user_id==session['user_id'])
 												    .order_by(Rating.rating_id)).all()
 	
-	# reviews.sort(key=lambda x: x[1])
 	review_dict = {}
 	i = 0
 	for review in reviews:
