@@ -321,8 +321,10 @@ def delete_test_ratings():
 ##############################################################################
 
 def init_app():
+	print "init app called"
 	from flask import Flask
-	app = Flask(__name__)
+	# app = Flask(__name__)
+
 
 	connect_to_db(app)
 	print "Connected to DB"
@@ -330,7 +332,7 @@ def init_app():
 
 def connect_to_db(app, URI='postgres:///projectdb'):
 	"""Connect the database to my Flask app"""
-
+	print "connect_to_db called"
 	app.config['SQLALCHEMY_DATABASE_URI'] = URI
 	app.config['SQLALCHEMY_ECHO'] = False
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -339,7 +341,9 @@ def connect_to_db(app, URI='postgres:///projectdb'):
 
 
 if __name__ == "__main__":
-
-	init_app()	
+	from server import app
+	# init_app()
+	connect_to_db(app)
+	db.drop_all()
 	db.create_all()
 
