@@ -3,6 +3,8 @@ html, body {
 	font-family: 'Raleway', sans-serif;
 	/*font-family: 'Raleway Dots', cursive;*/
 	font-weight: 300;
+	padding-left: 25px;
+	padding-right: 25px;
 }
 #top-picks {
 	margin: 10px;
@@ -29,9 +31,20 @@ html, body {
 	display: flex;
 }
 
+.rate {
+
+}
+
+.rate .selected {
+	background-color: red;
+}
+
 .container {
 	height: 100%;
-	margin: none;
+/*	margin-left: 50px;
+	margin-right: 50px;*/
+	max-width: 1000px;
+
 }
 
 .main {
@@ -42,6 +55,21 @@ html, body {
 	background: url(/static/images/brenda-godinez-227272-unsplash.jpg) no-repeat center center;
 	/*background: url(/static/images/eaters-collective-172258-unsplash.jpg) no-repeat center center;*/
 	background-size: cover;
+}
+
+.signupHero {
+	height: 80%;
+	background: url(/static/images/brooke-lark-296282-unsplash.jpg) no-repeat center center;
+	background-size: cover;
+}
+
+.adventure {
+	font-family: 'Kaushan Script', cursive;
+	color: #00C1BE;
+	padding-left: 10px;
+	font-size: 3em;
+	text-shadow: 2px;
+	/*font-weight: 700;*/
 }
 
 .column {
@@ -190,9 +218,9 @@ a:hover {
 	display: none;
 }
 
-.loginFail.loginFailShow {
+/*.loginFail.loginFailShow {
 	display: block;
-}
+}*/
 
 .carousel-indicators li {
 	background-color: #dee2e6;
@@ -210,11 +238,24 @@ a:hover {
 	margin-top: 10px;
 }
 
-.reviewName {
+.reviewName, .searchHeader {
 	font-size: 1.2em;
-	font-weight: 500;
+	font-weight: 700;
+	color: #D1457A;
+	font-family: 'Raleway Dots', cursive;
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
-.priceFilter:target {
-	background-color: red;
+.btn-outline-info {
+	color: #00C1BE;
+	border-color: #00C1BE;
+}
+.btn-outline-info .selected {
+	color: red;
+}
+
+.btn-primary {
+	background-color: #00C1BE;
+	border: none;
 }
