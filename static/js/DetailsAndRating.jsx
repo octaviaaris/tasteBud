@@ -9,13 +9,13 @@ class RatingParent extends React.Component {
 
 		fetch('/user-rating.json',
 			  {credentials: 'include'}).then((response) => response.json())
-									   .then((data) => (data) ? this.setState({currentRating: '*'.repeat(data['userRating'])}) 
+									   .then((data) => (data) ? this.setState({currentRating: data['userRating']}) 
 									   						  : this.setState({currentRating: "Rate below"}));
 
 	}
 
 	handleRatingChange(newRating) {
-		this.setState({currentRating: '*'.repeat(newRating)});
+		this.setState({currentRating: newRating});
 	}
 
 	render () {
@@ -25,7 +25,7 @@ class RatingParent extends React.Component {
 		return (
 			<div>
 				<RestaurantDetails 
-					rating={currentRating} />
+					currentRating={currentRating} />
 				<div className="rateButtons">
 					<RateButton value="1"
 								className="rateBtn"
@@ -70,17 +70,31 @@ class RestaurantDetails extends React.Component {
 
 	render() {
 
-		const rating = this.props.rating;
+
+		const currentRating = this.props.currentRating;
+		const yelp_rating = this.state.details['yelp_rating'];
+
+		let you = [];
+		for (let step = 0; step < currentRating; step++ ) {
+			you.push(<i key={step} className="fas fa-star"></i>)
+			}
+
+		let yelp =[];
+		for (let step = 0; step < yelp_rating; step++ ) {
+			yelp.push(<i key={step} className="fas fa-star"></i>)
+			}
 
 		return (
-			<div>
-				<h3>{this.state.details['name']}</h3>
-				Yelp: {'*'.repeat(this.state.details['yelp_rating'])} | You: {rating}
-				<p>{'$'.repeat(this.state.details['price'])} | {this.state.categories.join(", ")}</p>
-				<p>Address:</p>
-				{this.state.details['address1']}<br/>
-				{this.state.details['city']}, {this.state.details['state']} {this.state.details['zipcode']}
-				<p><a href={this.state.details['yelp_url']} target="_blank">Go to yelp page</a></p>
+			<div className="row">
+				<div className="col detailPage">
+					<h3>{this.state.details['name']}</h3>
+					Yelp: {yelp} | You: {you}
+					<p>{'$'.repeat(this.state.details['price'])} | {this.state.categories.join(", ")}</p>
+					<p>Address:</p>
+					{this.state.details['address1']}<br/>
+					{this.state.details['city']}, {this.state.details['state']} {this.state.details['zipcode']}
+					<p><a href={this.state.details['yelp_url']} target="_blank">Go to yelp page</a></p>
+				</div>
 			</div>
 			)
 	}
