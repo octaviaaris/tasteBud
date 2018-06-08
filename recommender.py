@@ -1,7 +1,7 @@
 from model import *
 from random import sample
 
-init_app()
+# init_app()
 
 def get_new_restaurant_recs(user):
 	"""Finds restaurants based on restaurants similar to what user has rated 4 or above."""
