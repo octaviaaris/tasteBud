@@ -149,41 +149,53 @@ class UserReviews extends React.Component {
 			</form>
 		]
 
-		const priceFilterBtns = [
-			<div className="priceFilter" key={1}>
-				<button value="1"
-						onClick={this.handlePriceFilter}>$</button>
-				<button value="2"
-						onClick={this.handlePriceFilter}>$$</button>
-				<button value="3" 
-						onClick={this.handlePriceFilter}>$$$</button>
-				<button value="4"
-						onClick={this.handlePriceFilter}>$$$$</button>
-			</div>
-		]
+		let priceFilterBtns = [];
 
-		const ratingFilterBtns = [
-			<div className="ratingFilter" key={1}>
-				<button value="1"
-						onClick={this.handleRatingFilter}>*</button>
-				<button value="2"
-						onClick={this.handleRatingFilter}>**</button>
-				<button value="3" 
-						onClick={this.handleRatingFilter}>***</button>
-				<button value="4"
-						onClick={this.handleRatingFilter}>****</button>
-				<button value="5"
-						onClick={this.handleRatingFilter}>*****</button>
-			</div>
-		]
+		for (let step = 1; step < 5; step++) {
+			let prices = this.state.priceFilter;
+			if (prices.has(String(step))) {
+				priceFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handlePriceFilter}
+									   className="btn btn-outline-info selected">{"$".repeat(step)}</button>)
+			} else {
+				priceFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handlePriceFilter}
+									   className="btn btn-outline-info">{"$".repeat(step)}</button>)
+			}
+		}
+
+		let ratingFilterBtns = [];
+
+		for (let step = 1; step < 6; step++) {
+			let ratings = this.state.ratingFilter;
+			if (ratings.has(String(step))) {
+				ratingFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handleRatingFilter}
+									   className="btn btn-outline-info selected">{"*".repeat(step)}</button>)
+			} else {
+				ratingFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handleRatingFilter}
+									   className="btn btn-outline-info">{"*".repeat(step)}</button>)
+			}
+		}
 
 		return (
-			<div>
+			<div class="row">
+				<div className="col-5 filterPanel">
 				<div id="reviewTitle"><h2>Your Reviews</h2></div>
 				{sortForm}
+				<div className="filterDivide"></div>
 				{priceFilterBtns}
+				<div className="filterDivide"></div>
 				{ratingFilterBtns}
+				</div>
+				<div className="col-6">
 				{reviewArray}
+				</div>
 			</div>
 		)
 	}
