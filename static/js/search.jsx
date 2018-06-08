@@ -161,33 +161,40 @@ class SearchForm extends React.Component {
 			</form>
 		]
 
-		const priceFilterBtns = [
-			<div key={1} className="priceFilter">
-				<button value="1"
-						onClick={this.handlePriceFilter}>$</button>
-				<button value="2"
-						onClick={this.handlePriceFilter}>$$</button>
-				<button value="3" 
-						onClick={this.handlePriceFilter}>$$$</button>
-				<button value="4"
-						onClick={this.handlePriceFilter}>$$$$</button>
-			</div>
-		]
+		let priceFilterBtns = [];
+
+		for (let step = 1; step < 5; step++) {
+			let prices = this.state.priceFilter;
+			if (prices.has(String(step))) {
+				priceFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handlePriceFilter}
+									   className="btn btn-outline-info selected">{"$".repeat(step)}</button>)
+			} else {
+				priceFilterBtns.push(<button key={step}
+									   value={step}
+									   onClick={this.handlePriceFilter}
+									   className="btn btn-outline-info">{"$".repeat(step)}</button>)
+			}
+		}
 
 		return(
-			<div>
-
-			{searchForm}
-			{sortForm}
-			{priceFilterBtns}
-
-			<SearchResults 
-				results={this.state.results} 
-				submitCity={this.state.submitCity}
-				submitSearch={this.state.submitSearch}
-				submitted={this.state.submitted}
-				article={this.state.article}
-				filteredArray={this.state.filteredArray} />
+			<div class="row filterPanelContainer">
+				<div className="col-5 filterPanel">
+					{searchForm}
+					{sortForm}
+					<div className="filterDivide"></div>
+					{priceFilterBtns}
+				</div>
+				<div className="col-6">
+				<SearchResults 
+					results={this.state.results} 
+					submitCity={this.state.submitCity}
+					submitSearch={this.state.submitSearch}
+					submitted={this.state.submitted}
+					article={this.state.article}
+					filteredArray={this.state.filteredArray} />
+				</div>
 			</div>
 		);
 	}
@@ -213,10 +220,24 @@ class SearchResults extends React.Component {
 			let price = results[result].price;
 			let yelp_rating = results[result].yelp_rating;
 
+			let priceIcon = [];
+			for (let step = 0; step < price; step++ ) {
+				priceIcon.push(<i key={step} className="fas fa-dollar-sign"></i>)
+			}
+
+			let ratingIcon = [];
+			for (let step = 0; step < yelp_rating; step++ ) {
+				if (yelp_rating - step == 0.5) {
+					ratingIcon.push(<i key={step} className="fas fa-star-half"></i>)
+				} else {
+					ratingIcon.push(<i key={step} className="fas fa-star"></i>)
+				}
+			}
+
 			resultArray.push(
 				<div key={resultKey}>
 				<a href={url + restaurant_id} target="_blank">{name}</a><br/>
-				Price: {price} | Yelp Rating: {yelp_rating}
+				Price: {priceIcon} | Yelp Rating: {ratingIcon}
 				<p></p>
 				</div>
 			)
@@ -226,14 +247,14 @@ class SearchResults extends React.Component {
 		if (resultArray.length > 0) {
 			return (
 				<div>
-				<h3>{this.props.submitSearch} {this.props.article} {this.props.submitCity}</h3>
+				<p className="searchHeader">{this.props.submitSearch} {this.props.article} {this.props.submitCity}</p>
 				{resultArray}
 				</div>
 			);
 		}
 
 		else if (resultArray.length == 0 && this.props.submitted == true) {
-			return (<div><p>No results for "{this.props.submitSearch}" {this.props.article} {this.props.submitCity}.</p></div>);
+			return (<div><p className="searchHeader">No results for "{this.props.submitSearch}" {this.props.article} {this.props.submitCity}.</p></div>);
 		}
 
 		else {
