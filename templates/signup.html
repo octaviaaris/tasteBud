@@ -4,13 +4,41 @@
 
 {% block content %}
 
-<h1>Let's get you started!</h1>
+<!-- <h1>Let's get you started!</h1> -->
 
-<form action="/handle-signup" method="POST">
+<!-- <form action="/handle-signup" method="POST">
 	username: <input type="text" name="username" required>
 	password: <input type="password" name="password" required>
 	<input type="submit" value="Sign Up">
 </form>
 
-<p>Already have an account? <a href="/">Log in</a>.</p>
+<p>Already have an account? <a href="/">Log in</a>.</p> -->
+
+<div class="container">
+	<div class="row logo">
+		<!-- <i class="fas fa-wine-glass home-wine"></i> -->
+		<h1 id="logo"><a href="/">tasteBud</a></h1>
+	</div>
+	<div class="row signupHero">
+		<div class="column col adventure"><h2>Your culinary adventure awaits</h2></div>
+		<div class="column col login-form-container">
+			<form class="dropdown-menu p-4" action="/handle-signup" id="login-form" method="POST">
+				<div class="loginFail">
+					<div class="alert alert-warning alert-dismissible fade show" role="alert">
+						Failure!
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					    <span aria-hidden="true">&times;</span>
+					  </button>
+				</div>
+				</div>
+			  <div class="form-group">
+			    <input type="text" class="form-control" name="username" id="username-field" placeholder="Username">
+			  </div>
+			  <div class="form-group">
+			    <input type="password" class="form-control" name="password" id="password-field" placeholder="Password">
+			  </div>
+			  <button type="submit" class="btn btn-primary">Sign Up</button>
+			  <div class="signup mt-3">Already have an account? <a href="/">Log in</a></div>
+			</form>
+		</div>
 {% endblock %}
