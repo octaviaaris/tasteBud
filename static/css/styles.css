@@ -135,7 +135,7 @@ html, body {
 	position: relative;
 	top: 0%;
 	margin: auto;
-	width: 250px;
+	width: 300px;
 }
 
 .footer {
@@ -218,10 +218,6 @@ a:hover {
 	display: none;
 }
 
-/*.loginFail.loginFailShow {
-	display: block;
-}*/
-
 .carousel-indicators li {
 	background-color: #dee2e6;
 	width: 10px;
@@ -251,11 +247,24 @@ a:hover {
 	color: #00C1BE;
 	border-color: #00C1BE;
 }
-.btn-outline-info .selected {
-	color: red;
+
+button.btn.btn-outline-info {
+	box-shadow: none;
+}
+
+button.btn.btn-outline-info.selected {
+	background-color: #00C1BE;
+	color: white;
+	border-color: white;
+	box-shadow: none;
 }
 
 .btn-primary {
 	background-color: #00C1BE;
 	border: none;
+}
+
+.filterDivide {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
