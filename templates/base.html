@@ -3,13 +3,18 @@
   <head>
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<link href="https://fonts.googleapis.com/css?family=Bungee+Shade|Kaushan+Script|Raleway+Dots|Raleway:300,400,500" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Bungee+Shade|Kaushan+Script|Raleway+Dots|Raleway:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/css/styles.css">
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
     <script src="//use.edgefonts.net/advent-pro.js"></script>
   </head>
   <body>
     {% if not home %}
+    {% if not signup %}
     <nav class="navbar navbar-expand-lg navbar-style">
       <!-- <i class="fas fa-wine-glass"></i> -->
       <a class="navbar-brand mr-auto" href="/">tasteBud</a>
@@ -28,6 +33,7 @@
         </ul>
     </nav>
     {% endif %}
+    {% endif %}
 
       {% block content %}BODY CONTENT GOES HERE{% endblock %}
       <!-- <footer>Hackbright Project</footer> -->
@@ -41,7 +47,7 @@
   <script src="/static/js/top_picks.jsx" type="text/jsx"></script>
   <script src="/static/js/reviews.jsx" type="text/jsx"></script>
   <script src="/static/js/DetailsAndRating.jsx" type="text/jsx"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
   </body>
