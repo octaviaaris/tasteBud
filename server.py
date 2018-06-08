@@ -230,6 +230,9 @@ def rate_restaurant():
 							user_id=user_id,
 							user_rating=rating)
 
+		db.session.add(new_rating)
+		db.session.commit()
+
 	return jsonify({"rating": rating})
 
 @app.route("/user-rating.json")
