@@ -176,7 +176,8 @@ def send_top_picks():
 									 "address1": rec.address1,
 									 "city": rec.city,
 									 "state": rec.state,
-									 "zipcode": rec.zipcode} for rec in recs}
+									 "zipcode": rec.zipcode,
+									 "image": rec.image} for rec in recs}
 
 	return jsonify(recs_dict)
 

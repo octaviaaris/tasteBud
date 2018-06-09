@@ -132,21 +132,34 @@ class SearchForm extends React.Component {
 
 		const searchForm = [
 			<form key={1} onSubmit={this.handleSubmit}>
-				<label>
-				Find <input name="searchString"
-							type="text" 
-							placeholder="japanese, asian, Tacorea" 
-							value={this.state.searchString} 
-							onChange={this.handleChange} />
-				</label>
-				<label>
-				<select name="city"
-						value={this.state.city} 
-						onChange={this.handleChange}>
-					<option value="">Choose a city</option>
-					{cityOptions}
-				</select>
-				</label>
+				
+				<div class="form-row">
+					<div class="form-group">
+						<label>
+						Find <input name="searchString"
+									className="form-control form-control-sm"
+									type="text" 
+									placeholder="japanese, asian, Tacorea" 
+									value={this.state.searchString} 
+									onChange={this.handleChange} />
+						</label>
+					</div>
+				
+
+					<div className="form-group">
+					<label>
+						<select name="city"
+								className="form-control form-control-sm"
+								value={this.state.city} 
+								onChange={this.handleChange}>
+							<option value="">Choose a city</option>
+							{cityOptions}
+						</select>
+					</label>
+					</div>
+				</div>
+
+
 				<input type="submit" value="Search" />
 			</form>
 		]

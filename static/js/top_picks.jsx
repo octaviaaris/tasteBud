@@ -25,7 +25,7 @@ class TopPicks extends React.Component {
 		let recommendations = this.state.topPicks;
 
 		for (let pick in recommendations) {
-			
+
 			let price = [];
 			for (let step = 0; step < recommendations[pick].price; step++ ) {
 				price.push(<i className="fas fa-dollar-sign"></i>)
@@ -41,15 +41,14 @@ class TopPicks extends React.Component {
 			}
 
 			if (resultKey == 0) {
-
 				
 				resultArray.push(
 					<div className="carousel-item active" key={resultKey}>
 				      <a href={url + pick} target="_blank" className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
 				      {price} | {recommendations[pick].categories.join(", ")}<br/>
-				      <strong><p>{recommendations[pick].address1}<br/>
-				      {recommendations[pick].city}, {recommendations[pick].state} {recommendations[pick].zipcode}</p></strong>
+				      <p className="address">{recommendations[pick].address1}<br/>
+				      {recommendations[pick].city}, {recommendations[pick].state} {recommendations[pick].zipcode}</p>
 				    </div>
 				 );
 			} else {
@@ -58,8 +57,8 @@ class TopPicks extends React.Component {
 				      <a href={url + pick} target="_blank" className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
 				      {price} | {recommendations[pick].categories.join(", ")}<br/>
-				      <strong><p>{recommendations[pick].address1}<br/>
-				      {recommendations[pick].city}, {recommendations[pick].state} {recommendations[pick].zipcode}</p></strong>
+				      <p className="address">{recommendations[pick].address1}<br/>
+				      {recommendations[pick].city}, {recommendations[pick].state} {recommendations[pick].zipcode}</p>
 				    </div>
 					);
 			}

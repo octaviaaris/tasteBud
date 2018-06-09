@@ -113,35 +113,39 @@ class UserReviews extends React.Component {
 		let reviewArray = []
 		let reviewKey = 0
 
-		for (let review in reviews) {
-			reviewKey++;
-			let restaurant_id = reviews[review].restaurant_id
-			let name = reviews[review].name;
-			let city = reviews[review].city;
-			let price = reviews[review].price;
-			let userRating = reviews[review].user_rating;
+		if (reviews.length != 0) {
+			for (let review in reviews) {
+				reviewKey++;
+				let restaurant_id = reviews[review].restaurant_id
+				let name = reviews[review].name;
+				let city = reviews[review].city;
+				let price = reviews[review].price;
+				let userRating = reviews[review].user_rating;
 
-			let priceIcon = [];
-			for (let step = 0; step < price; step++ ) {
-				priceIcon.push(<i key={step} className="fas fa-dollar-sign"></i>)
-			}
-
-			let ratingIcon = [];
-			for (let step = 0; step < userRating; step++ ) {
-				ratingIcon.push(<i key={step} className="fas fa-star"></i>)
+				let priceIcon = [];
+				for (let step = 0; step < price; step++ ) {
+					priceIcon.push(<i key={step} className="fas fa-dollar-sign"></i>)
 				}
 
-			reviewArray.push(
-				<div className="userReview" key={reviewKey}>
-				<span className="reviewName"><a href={url + restaurant_id} target="_blank">{name}</a></span> ({city})<br/>
-				Price: {priceIcon} | Your review: {ratingIcon}
-				</div>
-			)
+				let ratingIcon = [];
+				for (let step = 0; step < userRating; step++ ) {
+					ratingIcon.push(<i key={step} className="fas fa-star"></i>)
+					}
+
+				reviewArray.push(
+					<div className="userReview" key={reviewKey}>
+					<span className="reviewName"><a href={url + restaurant_id} target="_blank">{name}</a></span> ({city})<br/>
+					Price: {priceIcon} | Your review: {ratingIcon}
+					</div>
+				)
+			}
+		} else {
+			reviewArray.push(<div className="userReview" key={reviewKey}>"No reviews match your criteria. Try removing one or more filters."</div>);
 		}
 
 		let sortForm = [
 			<form key={1}>
-				<select name="sortBy" onChange={this.handleChange}>
+				<select name="sortBy" onChange={this.handleChange} className="form-control form-control-sm">
 					<option value="user_rating">Rating</option>
 					<option value="price">Price (high to low)</option>
 					<option value="price asc">Price (low to high)</option>
@@ -157,12 +161,12 @@ class UserReviews extends React.Component {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handlePriceFilter}
-									   className="btn btn-outline-info selected">{"$".repeat(step)}</button>)
+									   className="btn btn-outline-info pricefilter selected">{"$".repeat(step)}</button>)
 			} else {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handlePriceFilter}
-									   className="btn btn-outline-info">{"$".repeat(step)}</button>)
+									   className="btn btn-outline-info pricefilter">{"$".repeat(step)}</button>)
 			}
 		}
 
@@ -174,27 +178,27 @@ class UserReviews extends React.Component {
 				ratingFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handleRatingFilter}
-									   className="btn btn-outline-info selected">{"*".repeat(step)}</button>)
+									   className="btn btn-outline-info btn-work ratingfilter selected">{"*".repeat(step)}</button>)
 			} else {
 				ratingFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handleRatingFilter}
-									   className="btn btn-outline-info">{"*".repeat(step)}</button>)
+									   className="btn btn-outline-info btn-work ratingfilter">{"*".repeat(step)}</button>)
 			}
 		}
 
 		return (
 			<div class="row">
 				<div className="col-5 filterPanel">
-				<div id="reviewTitle"><h2>Your Reviews</h2></div>
-				{sortForm}
-				<div className="filterDivide"></div>
-				{priceFilterBtns}
-				<div className="filterDivide"></div>
-				{ratingFilterBtns}
+					{sortForm}
+					<div className="filterDivide"></div>
+					{priceFilterBtns}
+					<div className="filterDivide"></div>
+					{ratingFilterBtns}
 				</div>
-				<div className="col-6">
-				{reviewArray}
+				<div className="col-7 userReviews">
+					<div id="reviewTitle"><h2>Your Reviews</h2></div>
+					{reviewArray}
 				</div>
 			</div>
 		)

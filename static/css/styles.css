@@ -16,15 +16,12 @@ html, body {
 
 #top-picks, #reviewTitle {
 	color: #D1457A;
-	font-family: 'Raleway Dots', cursive;
+	font-family: 'Raleway', sans-serif;
+	font-weight: 700;
 }
 
 #show-results {
 
-}
-
-#root {
-	
 }
 
 .rateButtons {
@@ -156,19 +153,16 @@ html, body {
 	max-height: 400px;
 }
 
-
 .carousel-inner {
 	display: flex;
 	justify-content: space-around;
 	background-size: cover;
-}
-
-.recommendations {
+	/*height: 500px;*/
 }
 
 .carousel-item {
 	height: 500px;
-	padding-left: 100px;
+	padding-left: 120px;
 	padding-right: 100px;
 	padding-top: 100px;
 }
@@ -212,7 +206,6 @@ a:hover {
 	font-size: 2em;
 	background-color: white;
 }
-
 
 .loginFail {
 	display: none;
@@ -267,4 +260,28 @@ button.btn.btn-outline-info.selected {
 .filterDivide {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+.address {
+	font-weight: 700;
+}
+
+.filterPanel {
+	padding-top: 55px;
+}
+
+.form-control-sm {
+	width: 220px;
+}
+
+.pricefilter {
+	width: 55px;
+}
+
+.ratingfilter {
+	width: 44px;
+}
+
+.hidden {
+	display: none;
 }

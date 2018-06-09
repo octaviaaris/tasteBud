@@ -2,7 +2,7 @@ class RatingParent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleRatingChange = this.handleRatingChange.bind(this);
-		this.state = {currentRating: "Rate below"};
+		this.state = {currentRating: 0};
 	}
 
 	componentDidMount() {
@@ -10,7 +10,9 @@ class RatingParent extends React.Component {
 		fetch('/user-rating.json',
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => (data) ? this.setState({currentRating: data['userRating']}) 
-									   						  : this.setState({currentRating: "Rate below"}));
+									   						  : this.setState({currentRating: 0}));
+
+
 
 	}
 
@@ -56,6 +58,8 @@ class RatingParent extends React.Component {
 class RestaurantDetails extends React.Component {
 	constructor(props) {
 		super(props);
+		this.toggleStar = this.toggleStar.bind(this);
+		this.untoggleStar = this.untoggleStar.bind(this);
 		this.state = {details: {},
 					  categories: [],
 					  userRating: "Rate below"};
@@ -68,17 +72,46 @@ class RestaurantDetails extends React.Component {
 									   .then((data) => this.setState({details: data, categories: data['categories']}));
 	}
 
-	render() {
+	toggleStar(evt) {
+		for (let range = 0; range < (evt.target.id[4] - this.props.currentRating); range++ ) {
+			let number = evt.target.id[4] - range;
+			let idString = "star" + number;
+			document.getElementById(idString).className = "fas fa-star";
+		}
+	}
 
+	untoggleStar(evt) {
+		for (let range = 0; range < (evt.target.id[4] - this.props.currentRating); range++ ) {
+			let number = evt.target.id[4] - range;
+			let idString = "star" + number;
+			document.getElementById(idString).className = "far fa-star";
+		}
+	}
+
+	render() {
 
 		const currentRating = this.props.currentRating;
 		const yelp_rating = this.state.details['yelp_rating'];
 
+		// user rating
 		let you = [];
+
 		for (let step = 0; step < currentRating; step++ ) {
 			you.push(<i key={step} className="fas fa-star"></i>)
 			}
 
+		for (let step = currentRating + 1; step < 6; step++ ) {
+			let starId = "star" + step
+			you.push(
+				<i key={step}
+				   id={starId}
+				   className="far fa-star"
+				   onMouseOver={ this.toggleStar }
+				   onMouseOut={ this.untoggleStar }
+				   onClick={ this.fillStar }></i>)
+			}
+
+		// yelp rating
 		let yelp =[];
 		for (let step = 0; step < yelp_rating; step++ ) {
 			yelp.push(<i key={step} className="fas fa-star"></i>)
