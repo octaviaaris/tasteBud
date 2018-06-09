@@ -24,13 +24,9 @@ def seed_restaurants(filename):
 			zipcode = line['location']['zip_code']
 			latitude = line['coordinates']['latitude']
 			longitude = line['coordinates']['longitude']
-
 			price = len(line.get('price', '$'))
-			# try:
-			# 	price = len(line['price'])
-			# except:
-			# 	price = 1
 			yelp_rating = float(line['rating'])
+			image = line['image_url']
 
 			new = Restaurant(restaurant_id=restaurant_id,
 							 name=name,
@@ -45,7 +41,8 @@ def seed_restaurants(filename):
 							 longitude=longitude,
 							 hours=None,
 							 price=price,
-							 yelp_rating=yelp_rating)
+							 yelp_rating=yelp_rating,
+							 image=image)
 
 			if not Restaurant.query.filter_by(restaurant_id=restaurant_id).first():
 				db.session.add(new)
