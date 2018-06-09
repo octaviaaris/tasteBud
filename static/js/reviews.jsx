@@ -145,13 +145,11 @@ class UserReviews extends React.Component {
 			if (prices.has(String(step))) {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
-									   id="priceFilter"
 									   onClick={this.handlePriceFilter}
 									   className="btn btn-outline-info pricefilter selected">{"$".repeat(step)}</button>)
 			} else {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
-									   id="priceFilter"
 									   onClick={this.handlePriceFilter}
 									   className="btn btn-outline-info pricefilter">{"$".repeat(step)}</button>)
 			}
@@ -233,8 +231,8 @@ class UserReviews extends React.Component {
 
 		return (
 			<div className="row">
-				<div className="col-5 filterPanel">
-					<div className="filterPanelBorder">
+				<div className="col-5 filterPanel reviews">
+					<div className="filterPanelBorder reviews">
 						<div className="filterLabels">Sort</div>
 						<div className="filterDivide"></div>
 						{sortForm}

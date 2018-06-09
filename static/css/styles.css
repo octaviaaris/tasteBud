@@ -1,15 +1,13 @@
 html, body {
 	height: 100%;
 	font-family: 'Raleway', sans-serif;
-	/*font-family: 'Raleway Dots', cursive;*/
 	font-weight: 300;
 	padding-left: 25px;
 	padding-right: 25px;
 }
+
 #top-picks {
 	margin: 10px;
-	/*color: #D1457A;
-	font-family: 'Raleway Dots', cursive;*/
 	display: flex;
 	justify-content: space-around;
 }
@@ -20,20 +18,13 @@ html, body {
 	font-weight: 700;
 }
 
-#show-results {
-
-}
-
 .rateButtons {
 	display: flex;
 }
 
 .container {
 	height: 100%;
-/*	margin-left: 50px;
-	margin-right: 50px;*/
 	max-width: 1000px;
-
 }
 
 .main {
@@ -42,7 +33,6 @@ html, body {
 	align-items: center;
 	height: 80%;
 	background: url(/static/images/brenda-godinez-227272-unsplash.jpg) no-repeat center center;
-	/*background: url(/static/images/eaters-collective-172258-unsplash.jpg) no-repeat center center;*/
 	background-size: cover;
 }
 
@@ -58,7 +48,6 @@ html, body {
 	padding-left: 10px;
 	font-size: 3em;
 	text-shadow: 2px;
-	/*font-weight: 700;*/
 }
 
 .column {
@@ -91,10 +80,8 @@ html, body {
 }
 
 .navbar-brand {
-	/*font-family: 'Pacifico', cursive;*/
 	font-family: 'Kaushan Script', cursive;
 	font-size: 1.75em;
-	/*font-family: 'Bungee Shade', cursive;*/
 }
 
 .navbar-brand, #navbarDropdown {
@@ -258,12 +245,12 @@ button.btn.btn-outline-info.selected {
 	margin-bottom: 20px;
 }
 
-.address {
-	font-weight: 700;
+.filterDivide.search {
+	margin-top: 20px;
 }
 
-.filterPanel {
-	padding-top: 55px;
+.address {
+	font-weight: 700;
 }
 
 .filterLabels {
@@ -271,15 +258,30 @@ button.btn.btn-outline-info.selected {
 }
 
 .filterPanelBorder {
-	padding: 10px;
+	padding: 15px;
 	border-radius: 8px;
 	background-color: #F9F9F9;
+	height: 320px;
+}
+
+.filterPanelBorder.reviews{
+	padding: 15px;
+	border-radius: 8px;
+	background-color: #F9F9F9;
+	height: 270px;
 }
 
 .col-5.filterPanel {
-	max-width: 275px;
+	max-width: 280px;
+	height: 320px;
 	margin-right: 50px;
 	padding: auto;
+	margin-top: 50px;
+}
+
+.col-5.filterPanel.reviews {
+
+	height: 270px;
 }
 
 .form-control-sm {
@@ -314,4 +316,23 @@ button.btn.btn-outline-info.selected {
 
 .filterStars.selected i{
 	color: #D1457A;
+}
+
+button.btn.btn-primary.search {
+	box-shadow: none;
+	margin-left: 140px;
+}
+
+.col-5.filterPanel.search {
+	padding: auto;
+	border-radius: 8px;
+	background-color: #F9F9F9;
+}
+
+.form-group {
+	margin-bottom: 5px;
+}
+
+nav.navbar.navbar-expand-lg.navbar-style {
+	margin-bottom: 50px;
 }

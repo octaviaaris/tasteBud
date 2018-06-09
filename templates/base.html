@@ -23,6 +23,7 @@
               Welcome back, {{ session.username }}!
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/profile">Home</a>
               <a class="dropdown-item" href="/reviews">My Reviews</a>
               <a class="dropdown-item" href="/search">Search</a>
               <div class="dropdown-divider"></div>
@@ -35,7 +36,6 @@
     {% endif %}
 
       {% block content %}BODY CONTENT GOES HERE{% endblock %}
-      <!-- <footer>Hackbright Project</footer> -->
 
   <!-- <script src="http://code.jquery.com/jquery.js"></script> -->
   <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>

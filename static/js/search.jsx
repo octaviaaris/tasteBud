@@ -3,12 +3,6 @@
 class SearchForm extends React.Component {
 	constructor(props) {
 		super(props);
-		this.sortResults = this.sortResults.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleSortChange = this.handleSortChange.bind(this);
-		this.handlePriceFilter = this.handlePriceFilter.bind(this);
-		this.filterResults = this.filterResults.bind(this);
 		this.state = {searchString: '',
 					  city: '',
 					  citiesArray: '',
@@ -23,7 +17,7 @@ class SearchForm extends React.Component {
 					  filteredArray: []};
 	}
 
-	sortResults(key="yelp_rating", order="desc") {
+	sortResults = (key="yelp_rating", order="desc") => {
 		
 		let unsorted = [];
 
@@ -48,11 +42,11 @@ class SearchForm extends React.Component {
 		this.setState({sortedArray: sorted}, this.filterResults);
 	}
 
-	handleChange(evt) {
+	handleChange = (evt) => {
 		this.setState({[evt.target.name]: evt.target.value});
 	}
 
-	handleSubmit(evt) {
+	handleSubmit = (evt) => {
 		evt.preventDefault();
 
 		let search_string = this.state.searchString;
@@ -74,12 +68,12 @@ class SearchForm extends React.Component {
 																		 .then((data) => this.setState({results: data, priceFilter: new Set()}, this.sortResults));
 	}
 
-	handleSortChange(evt) {
+	handleSortChange = (evt) => {
 		let params = evt.target.value.split(" ");
 		this.sortResults(params[0], params[1]);
 	}
 
-	handlePriceFilter(evt) {
+	handlePriceFilter = (evt) => {
 		let filters = this.state.priceFilter;
 
 		if (filters.has(evt.target.value)) {
@@ -91,11 +85,10 @@ class SearchForm extends React.Component {
 		this.setState({priceFilter: filters}, this.filterResults);
 	}
 
-	filterResults() {
+	filterResults = () => {
 		let filters = this.state.priceFilter;
 		let filtered = [];
 		let unfiltered = this.state.sortedArray;
-		console.log(filters);
 
 		if (filters.size > 0) {for (let item of this.state.sortedArray) {
 			if (filters.has(String(item.price))) {
@@ -131,22 +124,16 @@ class SearchForm extends React.Component {
 		});
 
 		const searchForm = [
-			<form key={1} onSubmit={this.handleSubmit}>
-				
-				<div class="form-row">
-					<div class="form-group">
-						<label>
-						Find <input name="searchString"
+			<div className="searchForm">
+				<form key={1} onSubmit={this.handleSubmit}>
+					<label>
+						<input name="searchString"
 									className="form-control form-control-sm"
 									type="text" 
 									placeholder="japanese, asian, Tacorea" 
 									value={this.state.searchString} 
 									onChange={this.handleChange} />
-						</label>
-					</div>
-				
-
-					<div className="form-group">
+					</label>
 					<label>
 						<select name="city"
 								className="form-control form-control-sm"
@@ -156,22 +143,23 @@ class SearchForm extends React.Component {
 							{cityOptions}
 						</select>
 					</label>
-					</div>
-				</div>
-
-
-				<input type="submit" value="Search" />
-			</form>
+					<button class="btn btn-primary search ml-auto" type="submit">Search</button>
+				</form>
+			</div>
 		]
 
 		const sortForm = [
-			<form key={1}>
-				<select name="sortBy" onChange={this.handleSortChange}>
-					<option value="yelp_rating">Rating</option>
-					<option value="price">Price (high to low)</option>
-					<option value="price asc">Price (low to high)</option>
-				</select>
-			</form>
+			<div>
+				<form key={1}>
+					<select name="sortBy"
+							className="form-control form-control-sm"
+							onChange={this.handleSortChange}>
+						<option value="yelp_rating">Rating</option>
+						<option value="price">Price (high to low)</option>
+						<option value="price asc">Price (low to high)</option>
+					</select>
+				</form>
+			</div>
 		]
 
 		let priceFilterBtns = [];
@@ -182,22 +170,32 @@ class SearchForm extends React.Component {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handlePriceFilter}
-									   className="btn btn-outline-info selected">{"$".repeat(step)}</button>)
+									   className="btn btn-outline-info pricefilter selected">{"$".repeat(step)}</button>)
 			} else {
 				priceFilterBtns.push(<button key={step}
 									   value={step}
 									   onClick={this.handlePriceFilter}
-									   className="btn btn-outline-info">{"$".repeat(step)}</button>)
+									   className="btn btn-outline-info pricefilter">{"$".repeat(step)}</button>)
 			}
 		}
 
 		return(
 			<div class="row filterPanelContainer">
-				<div className="col-5 filterPanel">
-					{searchForm}
-					{sortForm}
-					<div className="filterDivide"></div>
-					{priceFilterBtns}
+				<div className="col-5 filterPanel search">
+					<div className="filterPanelBorder">
+						<div>
+							<div className="filterLabels">Find</div>
+							{searchForm}
+						</div>
+						<div className="filterDivide search"></div>
+						<div>
+							<div className="filterLabels">Sort Results</div>
+							{sortForm}
+							<div className="filterDivide"></div>
+							<div className="filterLabels">Filter By Price</div>
+							{priceFilterBtns}
+						</div>
+					</div>
 				</div>
 				<div className="col-6">
 				<SearchResults 
@@ -260,7 +258,7 @@ class SearchResults extends React.Component {
 		if (resultArray.length > 0) {
 			return (
 				<div>
-				<p className="searchHeader">{this.props.submitSearch} {this.props.article} {this.props.submitCity}</p>
+				<h4 className="searchHeader">{this.props.submitSearch} {this.props.article} {this.props.submitCity}</h4>
 				{resultArray}
 				</div>
 			);
