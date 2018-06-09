@@ -28,14 +28,6 @@ html, body {
 	display: flex;
 }
 
-.rate {
-
-}
-
-.rate .selected {
-	background-color: red;
-}
-
 .container {
 	height: 100%;
 /*	margin-left: 50px;
@@ -191,15 +183,6 @@ a:hover {
 	color: #D1457A;
 }
 
-.fa-wine-glass {
-	color: #D1457A;
-	/*margin-right: 5px;*/
-}
-
-.home-wine {
-	font-size: 2.5em;
-}
-
 .fa-chevron-circle-left,
 .fa-chevron-circle-right {
 	color: #00C1BE;
@@ -243,6 +226,14 @@ a:hover {
 
 button.btn.btn-outline-info {
 	box-shadow: none;
+	background-color: white;
+	text-align: center;
+}
+
+button.btn.btn-outline-info:hover {
+	background-color: #00C1BE;
+	color: white;
+	border-color: white;
 }
 
 button.btn.btn-outline-info.selected {
@@ -262,6 +253,11 @@ button.btn.btn-outline-info.selected {
 	margin-bottom: 5px;
 }
 
+.filterDivide.sort {
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
 .address {
 	font-weight: 700;
 }
@@ -270,18 +266,52 @@ button.btn.btn-outline-info.selected {
 	padding-top: 55px;
 }
 
+.filterLabels {
+	font-weight: 500;
+}
+
+.filterPanelBorder {
+	padding: 10px;
+	border-radius: 8px;
+	background-color: #F9F9F9;
+}
+
+.col-5.filterPanel {
+	max-width: 275px;
+	margin-right: 50px;
+	padding: auto;
+}
+
 .form-control-sm {
 	width: 220px;
 }
 
 .pricefilter {
 	width: 55px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 6px;
+	padding-bottom: 6px;
 }
 
 .ratingfilter {
 	width: 44px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 10px;
+	padding-bottom: 6px;
 }
 
 .hidden {
 	display: none;
+}
+
+.filterStars i{
+	font-size: 2em;
+	color: #D17D9D;
+}
+
+
+.filterStars.selected i{
+	color: #D1457A;
 }
