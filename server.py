@@ -213,6 +213,26 @@ def get_retaurant_details():
 
 	return jsonify(details)
 
+@app.route("/similar-restaurants.json")
+def get_sim_restaurants():
+	"""Return dictionary of similar retaurants."""
+
+	restaurant_id = session['restaurant_id']
+
+	r = Restaurant.query.filter_by(restaurant_id=restaurant_id).one()
+
+	sim_restaurants = r.find_sim_restaurants()
+
+	details = {s[1].restaurant_id: {'name': s[1].name,
+								   'categories': [c.category for c in s[1].rest_cats],
+								   'price': s[1].price,
+								   'yelp_rating': s[1].yelp_rating,
+								   'city': s[1].city,
+								   'state': s[1].state} for s in sim_restaurants}
+
+	print details
+	return jsonify(details)
+
 @app.route("/rate-restaurant.json")
 def rate_restaurant():
 	
@@ -249,7 +269,7 @@ def get_user_rating():
 	if rating:
 		return jsonify({'userRating': rating.user_rating})
 
-	return None
+	return jsonify({'userRating': ""})
 
 @app.route("/reviews.json")
 def show_user_reviews():
