@@ -137,7 +137,7 @@ class Restaurant(db.Model):
 
 			total = len(set(self_attributes['categories'] + other_attributes['categories'])) + 2
 
-			# divide category match score by total possible points (number of anchor's categories + number of other's categories)
+			# divide category match score by total possible points (number of anchor's categories + number of other's categories + 2 for price and rating)
 			match_score /= total
 
 			matches.append((match_score, r))
