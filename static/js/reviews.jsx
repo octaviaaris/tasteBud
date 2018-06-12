@@ -125,7 +125,7 @@ class UserReviews extends React.Component {
 
 				reviewArray.push(
 					<div className="userReview" key={reviewKey}>
-					<span className="reviewName"><a href={url + restaurant_id} target="_blank">{name}</a></span> ({city})<br/>
+					<span className="reviewName"><a href={url + restaurant_id}>{name}</a></span> ({city})<br/>
 					Price: {priceIcon} | Your review: {ratingIcon}
 					</div>
 				)

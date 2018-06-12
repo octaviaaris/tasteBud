@@ -44,7 +44,7 @@ class TopPicks extends React.Component {
 				
 				resultArray.push(
 					<div className="carousel-item active" key={resultKey}>
-				      <a href={url + pick} target="_blank" className="restaurantName">{recommendations[pick].name}</a><br/>
+				      <a href={url + pick} className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
 				      {price} | {recommendations[pick].categories.join(", ")}<br/>
 				      <p className="address">{recommendations[pick].address1}<br/>
@@ -54,7 +54,7 @@ class TopPicks extends React.Component {
 			} else {
 				resultArray.push(
 					<div className="carousel-item" key={resultKey}>
-				      <a href={url + pick} target="_blank" className="restaurantName">{recommendations[pick].name}</a><br/>
+				      <a href={url + pick} className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
 				      {price} | {recommendations[pick].categories.join(", ")}<br/>
 				      <p className="address">{recommendations[pick].address1}<br/>
