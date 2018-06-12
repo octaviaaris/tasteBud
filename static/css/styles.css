@@ -1,6 +1,9 @@
 html, body {
 	height: 100%;
-	font-family: 'Raleway', sans-serif;
+	/*font-family: 'Raleway', sans-serif;*/
+	font-family: abel, sans-serif;
+	/*font-family: source-sans-pro, sans-serif;*/
+	/*font-family: pontano-sans, sans-serif;*/
 	font-weight: 300;
 	padding-left: 25px;
 	padding-right: 25px;
@@ -14,8 +17,12 @@ html, body {
 
 #top-picks, #reviewTitle {
 	color: #D1457A;
-	font-family: 'Raleway', sans-serif;
-	font-weight: 700;
+	/*font-family: 'Raleway', sans-serif;*/
+	/*font-weight: 700;*/
+	font-family: abel, sans-serif;
+	/*font-family: source-sans-pro, sans-serif;*/
+	/*font-family: pontano-sans, sans-serif;*/
+	font-size: 2em;
 }
 
 .rateButtons {
