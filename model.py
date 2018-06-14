@@ -66,8 +66,8 @@ class User(db.Model):
 
 		for s in sim_users_id:
 			sim_user_restaurants = (db.session.query(Rating, Restaurant)
-				  				   .join(Restaurant, Restaurant.restaurant_id == Rating.restaurant_id)
-				  				   .filter(Rating.user_id == s))
+							  				  .join(Restaurant, Restaurant.restaurant_id == Rating.restaurant_id)
+							  				  .filter(Rating.user_id == s))
 
 			for rating, restaurant in sim_user_restaurants:
 				if rating.restaurant_id not in self_restaurants and rating.user_rating >= 4:
@@ -118,8 +118,7 @@ class Restaurant(db.Model):
 		matches = []
 		self_attributes = get_attributes(self.restaurant_id)
 
-		# only look at restaurants with 4 stars or above on yelp
-		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id, Restaurant.yelp_rating >= 4).all()
+		other_restaurants = Restaurant.query.filter(Restaurant.restaurant_id != self.restaurant_id).all()
 
 		for r in other_restaurants:
 			other_attributes = get_attributes(r.restaurant_id)

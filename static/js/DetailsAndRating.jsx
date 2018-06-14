@@ -50,7 +50,8 @@ class RestaurantDetails extends React.Component {
 		for (let range = 0; range < (evt.target.id[4] - this.props.currentRating); range++ ) {
 			let number = evt.target.id[4] - range;
 			let idString = "star" + number;
-			document.getElementById(idString).className = "fas fa-star";
+			document.getElementById(idString).classList.remove("far")
+			document.getElementById(idString).classList.add("fas")
 		}
 	}
 
@@ -58,7 +59,8 @@ class RestaurantDetails extends React.Component {
 		for (let range = 0; range < (evt.target.id[4] - this.props.currentRating); range++ ) {
 			let number = evt.target.id[4] - range;
 			let idString = "star" + number;
-			document.getElementById(idString).className = "far fa-star";
+			document.getElementById(idString).classList.remove("fas")
+			document.getElementById(idString).classList.add("far")
 		}
 	}
 
@@ -67,7 +69,8 @@ class RestaurantDetails extends React.Component {
 		for (let range = this.props.currentRating; range > num; range-- ) {
 			let number = range;
 			let idString = "star" + number;
-			document.getElementById(idString).className = "far fa-star";
+			document.getElementById(idString).classList.remove("fas")
+			document.getElementById(idString).classList.add("far")
 		}
 	}
 
@@ -76,7 +79,8 @@ class RestaurantDetails extends React.Component {
 		for (let range = num; range < this.props.currentRating + 1; range++ ) {
 			let number = range;
 			let idString = "star" + number;
-			document.getElementById(idString).className = "fas fa-star";
+			document.getElementById(idString).classList.remove("far")
+			document.getElementById(idString).classList.add("fas")
 		}
 	}
 
@@ -102,7 +106,7 @@ class RestaurantDetails extends React.Component {
 			you.push(
 				<i key={step}
 				   id={starId}
-				   className="fas fa-star"
+				   className="fas fa-star userStar"
 				   onMouseOver={ this.toggleStar }
 			   	   onMouseOut={ this.untoggleStar }
 			   	   onClick={ this.changeRating }></i>)
@@ -113,7 +117,7 @@ class RestaurantDetails extends React.Component {
 			you.push(
 				<i key={step}
 				   id={starId}
-				   className="far fa-star"
+				   className="far fa-star userStar"
 				   onMouseOver={ this.fillStar }
 				   onMouseOut={ this.unfillStar }
 				   onClick={ this.changeRating }></i>)
@@ -153,10 +157,11 @@ class RestaurantDetails extends React.Component {
 		return (
 				<div className="container">
 					<div className="row">
+						<img className="detailImg" src={this.state.details['image']}/>
 						<div className="col detailPage">
 							<h3>{this.state.details['name']}</h3>
 							Yelp: {yelp} | You: {you}
-							<p>{price} | {this.state.categories.join(", ")}</p>
+							<p className="text-truncate">{price} | {this.state.categories.join(", ")}</p>
 							Address:
 							<p className="address">{this.state.details['address1']}<br/>
 							{this.state.details['city']}, {this.state.details['state']} {this.state.details['zipcode']}</p>

@@ -1,8 +1,6 @@
 from model import *
 from random import sample
 
-# init_app()
-
 def get_new_restaurant_recs(user):
 	"""Finds restaurants based on restaurants similar to what user has rated 4 or above."""
 
@@ -76,7 +74,8 @@ def user_search_results(city, search_string=None):
 						  "name": r.name,
 						  "price": r.price,
 						  "city": r.city,
-						  "yelp_rating": r.yelp_rating}
+						  "yelp_rating": r.yelp_rating,
+						  "image": r.image}
 		i+=1
 
 	return result_dict

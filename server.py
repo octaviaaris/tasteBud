@@ -4,6 +4,8 @@ from sqlalchemy import func
 from model import *
 from recommender import *
 import json
+import requests
+import os
 
 # -- coding: utf-8 --
 
@@ -46,25 +48,6 @@ def create_user_account():
 		db.session.commit()
 		flash("Account created! Please log in.")
 		return redirect("/")
-
-# @app.route("/handle-login", methods=['POST'])
-# def handle_login():
-# 	"""Validate user info and save username in session."""
-
-# 	# get username from form submission
-# 	username = request.form['username']
-# 	pw = request.form['password']
-
-# 	user = User.query.filter_by(username=username, password=pw).first()
-
-# 	# check if username and pw exist in db
-# 	if user:
-# 		session['username'] = user.username
-# 		session['user_id'] = user.user_id
-# 		return redirect("/profile")
-# 	else:
-# 		flash(Markup('Email and/or password is invalid. Please try again or <a href="/signup">create an account</a>.'))
-# 		return redirect("/")
 
 @app.route("/handle-login", methods=['POST'])
 def handle_login():
@@ -131,6 +114,24 @@ def show_rated_restaurants():
 ########################################
 ####### routes for ajax requests #######
 ########################################
+
+# API_KEY = os.environ['YELP_API_KEY']
+
+# API_HOST = 'https://api.yelp.com'
+# SEARCH_PATH = '/v3/businesses/search'
+# BUSINESS_PATH = '/v3/businesses/'  # Business ID will come after slash.
+# HEADER = {'Authorization': 'Bearer {key}'.format(key=API_KEY)}
+
+# @app.route("/get-images.json")
+# def get_images():
+
+# 	business_path = BUSINESS_PATH + request.args.get('restaurant_id')
+
+# 	response = requests.get(API_HOST + BUSINESS_PATH + business_path, headers=HEADER)
+
+# 	print request.args.get('restaurant_id')
+# 	print response.content
+# 	return "hi"
 
 @app.route("/check-credentials.json", methods=['POST'])
 def check_credentials():
@@ -209,7 +210,8 @@ def get_retaurant_details():
 			   'city': r.city,
 			   'state': r.state,
 			   'zipcode': r.zipcode,
-			   'yelp_url': r.url}
+			   'yelp_url': r.url,
+			   'image': r.image}
 
 	return jsonify(details)
 
@@ -275,7 +277,7 @@ def get_user_rating():
 def show_user_reviews():
 	"""Return list of restaurants (and details in tuples) user has rated.
 	
-	reviews = [(restaurant_id, name, price, city, user_rating)]
+	reviews = [(restaurant_id, name, price, city, image, user_rating)]
 
 	"""
 
@@ -283,7 +285,8 @@ def show_user_reviews():
 								Restaurant.name,
 								Restaurant.price,
 								Restaurant.city,
-								Rating.user_rating,).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
+								Restaurant.image,
+								Rating.user_rating).join(Restaurant, Restaurant.restaurant_id==Rating.restaurant_id)
 												    .filter(Rating.user_id==session['user_id'])
 												    .order_by(Rating.rating_id)).all()
 	
@@ -294,14 +297,15 @@ def show_user_reviews():
 						  'name': review[1],
 						  'price': review[2],
 						  'city': review[3],
-						  'user_rating': review[4]}
+						  'image': review[4],
+						  'user_rating': review[5]}
 		i+= 1
 
 	return jsonify(review_dict)
 
 if __name__ == "__main__": # pragma: no cover
 	app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-	app.debug = True
+	app.debug = False
 
 	connect_to_db(app)
 

@@ -112,6 +112,7 @@ class UserReviews extends React.Component {
 				let city = reviews[review].city;
 				let price = reviews[review].price;
 				let userRating = reviews[review].user_rating;
+				let img = reviews[review].image;
 
 				let priceIcon = [];
 				for (let step = 0; step < price; step++ ) {
@@ -124,9 +125,18 @@ class UserReviews extends React.Component {
 					}
 
 				reviewArray.push(
-					<div className="userReview" key={reviewKey}>
-					<span className="reviewName"><a href={url + restaurant_id}>{name}</a></span> ({city})<br/>
-					Price: {priceIcon} | Your review: {ratingIcon}
+					// <div className="userReview" key={reviewKey}>
+					// <span className="reviewName"><a href={url + restaurant_id}>{name}</a></span> ({city})<br/>
+					// Price: {priceIcon} | Your review: {ratingIcon}
+					// </div>
+
+					<div className="reviewResults" key={reviewKey}>
+						<a href={url + restaurant_id}
+						   className="reviewResultsInfo noColorChange">
+						   <img className="imgThumbnail" src={img}/>
+						   <span className="reviewName">{name}</span> ({city})<br/>
+						   Price: {priceIcon} | Your review: {ratingIcon}
+						</a>
 					</div>
 				)
 			}

@@ -143,7 +143,7 @@ class SearchForm extends React.Component {
 							{cityOptions}
 						</select>
 					</label>
-					<button class="btn btn-primary search ml-auto" type="submit">Search</button>
+					<button className="btn btn-primary search ml-auto" type="submit">Search</button>
 				</form>
 			</div>
 		]
@@ -180,7 +180,7 @@ class SearchForm extends React.Component {
 		}
 
 		return(
-			<div class="row filterPanelContainer">
+			<div className="row filterPanelContainer">
 				<div className="col-5 filterPanel search">
 					<div className="filterPanelBorder">
 						<div>
@@ -230,6 +230,7 @@ class SearchResults extends React.Component {
 			let city = results[result].city;
 			let price = results[result].price;
 			let yelp_rating = results[result].yelp_rating;
+			let img = results[result].image;
 
 			let priceIcon = [];
 			for (let step = 0; step < price; step++ ) {
@@ -246,10 +247,16 @@ class SearchResults extends React.Component {
 			}
 
 			resultArray.push(
-				<div key={resultKey}>
-				<a href={url + restaurant_id} target="_blank">{name}</a><br/>
-				Price: {priceIcon} | Yelp Rating: {ratingIcon}
-				<p></p>
+				<div className="searchResult" key={resultKey}>
+					<a href={url + restaurant_id}
+					   target="_blank"
+					   className="searchResultsTest noColorChange">
+						<img className="imgThumbnail" src={img}/>
+						<div className="searchResultBody">
+							<span id="searchResultName">{name}</span><br/>
+							Price: {priceIcon} | Yelp Rating: {ratingIcon}
+						</div>
+					</a>
 				</div>
 			)
 		}

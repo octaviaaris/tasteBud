@@ -15,6 +15,15 @@ html, body {
 	justify-content: space-around;
 }
 
+#topPicksHeader {
+	/*border-style: solid;
+	border-width: 0.5px;
+	padding-top: 10px;
+	padding-left: 50px;
+	padding-right: 50px;*/
+	margin-bottom: -50px;
+}
+
 #top-picks, #reviewTitle {
 	color: #D1457A;
 	/*font-family: 'Raleway', sans-serif;*/
@@ -55,6 +64,11 @@ html, body {
 	padding-left: 10px;
 	font-size: 3em;
 	text-shadow: 2px;
+	background-color: rgba(255, 255, 255, 0.8);
+	border-radius: 8px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 8px;
 }
 
 .column {
@@ -130,7 +144,7 @@ html, body {
 }
 
 .carousel {
-	width: 70%;
+	/*width: 70%;*/
 	margin: auto;
 }
 
@@ -147,10 +161,12 @@ html, body {
 }
 
 .carousel-item {
-	height: 500px;
+	height: 450px;
 	padding-left: 120px;
 	padding-right: 100px;
-	padding-top: 100px;
+	padding-top: 60px;
+	padding-bottom: -20px;
+	font-size: 1.3em;
 }
 
 .restaurantName {
@@ -180,7 +196,7 @@ a:hover {
 .fa-chevron-circle-left,
 .fa-chevron-circle-right {
 	color: #00C1BE;
-	font-size: 2em;
+	font-size: 2.5em;
 	background-color: white;
 }
 
@@ -206,11 +222,13 @@ a:hover {
 
 .reviewName, .searchHeader {
 	font-size: 1.2em;
-	font-weight: 700;
-	color: #D1457A;
-	font-family: 'Raleway Dots', cursive;
 	margin-top: 10px;
 	margin-bottom: 10px;
+	color: #00C1BE;
+}
+
+.searchHeader {
+	color: #D1457A;
 }
 
 .btn-outline-info {
@@ -376,11 +394,143 @@ nav.navbar.navbar-expand-lg.navbar-style {
 	text-decoration: none;
 }
 
+.searchResult {
+	color: black;
+	display: block;
+	width: 400px;
+}
+
+.searchResultBody {
+	color: black;
+}
+
+#searchResultName {
+	font-size: 1.2em;
+	color: #00C1BE;
+}
+
+.searchResult:hover {
+	border: none;
+    box-shadow: 1px 1px 8px 2px #ccc;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+a.searchResultsTest.noColorChange:hover {
+	text-decoration: none;
+	color: black;
+}
+
+a.reviewResultsInfo.noColorChange {
+	color: black;
+}
+
+.reviewResults {
+	margin-bottom: 15px;
+	color: black;
+}
+
+.reviewResults:hover {
+	border: none;
+    box-shadow: 1px 1px 8px 2px #ccc;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+a.reviewResultsInfo.noColorChange:hover {
+	text-decoration: none;
+	color: black;
+}
+
 .name {
 	color: #00C1BE;
 }
 
 .simRow {
 	margin: auto;
+	margin-bottom: 10px;
 	max-width: 1200px;
+}
+
+#simHeader {
+	padding-left: 12px;
+}
+
+.userStar {
+	color: #00C1BE;
+}
+
+.detailPage {
+	margin-right: 15px;
+	margin-left: 15px;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 1px;
+	border-radius: 6px;
+	height: 300px;
+	width: 300px;
+	padding-top: 30px;
+    padding-left: 30px;
+}
+
+img.detailImg {
+	width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 6px;
+    border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.navBarLine {
+	margin-top: -50px;
+	margin-bottom: 50px;
+}
+
+.searchResult {
+	margin-bottom: 10px;
+}
+
+img.searchImage {
+	width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+}
+
+img.imgThumbnail {
+	height: 50px;
+    width: 50px;
+    float: left;
+    margin-right: 10px;
+    object-fit: cover;
+    border-radius: 6px;
+    border-color: #ccc;
+    border-width: 0.5px;
+    border-style: solid;
+}
+
+.profile {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	height: 80%;
+	background: url(/static/images/brooke-lark-261793-unsplash.jpg) no-repeat center center;
+	background-size: cover;
+}
+
+#recommendations {
+	padding-top: 30px;
+	background-color: rgba(255, 255, 255, 0.95);
+	border-color: white;
+	border-style: double;
+	border-width: 2px;
+	border-radius: 8px;
+	padding-left: -30px;
+	padding-right: -30px;
+	width: 500px;
 }

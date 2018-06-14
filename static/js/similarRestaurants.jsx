@@ -39,7 +39,7 @@ class SimilarRestaurants extends React.Component {
 					   className="m-auto simRestaurantBox">
 						<p className="address name">{this.state.restaurants[r].name}</p>
 						{yelp}<br/>
-						<p>{price} | {this.state.restaurants[r]['categories'].join(", ")}</p>
+						<p className="text-truncate">{price} | {this.state.restaurants[r]['categories'].join(", ")}</p>
 						<p className="address">{this.state.restaurants[r].city}</p>
 					</a>
 				</div>
@@ -70,7 +70,8 @@ class SimilarRestaurants extends React.Component {
 
 		return (
 			<div className="simRestaurants">
-				<p>Other places like {this.state.currentRestaurant}:</p>
+				<hr/>
+				<div className="row simRow" id="simHeader"><p>Other places like {this.state.currentRestaurant}:</p></div>
 				<div className="row simRow">{this.state.similars}</div>
 			</div>
 		);

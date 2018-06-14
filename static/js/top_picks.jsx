@@ -44,7 +44,7 @@ class TopPicks extends React.Component {
 				
 				resultArray.push(
 					<div className="carousel-item active" key={resultKey}>
-				      <a href={url + pick} className="restaurantName">{recommendations[pick].name}</a><br/>
+				      <a href={url + pick} key={resultKey} className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
 				      {price} | {recommendations[pick].categories.join(", ")}<br/>
 				      <p className="address">{recommendations[pick].address1}<br/>
@@ -54,9 +54,9 @@ class TopPicks extends React.Component {
 			} else {
 				resultArray.push(
 					<div className="carousel-item" key={resultKey}>
-				      <a href={url + pick} className="restaurantName">{recommendations[pick].name}</a><br/>
+				      <a href={url + pick} key={resultKey} className="restaurantName">{recommendations[pick].name}</a><br/>
 				      {rating}<br/>
-				      {price} | {recommendations[pick].categories.join(", ")}<br/>
+				      <p className="text-truncate">{price} | {recommendations[pick].categories.join(", ")}</p>
 				      <p className="address">{recommendations[pick].address1}<br/>
 				      {recommendations[pick].city}, {recommendations[pick].state} {recommendations[pick].zipcode}</p>
 				    </div>
@@ -68,11 +68,11 @@ class TopPicks extends React.Component {
 		return (
 			<div>
 			<div id="top-picks" key={1}>
-			  <div><h2>Top Picks For You</h2></div>
+			  <div id="topPicksHeader"><h2>Top Picks For You</h2></div>
 			</div>
 		  	<div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel" data-interval="false" key={2}>
-  		      <ol class="carousel-indicators text-primary">
-			    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+  		      <ol className="carousel-indicators text-primary">
+			    <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
 			    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
 			    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
 			    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
