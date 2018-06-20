@@ -1,7 +1,5 @@
-# tasteBud
-
-tasteBud uses restaurant data pulled using the Yelp Fusin API and user ratings to tailor new restaurant recommendations to the user's unique taste. Its front-end is implemented in React.
 ![tasteBud homepage](https://github.com/octaviaaris/tasteBud/blob/master/static/images/tasteBudhomepage.png)<br/>
+tasteBud uses restaurant data pulled using the Yelp Fusin API and user ratings to tailor new restaurant recommendations to the user's unique taste. Its front-end is implemented in React.
 ## Table of Contents
 
 * [Technologies](#technologies)
