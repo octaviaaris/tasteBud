@@ -16,6 +16,7 @@ tasteBud uses restaurant data pulled using the Yelp Fusin API and user ratings t
 **APIs**: Yelp Fusion<br/>
 
 ## <a name="features"></a>Features
+![tasteBud homepage](https://github.com/octaviaaris/tasteBud/blob/master/static/images/tasteBudhomepage.png)<br/>
 **Top Picks**:<br/>
 tasteBud's recommendation machine uses collaborative filtering. For users, the recommender calculates the Pearson Correlation between a given user and others based on rating histories and saves the top-rated restaurants from the most similar users. For restaurants, the percent overlap in rating, price and categories is calculated to find places that best match a given user’s favorite restaurants. It then combines these outputs, filters out places the user already rated, and samples 5 random restaurants from the final list.<br/>
 
