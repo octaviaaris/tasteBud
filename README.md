@@ -23,4 +23,4 @@ Before becoming a software engineer, Octavia led communications for an open sour
 
 In her free time, Octavia plays Ultimate Frisbee competitively. She is a three-time national champion and two-time world champion. One of her favorite parts of competing around the world is getting to explore restaurants and cuisines with teammates in new places. tasteBud, Octavia's first project, was inspired by her experiences of discovering some of her favorite restaurants in different cities and countries with her friends.
 
-Octavia currently lives in the Bay Area. Visit her on [LinkedIn](#https://www.linkedin.com/in/octaviaaris).
+Octavia currently lives in the Bay Area. Visit her on [LinkedIn](https://www.linkedin.com/in/octaviaaris).
