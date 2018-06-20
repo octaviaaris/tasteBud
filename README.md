@@ -16,11 +16,16 @@ tasteBud uses restaurant data pulled using the Yelp Fusin API and user ratings t
 **APIs**: Yelp Fusion<br/>
 
 ## <a name="features"></a>Features
+**Top Picks**:<br/>
+tasteBud's recommendation machine uses collaborative filtering. For users, the recommender calculates the Pearson Correlation between a given user and others based on rating histories and saves the top-rated restaurants from the most similar users. For restaurants, the percent overlap in rating, price and categories is calculated to find places that best match a given user’s favorite restaurants. It then combines these outputs, filters out places the user already rated, and samples 5 random restaurants from the final list.<br/>
+
+This two-pronged approach leverages the large sample size of restaurants in the database so that recommendations can still be generated even if there aren't enough similar users.<br/>
+
 ## <a name="installation"></a>Installation
 ## <a name="future"></a>2.0
 ## <a name="aboutme"></a>About the Developer
 Before becoming a software engineer, Octavia led communications for an open source forest monitoring platform. Working with engineers in that role made her realize she'd rather be building the kinds of products she was helping to promote.
 
-In her free time, Octavia plays Ultimate Frisbee competitively. She is a three-time national champion and two-time world champion. One of her favorite parts of competing around the world is getting to explore restaurants and cuisines with teammates in new places. tasteBud, Octavia's first project, was inspired by her experiences of discovering some of her favorite restaurants in different cities and countries with her friends.
+In her free time, Octavia plays Ultimate Frisbee competitively. She is a three-time national champion and two-time world champion. One of her favorite parts of competing around the world is getting to explore restaurants and cuisines with teammates in new places. tasteBud is Octavia's first project and was inspired by her experiences of discovering some of her favorite restaurants in different cities and countries with her friends.
 
 Octavia currently lives in the Bay Area. Visit her on [LinkedIn](https://www.linkedin.com/in/octaviaaris).
