@@ -5,7 +5,6 @@ tasteBud uses restaurant data pulled using the Yelp Fusion API and user ratings 
 * [Technologies](#technologies)
 * [Features](#features)
 * [Installation](#installation)
-* [2.0](#future)
 * [About the Developer](#aboutme)
 
 ## <a name="technologies"></a>Technologies
