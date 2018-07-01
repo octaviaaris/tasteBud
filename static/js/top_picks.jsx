@@ -13,6 +13,7 @@ class TopPicks extends React.Component {
 		// 		}.bind(this)
 		// 	)
 
+		// request top restaurant picks and set state
 		fetch(`/top-picks.json`,
 			  {credentials: 'include'}).then((response) => response.json())
 									   .then((data) => this.setState({topPicks: data}));
@@ -24,15 +25,20 @@ class TopPicks extends React.Component {
 		let resultKey = 0;
 		let recommendations = this.state.topPicks;
 
+		// get price and rating info for each top pick
 		for (let pick in recommendations) {
 
 			let price = [];
 			for (let step = 0; step < recommendations[pick].price; step++ ) {
+				
+				// generate dollar sign icons based on price 
 				price.push(<i className="fas fa-dollar-sign"></i>)
 			}
 
 			let rating = [];
 			for (let step = 0; step < recommendations[pick].yelp_rating; step++ ) {
+				
+				// generate star icons based on price
 				if (recommendations[pick].yelp_rating - step == 0.5) {
 					rating.push(<i className="fas fa-star-half"></i>)
 				} else {
@@ -42,6 +48,7 @@ class TopPicks extends React.Component {
 
 			if (resultKey == 0) {
 				
+				// add "active" class to first top pick for bootstrap carousel
 				resultArray.push(
 					<div className="carousel-item active" key={resultKey}>
 				      <a href={url + pick} key={resultKey} className="restaurantName">{recommendations[pick].name}</a><br/>
