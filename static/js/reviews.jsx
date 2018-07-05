@@ -107,39 +107,6 @@ class UserReviews extends React.Component {
 		this.sortReviews(params[0], params[1]);
 	}
 
-	// filter sorted reviews based on toggled price and rating
-	filterReviews = () => {
-		let prices = this.state.priceFilter;
-		let stars = this.state.ratingFilter;
-		let filteredByPrice = [];
-		let filteredByRating = [];
-
-		if (prices.size === 0 && stars.size === 0) {
-			this.setState({filteredArray: this.state.sortedArray});
-		} else {
-
-			if (prices.size > 0) {
-				for (let item of this.state.sortedArray) {
-					if (prices.has(String(item.price))) {
-						filteredByPrice.push(item);
-					}
-				}
-			} else {
-				filteredByPrice = this.state.sortedArray;}
-
-			if (stars.size > 0) {
-				for (let item of filteredByPrice) {
-					if (stars.has(String(item.user_rating))) {
-						filteredByRating.push(item);
-					}
-				}
-			} else {
-				filteredByRating = filteredByPrice;}
-
-			this.setState({filteredArray: filteredByRating});
-		}
-	}
-
 	// create price buttons
 	createPriceFilter = () => {
 		let priceFilterBtns = [];
@@ -188,6 +155,19 @@ class UserReviews extends React.Component {
 		return ratingFilterBtns;
 	}
 
+	// abstracted filter adding/removal to reduce redundancy 
+	checkFilters = (filter, evt) => {
+		const currentFilters = filter;
+		const newValue = evt.target.value;
+
+		if (currentFilters.has(newValue)) {
+			currentFilters.delete(newValue);
+		} else {
+			currentFilters.add(newValue);}
+
+		return currentFilters;
+	}
+	
 	// add/remove toggled price option to this.state.priceFilter, then refilter reviews
 	handlePriceFilter = (evt) => {
 		const priceFilters = this.checkFilters(this.state.priceFilter, evt);
@@ -200,17 +180,37 @@ class UserReviews extends React.Component {
 		this.setState({ratingFilter: ratingFilters}, this.filterReviews);
 	}
 
-	// abstracted filter adding/removal to reduce redundancy 
-	checkFilters = (filter, evt) => {
-		const currentFilters = filter;
-		const newValue = evt.target.value;
+	// filter sorted reviews based on toggled price and rating
+	filterReviews = () => {
+		let prices = this.state.priceFilter;
+		let stars = this.state.ratingFilter;
+		let filteredByPrice = [];
+		let filteredByRating = [];
 
-		if (currentFilters.has(newValue)) {
-			currentFilters.delete(newValue);
+		if (prices.size === 0 && stars.size === 0) {
+			this.setState({filteredArray: this.state.sortedArray});
 		} else {
-			currentFilters.add(newValue);}
 
-		return currentFilters;
+			if (prices.size > 0) {
+				for (let item of this.state.sortedArray) {
+					if (prices.has(String(item.price))) {
+						filteredByPrice.push(item);
+					}
+				}
+			} else {
+				filteredByPrice = this.state.sortedArray;}
+
+			if (stars.size > 0) {
+				for (let item of filteredByPrice) {
+					if (stars.has(String(item.user_rating))) {
+						filteredByRating.push(item);
+					}
+				}
+			} else {
+				filteredByRating = filteredByPrice;}
+
+			this.setState({filteredArray: filteredByRating});
+		}
 	}
 	
 	render() {
