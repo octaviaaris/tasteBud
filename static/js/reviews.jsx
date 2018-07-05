@@ -8,7 +8,14 @@ class UserReviews extends React.Component {
 					  filteredArray: []};
 	}
 
-	// request user's ratings from server
+	// request user's ratings from server (as object with ints as keys and objects as values)
+	// example: {0: {city: "Alameda",
+	//				 image: "https://s3-media4.fl.yelpcdn.com/bphoto/8WEDJCUN-AznDY4j_m-NKw/o.jpg",
+	//				 name: "East Ocean Seafood Restaurant",
+	//				 price: 2,
+	//				 restaurant_id: "1048yN4bQRt_h3zQ04GDSA",
+	//				 user_rating: 4}}
+
 	componentDidMount() {
 		
 		fetch('/reviews.json',
@@ -26,6 +33,7 @@ class UserReviews extends React.Component {
 			unsorted.push(this.state.reviews[review]);
 		}
 
+		// sort by argument passed in for key
 		let sorted = unsorted.sort(function(a, b) {
 			const itemA = a[key];
 			const itemB = b[key];
@@ -37,12 +45,13 @@ class UserReviews extends React.Component {
 				comparison = 1;
 			}
 
+			// reverse sort order is 'asc' argument passed in for order
 			return ((order == 'asc') ? (comparison * -1) : comparison);
 		});
 
 		this.setState({sortedArray: sorted}, this.filterReviews);
 	}
-	
+
 	// show reviews based on filtering/sorting options
 	showReviews = () => {
 		const reviews = this.state.filteredArray;
