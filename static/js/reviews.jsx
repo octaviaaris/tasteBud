@@ -16,6 +16,33 @@ class UserReviews extends React.Component {
 									   .then((data) => this.setState({reviews: data}, this.sortReviews));
 	}
 
+	// sort reviews based on params (user_rating and desc being default)
+	sortReviews = (key="user_rating", order="desc") => {
+		
+		// make copy of reviews and sort
+		let unsorted = [];
+
+		for (let review in this.state.reviews) {
+			unsorted.push(this.state.reviews[review]);
+		}
+
+		let sorted = unsorted.sort(function(a, b) {
+			const itemA = a[key];
+			const itemB = b[key];
+
+			let comparison = 0;
+			if (itemA > itemB) {
+				comparison = -1;
+			} else if (itemA < itemB) {
+				comparison = 1;
+			}
+
+			return ((order == 'asc') ? (comparison * -1) : comparison);
+		});
+
+		this.setState({sortedArray: sorted}, this.filterReviews);
+	}
+	
 	// show reviews based on filtering/sorting options
 	showReviews = () => {
 		const reviews = this.state.filteredArray;
@@ -69,33 +96,6 @@ class UserReviews extends React.Component {
 	handleSort = (evt) => {
 		let params = evt.target.value.split(" ")
 		this.sortReviews(params[0], params[1]);
-	}
-
-	// sort reviews based on params (user_rating and desc being default)
-	sortReviews = (key="user_rating", order="desc") => {
-		
-		// make copy of reviews and sort
-		let unsorted = [];
-
-		for (let review in this.state.reviews) {
-			unsorted.push(this.state.reviews[review]);
-		}
-
-		let sorted = unsorted.sort(function(a, b) {
-			const itemA = a[key];
-			const itemB = b[key];
-
-			let comparison = 0;
-			if (itemA > itemB) {
-				comparison = -1;
-			} else if (itemA < itemB) {
-				comparison = 1;
-			}
-
-			return ((order == 'asc') ? (comparison * -1) : comparison);
-		});
-
-		this.setState({sortedArray: sorted}, this.filterReviews);
 	}
 
 	// filter sorted reviews based on toggled price and rating
