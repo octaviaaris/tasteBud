@@ -4,7 +4,7 @@ idna==2.6
 requests>=2.20.0
 urllib3==1.22
 blinker==1.4
-Flask==0.9
+flask>=0.12.3
 Flask-DebugToolbar==0.10.0
 Flask-SQLAlchemy==0.16
 Flask-WTF==0.8
