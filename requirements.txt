@@ -9,7 +9,7 @@ Flask-DebugToolbar==0.10.0
 Flask-SQLAlchemy==0.16
 Flask-WTF==0.8
 itsdangerous==0.24
-Jinja2==2.6
+Jinja2==2.11.3
 psycopg2==2.6.1
 SQLAlchemy==0.7.9
 Werkzeug==0.8.3
